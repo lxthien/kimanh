@@ -3,5 +3,6 @@ User-agent: *
 Disallow: /admin
 Disallow: /wp-content
 Disallow: /wp-json
+Disallow: /form-rating-container
 
-Sitemap: https://xaydungkimanh.com/sitemap.xml
+Sitemap: https://suanhakimanh.com/sitemap.xml

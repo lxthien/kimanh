@@ -28,6 +28,14 @@ monolog:
 swiftmailer:
     disable_delivery:  true
 
+twig:
+    cache: '%kernel.cache_dir%/twig'
+    debug:            '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    form_themes:
+        - 'form/layout.html.twig'
+        - 'form/fields.html.twig'
+
 # EWZRecaptchaBundle
 ewz_recaptcha:
     public_key:  6LdQ_hEUAAAAAPMvrHZNSJOkIIPmZ5w8fbDtw1JN
