@@ -73,6 +73,32 @@
             border: 1px solid #ccc;
         }
     }
+
+    .blinks {
+        display: flex;
+        margin: 20px 0;
+        padding: 10px 0 10px 0;
+        border-top: 1px solid #ededed;
+        border-bottom: 1px solid #ededed;
+
+        p {
+            font-size: 22px;
+            font-style: italic;
+            color: #0053a5;
+            font-weight: 600;
+        }
+
+        .col-xs-6.col-sm-4.col-md-4 {
+            text-align: center;
+            padding: 5px 0;
+
+            a {
+                font-style: italic;
+                color: #0053a5;
+                font-weight: bold;
+            }
+        }
+    }
 }
 
 /* Tag
@@ -84,6 +110,7 @@
 
     ul {
         padding: 0;
+        margin-bottom: 0;
 
         li {
             margin-bottom: 0px;

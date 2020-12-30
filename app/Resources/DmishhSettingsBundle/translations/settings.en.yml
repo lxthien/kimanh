@@ -32,3 +32,5 @@ labels:
   linkToYoutube: Youtube
   linkToLinkedIn: Linkedin
   linkToInstagram: Instagram
+  enableBacklink: Display the backlinks
+  backlinks: Backlinks

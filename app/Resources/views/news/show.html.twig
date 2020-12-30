@@ -56,6 +56,12 @@
                     <div class="news-container">
                         {{ contentsLazy|raw }}
                     </div>
+                    
+                    {% if get_setting('enableBacklink') %}
+                        <div class="blinks">
+                            {{ get_setting('backlinks')|raw }}
+                        </div>
+                    {% endif %}
 
                     {# List tags #}
                     {{ include('news/components/tags.html.twig') }}
