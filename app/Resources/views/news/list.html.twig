@@ -5,9 +5,9 @@
     <noscript><link rel="stylesheet" href="{{ asset('build/css/list.css') }}" ></noscript>
 {% endblock %}
 
-{% block title %} {{ (category.getPageTitle() is not null ? category.getPageTitle() : category.getName()) ~ ' - Trang ' ~ pagination.currentPageNumber }} {% endblock %}
-{% block description %} {{ category.getPageDescription() ~ ' - Trang ' ~ pagination.currentPageNumber }} {% endblock %}
-{% block keyword %} {{ category.getPageKeyword() }} {% endblock %}
+{% block title %}{{ (category.getPageTitle() is not null ? category.getPageTitle() : category.getName()) ~ ' - Trang ' ~ pagination.currentPageNumber }}{% endblock %}
+{% block description %}{{ (category.getPageDescription() is not null ? category.getPageDescription() : category.getName()) ~ ' - Trang ' ~ pagination.currentPageNumber }}{% endblock %}
+{% block keyword %}{{ category.getPageKeyword() }}{% endblock %}
 
 {% block structuredOpenGraph %}
     <meta property="og:type" content="object" />

@@ -10,6 +10,29 @@
         </ol>
         <div class="carousel-inner">
             <div class="item active">
+                <a href="{{ path('news_show', {'slug': 'bang-bao-gia-xay-nha-phan-tho-moi-nhat'}) }}">
+                    <picture>
+                        <source
+                            data-srcset="{{ asset('assets/images/banner/banner-05.jpg') | imagine_filter('banner_768_400') }}"
+                            media="(max-width: 799px)" />
+                        <source
+                            data-srcset="{{ asset('assets/images/banner/banner-05.jpg') | imagine_filter('banner_1500_500') }}"
+                            media="(min-width: 800px)" />
+                        <img
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                            data-src="{{ asset('assets/images/banner/banner-05.jpg') | imagine_filter('banner_1500_500') }}"
+                            alt="Xây Dựng Kim Anh"
+                            class="lazyload" />
+                    </picture>
+                </a>
+                <div class="container">
+                    <div class="carousel-caption text-left">
+                        <h2 class="text-uppercase">Xây Dựng Kim Anh</h2>
+                        <p>Chuyên thi công xây nhà trọn gói tại TP HCM</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
                 <a href="{{ path('homepage') }}">
                     <picture>
                         <source
@@ -72,29 +95,6 @@
                 <div class="container">
                     <div class="carousel-caption text-left">
                         <h2 class="text-uppercase">Công Ty Nhà Thầu Xây Dựng Kim Anh</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <a href="{{ path('news_show', {'slug': 'bang-bao-gia-xay-nha-phan-tho-moi-nhat'}) }}">
-                    <picture>
-                        <source
-                            data-srcset="{{ asset('assets/images/banner/banner-xay-nha-tron-goi.jpg') | imagine_filter('banner_768_400') }}"
-                            media="(max-width: 799px)" />
-                        <source
-                            data-srcset="{{ asset('assets/images/banner/banner-xay-nha-tron-goi.jpg') | imagine_filter('banner_1500_500') }}"
-                            media="(min-width: 800px)" />
-                        <img
-                            src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                            data-src="{{ asset('assets/images/banner/banner-xay-nha-tron-goi.jpg') | imagine_filter('banner_1500_500') }}"
-                            alt="Xây Dựng Kim Anh"
-                            class="lazyload" />
-                    </picture>
-                </a>
-                <div class="container">
-                    <div class="carousel-caption text-left">
-                        <h2 class="text-uppercase">Xây Dựng Kim Anh</h2>
-                        <p>Chuyên thi công xây nhà trọn gói tại TP HCM</p>
                     </div>
                 </div>
             </div>

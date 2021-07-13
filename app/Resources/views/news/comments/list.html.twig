@@ -16,6 +16,8 @@
                                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                                     data-src="{{ asset('assets/images/user.png') | imagine_filter('user') }}"
                                     alt="{{ comment.getAuthor() }}"
+                                    width="65"
+                                    height="65"
                                     class="media-object lazyload">
                             </div>
                             <div class="media-body">
@@ -31,7 +33,9 @@
                                                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                                                     data-src="{{ asset('assets/images/user.png') | imagine_filter('user') }}"
                                                     alt="{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}"
-                                                    class="media-object">
+                                                    width="65"
+                                                    height="65"
+                                                    class="media-object lazyload">
                                             </div>
                                             <div class="media-body">
                                                 <h5 class="mt-0">{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}</h5>
@@ -50,6 +54,8 @@
                                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                                     data-src="{{ asset('assets/images/user.png') | imagine_filter('user') }}"
                                     alt="{{ comment.getAuthor() }}"
+                                    width="65"
+                                    height="65"
                                     class="media-object lazyload">
                             </div>
                             <div class="media-body">
@@ -65,7 +71,9 @@
                                                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                                                     data-src="{{ asset('assets/images/user.png') | imagine_filter('user') }}"
                                                     alt="{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}"
-                                                    class="media-object">
+                                                    width="65"
+                                                    height="65"
+                                                    class="media-object lazyload">
                                             </div>
                                             <div class="media-body">
                                                 <h5 class="mt-0">{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}</h5>
