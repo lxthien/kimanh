@@ -14,7 +14,9 @@
                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                     data-src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_277_220') }}"
                     class="mr-3 img-thumbnail lazyload"
-                    alt="{{row.getTitle()}}" />
+                    alt="{{row.getTitle()}}"
+                    width="282"
+                    height="220" />
             </picture>
             <a title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl() }) }}">
                 <i class="fa fa-link"></i>

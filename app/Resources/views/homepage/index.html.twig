@@ -81,7 +81,9 @@
                                                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                                                     alt="{{ priceOnHomepage.getTitle() }}"
                                                     class="img-responsive lazyload"
-                                                    data-src="{{ (vich_uploader_asset(priceOnHomepage, 'imageFile') ? vich_uploader_asset(priceOnHomepage, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_218_218') }}" />
+                                                    data-src="{{ (vich_uploader_asset(priceOnHomepage, 'imageFile') ? vich_uploader_asset(priceOnHomepage, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_218_218') }}"
+                                                    width="218"
+                                                    height="218" />
                                             </div>
                                         </a>
                                     </div>
@@ -191,7 +193,7 @@
                         <div class="row">
                             <div class="col-md-12 title-list-news-items">
                                 <h1 class="text-center text-uppercase">
-                                    <img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset('assets/images/icon-logo.png') }}" />
+                                    <img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset('assets/images/icon-logo.png') }}" width="35" height="23" />
                                     <span>Kim </span> Anh <i class="fas fa-angle-right"></i> 
                                     {{ blockOnHomepage.category.getName() }}
                                 </h1>
@@ -214,7 +216,7 @@
                         <div class="row project-hot">
                             <div class="col-md-12 title-list-news-items">
                                 <h1 class="text-center text-uppercase">
-                                    <img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset('assets/images/icon-logo.png') }}" />
+                                    <img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset('assets/images/icon-logo.png') }}" width="35" height="23" />
                                     <span>Kim </span> Anh <i class="fas fa-angle-right"></i> 
                                     {{ blockOnHomepage.category.getName() }}
                                 </h1>
@@ -248,7 +250,9 @@
                                 data-src="https://img.youtube.com/vi/76AB9uOFBos/hqdefault.jpg"
                                 async
                                 class="play-youtube-video lazyload"
-                                alt="Khách hàng hạnh phúc chia sẻ về Xây Dựng Kim Anh">
+                                alt="Khách hàng hạnh phúc chia sẻ về Xây Dựng Kim Anh" 
+                                width="282"
+                                height="212" >
                         </div>
                     </div>
                     <div class="media">
@@ -257,7 +261,9 @@
                                 data-src="https://img.youtube.com/vi/qZHPIqGX7pA/hqdefault.jpg"
                                 async
                                 class="play-youtube-video lazyload"
-                                alt="Ý kiến khách hàng về Xây Dựng Kim Anh">
+                                alt="Ý kiến khách hàng về Xây Dựng Kim Anh"
+                                width="282"
+                                height="212" >
                         </div>
                     </div>
                     <div class="media">
@@ -266,7 +272,9 @@
                                 data-src="https://img.youtube.com/vi/Jw70fD5eZp4/hqdefault.jpg"
                                 async
                                 class="play-youtube-video lazyload"
-                                alt="Ý kiến khách hàng về Xây Dựng Kim Anh">
+                                alt="Ý kiến khách hàng về Xây Dựng Kim Anh"
+                                width="282"
+                                height="212" >
                         </div>
                     </div>
                 </div>
