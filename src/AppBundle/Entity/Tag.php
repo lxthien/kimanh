@@ -13,11 +13,14 @@ namespace AppBundle\Entity;
 
 use AppBundle\Utils\Slugger;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity()
+ * @UniqueEntity("url")
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Table(name="tag", options={"collate"="utf8_general_ci"})
  */
