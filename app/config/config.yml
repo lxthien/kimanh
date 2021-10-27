@@ -56,6 +56,7 @@ framework:
     php_errors:
         log: true
     cache:
+        default_doctrine_provider: 'app.doctrine_cache'
         # this value is used as part of the "namespace" generated for the cache item keys
         # to avoid collisions when multiple apps share the same cache backend (e.g. a Redis server)
         # See https://symfony.com/doc/current/reference/configuration/framework.html#prefix-seed
@@ -63,8 +64,8 @@ framework:
 
 # Twig Configuration (used for rendering application templates)
 twig:
-    cache: false
-    debug:            '%kernel.debug%'
+    cache: '%kernel.cache_dir%/twig'
+    debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     form_themes:
         - 'form/layout.html.twig'

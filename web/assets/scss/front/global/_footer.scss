@@ -54,17 +54,15 @@ footer {
             margin-top: 50px;
     
             .event-footer-item {
-                h6 {
+                a {
+                    color: $black;
                     margin-bottom: 10px;
                     font-size: 15px;
                     font-style: italic;
-    
-                    a {
+                    display: inline-block;
+
+                    &:hover {
                         color: $black;
-    
-                        &:hover {
-                            color: $black;
-                        }
                     }
                 }
             }

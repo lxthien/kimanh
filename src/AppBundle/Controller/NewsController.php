@@ -171,9 +171,8 @@ class NewsController extends Controller
         }
 
         // Update viewCount for post
-        $post->setViewCounts( $post->getViewCounts() + 1 );
-        $this->getDoctrine()->getManager()->flush();
-
+        //$post->setViewCounts( $post->getViewCounts() + 1 );
+        //$this->getDoctrine()->getManager()->flush();
 
         $categoryPrimary = $request->query->get('danh-muc');
         
@@ -257,6 +256,10 @@ class NewsController extends Controller
         $contentsLazy = $this->lazyloadContent($post);
 
         if ($post->isPage()) {
+            $imagePath = $this->helper->asset($post, 'imageFile');
+            $imagePath = substr($imagePath, 1);
+            $imageSize = @getimagesize($imagePath);
+
             return $this->render('news/page.html.twig', [
                 'post'          => $post,
                 'form'          => $form->createView(),
@@ -265,12 +268,13 @@ class NewsController extends Controller
                 'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),
                 'ratingValue'   => round($rating['ratingValue']),
                 'ratingCount'   => round($rating['ratingCount']),
-                'comments'      => $comments
+                'comments'      => $comments,
+                'imageSize'     => $imageSize
             ]);
         } else {
             $imagePath = $this->helper->asset($post, 'imageFile');
             $imagePath = substr($imagePath, 1);
-            $imageSize = getimagesize($imagePath);
+            $imageSize = @getimagesize($imagePath);
 
             return $this->render('news/show.html.twig', [
                 'post'          => $post,
@@ -533,9 +537,17 @@ class NewsController extends Controller
                 20
             );
 
-        return $this->render('news/recent.html.twig', [
+        $response = $this->render('news/recent.html.twig', [
             'posts' => $posts,
         ]);
+
+        // cache for 3600 seconds
+        $response->setSharedMaxAge(3600);
+
+        // (optional) set a custom Cache-Control directive
+        $response->headers->addCacheControlDirective('must-revalidate', true);
+
+        return $response;
     }
 
     /**
@@ -552,9 +564,17 @@ class NewsController extends Controller
                 15
             );
 
-        return $this->render('news/hot.html.twig', [
+        $response = $this->render('news/hot.html.twig', [
             'posts' => $posts,
         ]);
+
+        // cache for 3600 seconds
+        $response->setSharedMaxAge(3600);
+
+        // (optional) set a custom Cache-Control directive
+        $response->headers->addCacheControlDirective('must-revalidate', true);
+
+        return $response;
     }
 
     /**
