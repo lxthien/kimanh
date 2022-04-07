@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Entity\News;
+use AppBundle\Entity\Rating;
 use AppBundle\Form\NewsCategoryType;
 use AppBundle\Form\NewsType;
 use AppBundle\Utils\Slugger;
@@ -58,6 +59,15 @@ class NewsController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($news);
                 $em->flush();
+
+                $emRating = $this->getDoctrine()->getManager();
+                
+                $rating = new Rating();
+                $rating->setNewsId( $news->getId() );
+                $rating->setRating( 5 );
+
+                $emRating->persist($rating);
+                $emRating->flush();
 
                 $this->addFlash('success', 'action.created_successfully');
 
