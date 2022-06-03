@@ -21,6 +21,6 @@
     "dependencies": {
         "@fancyapps/fancybox": "^3.5.6",
         "bxslider": "^4.2.14",
-        "jquery-validation": "^1.19.0"
+        "jquery-validation": "^1.19.4"
     }
 }
