@@ -51,7 +51,9 @@
         <meta name="description" content="{% block description %}{{ get_setting('pageDescription') }}{% endblock %}">
         <meta name="keywords" content="{% block keyword %}{{ get_setting('pageKeyword') }}{% endblock %}">
         
+        {% block robots %}
         <meta name="robots" content="index, follow" />
+        {% endblock %}
         <meta name="revisit-after" content="1 days">
         <meta name="google" content="notranslate" />
         <meta http-equiv="content-language" content="vi">
@@ -63,9 +65,9 @@
         <!-- Open Graph data -->
         <meta property="og:locale" content="vi_VN" />
         {% block structuredOpenGraph %}
-            <meta property="og:type" content="website" />
-            <meta property="og:title" content="{{ block('title') }}" />
-            <meta property="og:description" content="{{ block('description') }}" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="{{ block('title') }}" />
+        <meta property="og:description" content="{{ block('description') }}" />
         {% endblock %}
         {% if app.request.attributes.get('_route') is not null %}
             <meta property="og:url" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />

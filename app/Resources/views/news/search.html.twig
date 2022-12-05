@@ -5,17 +5,18 @@
     <noscript><link rel="stylesheet" href="{{ asset('build/css/list.css') }}" ></noscript>
 {% endblock %}
 
-{% block title %}
-    {{ 'post.archives.title'|trans({'%title%': q, '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}
-{% endblock %}
+{% block title %}{{ 'post.archives.title'|trans({'%title%': q, '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}{% endblock %}
 
 {% block structuredOpenGraph %}
-    <meta property="og:type" content="object" />
-    <meta property="og:title" content="{{ 'post.archives.title'|trans({'%title%': q, '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}" />
+<meta property="og:type" content="object" />
+<meta property="og:title" content="{{ 'post.archives.title'|trans({'%title%': q, '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}" />
+{% endblock %}
+
+{% block robots %}
+<meta name="robots" content="noindex,nofollow" />
 {% endblock %}
 
 {% block body %}
-    {# breadcrumbs #}
     {{ include('news/components/breadcrumbs.html.twig',
         { type: 'category', title: 'Kết quả tìm kiếm cho từ khoá: "' ~ q ~ '"', description: 'Vui lòng tìm lại nếu không đúng kết quả cần tìm' })
     }}
