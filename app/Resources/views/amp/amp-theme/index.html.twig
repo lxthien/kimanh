@@ -36,18 +36,53 @@
         <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
     </head>
     <body>
-        <amp-analytics type="gtag" data-credentials="include">
-            <script type="application/json">
-            {
-                "vars" : {
-                    "gtag_id": "UA-96046064-1",
-                    "config" : {
-                        "UA-96046064-1": { "groups": "default" }
+        {% if get_setting('ampGTM') is not null %}
+            <!-- Google Tag Manager -->
+            <amp-analytics config="https://www.googletagmanager.com/amp.json?id={{ get_setting('ampGTM') }}&gtm.url=SOURCE_URL" data-credentials="include"></amp-analytics>
+        {% endif %}
+        {% if get_setting('ga4MeasurementID') is not null %}
+            <amp-analytics type="googleanalytics" config="{{ absolute_url(asset('ga4.json')) }}" data-credentials="include">
+                <script type="application/json">
+                {
+                    "vars": {
+                        "GA4_MEASUREMENT_ID": "{{ get_setting('ga4MeasurementID') }}",
+                        "GA4_ENDPOINT_HOSTNAME": "www.google-analytics.com",
+                        "DEFAULT_PAGEVIEW_ENABLED": true,
+                        "GOOGLE_CONSENT_ENABLED": false,
+                        "WEBVITALS_TRACKING": false,
+                        "PERFORMANCE_TIMING_TRACKING": false,
+                        "SEND_DOUBLECLICK_BEACON": false
+                    },
+                    "triggers": {
+                        "zalo": {
+                            "on": "click",
+                            "selector": ".a-zalo",
+                            "request": "ga4Event",
+                            "vars": {
+                                "ga4_event_name": "amp-zalo"
+                            }
+                        },
+                        "facebook": {
+                            "on": "click",
+                            "selector": ".a-facebook",
+                            "request": "ga4Event",
+                            "vars": {
+                                "ga4_event_name": "amp-facebook"
+                            }
+                        },
+                        "hotline": {
+                            "on": "click",
+                            "selector": ".a-hotline",
+                            "request": "ga4Event",
+                            "vars": {
+                                "ga4_event_name": "amp-hotline"
+                            }
+                        }
                     }
                 }
-            }
-            </script>
-        </amp-analytics>
+                </script>
+            </amp-analytics>
+        {% endif %}
         <amp-animation id="showAnim" layout="nodisplay">
             <script type="application/json">
                 {
@@ -144,7 +179,7 @@
                                 </li>
                                 <li>
                                     <i class="fa fa-phone"></i>
-                                    <span><a href="tel:0974776305">0974.776.305</a></span>
+                                    <span><a class="a-hotline" href="tel:0974776305">0974.776.305</a></span>
                                 </li>
                                 <li>
                                     <i class="fa fa-envelope"></i>
@@ -326,17 +361,17 @@
 
                 <ul class="giuseart-pc-contact-bar">
                     <li class="facebook">
-                        <a href="https://m.me/xaydungkimanh" target="_blank" title="Chát với chúng tôi" rel="nofollow noreferrer"></a>
+                        <a class="a-facebook" href="https://m.me/xaydungkimanh" target="_blank" title="Chát với chúng tôi" rel="nofollow noreferrer"></a>
                     </li>
                     <li class="zalo">
-                        <a href="https://zalo.me/0974776305" target="_blank" title="Chát với chúng tôi" rel="nofollow noreferrer"></a>
+                        <a class="a-zalo" href="https://zalo.me/0974776305" target="_blank" title="Chát với chúng tôi" rel="nofollow noreferrer"></a>
                     </li>
                 </ul>
 
                 {% if post.getContactHotline() is empty %}
                     <div class="hotline">
                         <div class="inner">
-                            <a href="tel:0974776305"><div class="phonering-alo-ph-img-circle"></div>0974.776.305</a>
+                            <a class="a-hotline" href="tel:0974776305"><div class="phonering-alo-ph-img-circle"></div>0974.776.305</a>
                         </div>
                     </div>
                 {% else %}

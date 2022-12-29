@@ -202,6 +202,10 @@ liip_imagine:
             quality: 100
             filters:
                 thumbnail: { size: [1500, 500], mode: outbound }
+        banner_1500_550:
+            quality: 100
+            filters:
+                thumbnail: { size: [1500, 550], mode: outbound }
 
 # KnpPaginationBundle
 knp_paginator:

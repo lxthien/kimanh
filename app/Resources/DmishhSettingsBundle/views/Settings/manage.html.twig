@@ -41,6 +41,16 @@
                                             {{ form_widget(settings_form.googleAnalytic) }}
                                         </div>
                                         <div class="form-group">
+                                            {{ form_label(settings_form.ampGTM) }}
+                                            {{ form_errors(settings_form.ampGTM) }}
+                                            {{ form_widget(settings_form.ampGTM) }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_label(settings_form.ga4MeasurementID) }}
+                                            {{ form_errors(settings_form.ga4MeasurementID) }}
+                                            {{ form_widget(settings_form.ga4MeasurementID) }}
+                                        </div>
+                                        <div class="form-group">
                                             {{ form_label(settings_form.topKeyword) }}
                                             {{ form_errors(settings_form.topKeyword) }}
                                             {{ form_widget(settings_form.topKeyword) }}
