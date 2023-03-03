@@ -201,7 +201,7 @@ function initTypewriterEffect() {
         isParagraph = false;
 
     var textArray = [
-        "CÔNG TY TNHH TƯ VẤN THIẾT KẾ XÂY DỰNG KIM ANH|50I TRẦN THỊ BẢY, KHU PHỐ 3, PHƯỜNG HIỆP THÀNH, QUẬN 12, TP HCM"
+        "CÔNG TY TNHH TƯ VẤN THIẾT KẾ XÂY DỰNG KIM ANH|C40 - KDC HIỆP THÀNH - NGUYỄN THỊ BÚP, P. HIỆP THÀNH, QUẬN 12"
     ];
 
     // Speed (in milliseconds) of typing.
