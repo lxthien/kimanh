@@ -398,15 +398,10 @@ class NewsController extends Controller
                 'comments'      => $comments
             ]);
         } else {
-            $imagePath = $this->helper->asset($post, 'imageFile');
-            $imagePath = substr($imagePath, 1);
-            $imageSize = getimagesize($imagePath);
-
             return $this->render('amp/amp-theme/index.html.twig', [
                 'post'          => $post,
                 'contentsAmp'   => $contentsAmp,
                 'relatedNews'   => !empty($relatedNews) ? $relatedNews : NULL,
-                'imageSize'     => $imageSize,
                 'category'     => !empty($category) ? $category : NULL,
                 'rating'        => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
                 'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),

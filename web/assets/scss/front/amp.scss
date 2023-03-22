@@ -330,6 +330,20 @@ article {
             margin: 0 0 21px;
             border-left: 5px solid #223455;
         }
+
+        div[name="tableOfContents"] {
+            margin-bottom: 6px;
+        }
+
+        div[style="margin-left:30px"], div[style="margin-left:60px"] {
+            display: list-item;
+            list-style-type: disc;
+        }
+
+        hr {
+            margin-top: 18px;
+            margin-bottom: 18px;
+        }
     }
 
     .related-news {

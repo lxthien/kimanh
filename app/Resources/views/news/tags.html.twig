@@ -5,15 +5,9 @@
     <noscript><link rel="stylesheet" href="{{ asset('build/css/list.css') }}" ></noscript>
 {% endblock %}
 
-{% block title %}
-    {{ 'post.archives.title'|trans({'%title%': tag.getPageTitle() is not null ? tag.getPageTitle() : tag.getName(), '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}
-{% endblock %}
-{% block description %}
-    {{ tag.getPageDescription() }}
-{% endblock %}
-{% block keyword %}
-    {{ tag.getPageKeyword() }}
-{% endblock %}
+{% block title %}{{ 'post.archives.title'|trans({'%title%': tag.getPageTitle() is not null ? tag.getPageTitle() : tag.getName(), '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}{% endblock %}
+{% block description %}{{ tag.getPageDescription() is not null ? tag.getPageDescription() : tag.getPageTitle() }}{% endblock %}
+{% block keyword %}{{ tag.getPageKeyword() }}{% endblock %}
 
 {% block structuredOpenGraph %}
     <meta property="og:type" content="object" />
