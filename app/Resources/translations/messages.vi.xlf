@@ -220,6 +220,18 @@
                 <source>label.enable</source>
                 <target>Hiển thị</target>
             </trans-unit>
+            <trans-unit id="label.sortBy">
+                <source>label.sortBy</source>
+                <target>Sắp sếp theo</target>
+            </trans-unit>
+            <trans-unit id="label.ordering">
+                <source>label.ordering</source>
+                <target>Thứ tự</target>
+            </trans-unit>
+            <trans-unit id="label.default">
+                <source>label.default</source>
+                <target>Mặc định</target>
+            </trans-unit>
             <trans-unit id="label.imageFile">
                 <source>label.imageFile</source>
                 <target>Hình đại diện</target>

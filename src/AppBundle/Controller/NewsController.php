@@ -71,6 +71,10 @@ class NewsController extends Controller
         // Init breadcrum for category page
         $breadcrumbs = $this->buildBreadcrums(!empty($level2) ? $subCategory : $category, null, null);
 
+        $ordering = $category->getSortBy() == null ? '{"createdAt":"DESC"}' : $category->getSortBy();
+        $orderingData = (array)(json_decode($ordering));
+        $orderingKey = array_keys($orderingData);
+
         $listCategories = array();
         
         if (empty($level2)) {
@@ -97,7 +101,7 @@ class NewsController extends Controller
                 ->andWhere('n.enable = :enable')
                 ->setParameter('listCategoriesIds', $listCategoriesIds)
                 ->setParameter('enable', 1)
-                ->orderBy('n.createdAt', 'DESC')
+                ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
                 ->getQuery()->getResult();
 
             // No items on this page
@@ -114,7 +118,7 @@ class NewsController extends Controller
                     ->innerJoin('n.tags', 't')
                     ->where('t.id = :tags_id')
                     ->setParameter('tags_id', $tag->getId())
-                    ->orderBy('n.createdAt', 'DESC')
+                    ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
                     ->getQuery()->getResult();
             }
         } else {
@@ -126,7 +130,7 @@ class NewsController extends Controller
                 ->andWhere('n.enable = :enable')
                 ->setParameter('newscategory_id', $subCategory->getId())
                 ->setParameter('enable', 1)
-                ->orderBy('n.createdAt', 'DESC')
+                ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
                 ->getQuery()->getResult();
         }
 
