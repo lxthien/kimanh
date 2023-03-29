@@ -687,6 +687,7 @@ class NewsController extends Controller
             ->setParameter('q', '%'.$request->query->get('q').'%')
             ->setParameter('enable', 1)
             ->setParameter('postType', 'post')
+            ->orderBy('p.createdAt', 'DESC')
             ->getQuery();
         
         $paginator  = $this->get('knp_paginator');

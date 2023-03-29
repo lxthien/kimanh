@@ -51,7 +51,7 @@ $config['privateDir'] = array(
 
 $config['images'] = array(
     'maxWidth'  => 1600,
-    'maxHeight' => 1200,
+    'maxHeight' => 5000,
     'quality'   => 80,
     'sizes' => array(
         'small'  => array('width' => 480, 'height' => 320, 'quality' => 80),
@@ -109,8 +109,8 @@ $config['accessControl'][] = array(
 
     'FOLDER_VIEW'         => true,
     'FOLDER_CREATE'       => true,
-    'FOLDER_RENAME'       => false,
-    'FOLDER_DELETE'       => false,
+    'FOLDER_RENAME'       => true,
+    'FOLDER_DELETE'       => true,
 
     'FILE_VIEW'           => true,
     'FILE_CREATE'         => true,
