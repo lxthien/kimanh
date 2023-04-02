@@ -7,9 +7,25 @@
             <li data-target="#myCarousel" data-slide-to="2" class=""></li>
             <li data-target="#myCarousel" data-slide-to="3" class=""></li>
             <li data-target="#myCarousel" data-slide-to="4" class=""></li>
+            <li data-target="#myCarousel" data-slide-to="5" class=""></li>
         </ol>
         <div class="carousel-inner">
             <div class="item active">
+                <picture>
+                    <source
+                        data-srcset="{{ asset('assets/images/banner/xay-dung-kim-anh-1.jpg') | imagine_filter('banner_768_400') }}"
+                        media="(max-width: 799px)" />
+                    <source
+                        data-srcset="{{ asset('assets/images/banner/xay-dung-kim-anh-1.jpg') | imagine_filter('banner_1500_550') }}"
+                        media="(min-width: 800px)" />
+                    <img
+                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                        data-src="{{ asset('assets/images/banner/xay-dung-kim-anh-1.jpg') | imagine_filter('banner_1500_550') }}"
+                        alt="Xây Dựng Kim Anh"
+                        class="lazyload" />
+                </picture>
+            </div>
+            <div class="item">
                 <picture>
                     <source
                         data-srcset="{{ asset('assets/images/banner/xuan-2023-3.jpg') | imagine_filter('banner_768_400') }}"
@@ -24,7 +40,6 @@
                         class="lazyload" />
                 </picture>
             </div>
-            
             <div class="item">
                 <a href="{{ path('homepage') }}">
                     <picture>
