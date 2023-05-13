@@ -494,7 +494,7 @@ class NewsController extends Controller
             );
 
         if (!$tag) {
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('homepage', [], 301);
         }
 
         // Get the list post related to tag

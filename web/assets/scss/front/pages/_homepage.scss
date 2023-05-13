@@ -147,7 +147,7 @@
     }
 
     .slogin-title {
-        p {
+        .slogin-wrapper {
             margin-bottom: 0;
             font-size: 19px;
             font-family: $robotoCondesed;
@@ -158,6 +158,17 @@
             @media only screen and (max-width: 768px) {
                 font-size: 16px;
                 text-align: center;
+            }
+
+            h1 {
+                font-size: 19px;
+                display: inline-block;
+                font-family: $robotoCondesed;
+                margin-bottom: 0;
+
+                @media only screen and (max-width: 768px) {
+                    font-size: 16px;
+                }
             }
         }
 

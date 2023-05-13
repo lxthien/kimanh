@@ -547,6 +547,10 @@
                 <source>post.archives.title</source>
                 <target>%title% - Trang %currentPage% của %totalPage% | Xây Dựng Kim Anh</target>
             </trans-unit>
+            <trans-unit id="post.archives.description">
+                <source>post.archives.description</source>
+                <target>Tổng hợp thông tin về nội dung '%description%' - Trang %currentPage% của %totalPage%</target>
+            </trans-unit>
 
             <trans-unit id="post.do_not_have_item_on_this_page">
                 <source>post.do_not_have_item_on_this_page</source>
