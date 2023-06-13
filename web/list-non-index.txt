@@ -70,3 +70,13 @@ domain:lesogallery.com
 domain:lovelypetwear.com
 domain:libraryjobs.net
 domain:sharewarestar.com
+domain:besthostingprice.com
+domain:kientruchoanganh.com
+domain:cf-alba.com
+domain:chand-ung.web.app
+domain:aseko.org
+domain:essentials4travel.com
+domain:bonheurdebrodeuses.com
+domain:chaussures-homme-luxe.com
+domain:lynnstarr.info
+domain:freewordpressheaders.com

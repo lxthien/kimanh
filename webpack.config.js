@@ -21,6 +21,7 @@ Encore
     .addStyleEntry('css/list', ['./web/assets/scss/front/list.scss'])
     .addStyleEntry('css/contact', ['./web/assets/scss/front/contact.scss'])
     .addStyleEntry('css/amp', ['./web/assets/scss/front/amp.scss'])
+    .addStyleEntry('css/new', ['./web/assets/scss/front/new.scss'])
     .addStyleEntry('css/admin', ['./web/assets/scss/admin/admin.scss'])
 ;
 

@@ -418,8 +418,9 @@ class NewsController extends Controller
 
     private function amploadContent($post) {
         $html = $post->getContents();
-        preg_match_all("#<img(.*?)\\/?>#", $html, $img_matches);
 
+        # Code replace img tag to amp-img
+        preg_match_all("#<img(.*?)\\/?>#", $html, $img_matches);
         foreach ($img_matches[1] as $key => $img_tag) {
             preg_match_all('/(alt|src|width|height)=["\'](.*?)["\']/i', $img_tag, $attribute_matches);
             $attributes = array_combine($attribute_matches[1], $attribute_matches[2]);
@@ -442,6 +443,28 @@ class NewsController extends Controller
             $amp_tag .= '</amp-img>';
 
             $html = str_replace($img_matches[0][$key], $amp_tag, $html);
+        }
+
+        # Code replace iframe tag to amp-youtube
+        preg_match_all("#<iframe(.*?)\\/?>#", $html, $iframe_match);
+        foreach ($iframe_match[1] as $key => $iframe_tag) {
+            preg_match_all('/(alt|src|width|height)=["\'](.*?)["\']/i', $iframe_tag, $attribute_matches);
+            $attributes = array_combine($attribute_matches[1], $attribute_matches[2]);
+
+            if (array_key_exists('src', $attributes)) {
+                $iframeSrc = $attributes['src'];
+                preg_match('/embed\/([\w+\-+]+)[\"\?]/', $iframeSrc, $iframeMatch);
+            }
+
+            $iframe_tag = '<amp-youtube ';
+            $iframe_tag .= 'width="480"';
+            $iframe_tag .= 'height="270"';
+            $iframe_tag .= 'layout="responsive"';
+            $iframe_tag .= 'data-videoid="'.$iframeMatch[1].'"';
+            $iframe_tag .= '>';
+            $iframe_tag .= '</amp-youtube>';
+
+            $html = str_replace($iframe_match[0][$key], $iframe_tag, $html);
         }
 
         return html_entity_decode($html);
@@ -668,9 +691,7 @@ class NewsController extends Controller
         $form->handleRequest($request);
         
         if (!$form->isSubmitted() && empty($request->query->get('q'))) {
-            return $this->render('news/formSearch.html.twig', [
-                'form' => $form->createView(),
-            ]);
+            return $this->redirectToRoute('homepage', [], 301);
         }
 
         $q = $form->getData()['q'];

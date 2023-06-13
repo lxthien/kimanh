@@ -1,0 +1,30 @@
+.news {
+    .news-container {
+        .iframe-containers {
+            margin: 0 auto 20px;
+            width: 90%;
+
+            @media only screen and (max-width: 767.98px) {
+                width: 100%;
+            }
+
+            .iframe-container {
+                position: relative;
+                width: 100%;
+                overflow: hidden;
+                padding-top: 56.25%;
+    
+                iframe {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    bottom: 0;
+                    right: 0;
+                    width: 100%;
+                    height: 100%;
+                    border: none;
+                }
+            }
+        }
+    }
+}
