@@ -91,7 +91,7 @@ class ConvertImages
     {
         if ($filter) {
             $strpos = strpos($file, 'media/cache');
-            $file = mb_substr($file, $strpos, strlen($file), 'UTF-8');
+            $file = str_replace('/resolve' ,'', mb_substr($file, $strpos, strlen($file), 'UTF-8'));
         } else {
             $file = substr($file, 1);
         }

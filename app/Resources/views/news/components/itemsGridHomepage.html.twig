@@ -1,18 +1,30 @@
+{% set imagePath = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) %}
+{% set imagePathFilter = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_277_220') %}
+{% set imagePathFilterMobile = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_345_250') %}
+                        
+{% if convert_images.fileExists(imagePath) == false %}
+    {% set imagePath = imagePath | imagine_filter('news_277_220') %}
+    {% set imagePathMobile = imagePath | imagine_filter('news_345_250') %}
+{% else %}
+    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
+    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
+{% endif %}
+
 <div class="col-xs-12 col-sm-4 col-md-3 news-item {{ loop.index == 4 ? 'd-none' : '' }}">
     <div class="news-item-wrapper">
         <div class="media-thumb">
             <picture>
                 <!--[if IE 9]><video style="display: none"><![endif]-->
                 <source
-                    data-srcset="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_345_250') }}"
+                    data-srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
                     media="(max-width: 800px)" />
                 <source
-                    data-srcset="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_277_220') }}"
+                    data-srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
                     media="(min-width: 801px)" />
                 <!--[if IE 9]></video><![endif]-->
                 <img
                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                    data-src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_277_220') }}"
+                    data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
                     class="mr-3 img-thumbnail lazyload"
                     alt="{{row.getTitle()}}"
                     width="282"
