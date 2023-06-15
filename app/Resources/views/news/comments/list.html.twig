@@ -10,11 +10,12 @@
                     {% set loopComment = loopComment + 1 %}
 
                     {% if loopComment != positionAds %}
+                        {% set userPath = asset('/assets/images/user.png') | imagine_filter('user') %}
                         <li class="media{{ loop.first ? ' first' : '' }}" id="comment-{{ comment.getId() }}">
                             <div class="media-left">
                                 <img
                                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                    data-src="{{ asset('assets/images/user.png') | imagine_filter('user') }}"
+                                    data-src="{{ absolute_url(convert_images.webpConvert(userPath, '', true)) }}"
                                     alt="{{ comment.getAuthor() }}"
                                     width="65"
                                     height="65"
@@ -31,7 +32,7 @@
                                             <div class="media-left">
                                                 <img
                                                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                                    data-src="{{ asset('assets/images/user.png') | imagine_filter('user') }}"
+                                                    data-src="{{ convert_images.webpConvert(userPath, '', true) }}"
                                                     alt="{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}"
                                                     width="65"
                                                     height="65"
@@ -52,7 +53,7 @@
                             <div class="media-left">
                                 <img
                                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                    data-src="{{ asset('assets/images/user.png') | imagine_filter('user') }}"
+                                    data-src="{{ absolute_url(convert_images.webpConvert(userPath, '', true)) }}"
                                     alt="{{ comment.getAuthor() }}"
                                     width="65"
                                     height="65"
@@ -69,7 +70,7 @@
                                             <div class="media-left">
                                                 <img
                                                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                                    data-src="{{ asset('assets/images/user.png') | imagine_filter('user') }}"
+                                                    data-src="{{ absolute_url(convert_images.webpConvert(userPath, '', true)) }}"
                                                     alt="{{ replyComment.getAuthor() is same as ('Webmaster') ? get_setting('displayNameCommentAs')|raw : replyComment.getAuthor() }}"
                                                     width="65"
                                                     height="65"

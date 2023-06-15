@@ -67,6 +67,8 @@ twig:
     cache: '%kernel.cache_dir%/twig'
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    globals:
+        convert_images: "@convertImages"
     form_themes:
         - 'form/layout.html.twig'
         - 'form/fields.html.twig'

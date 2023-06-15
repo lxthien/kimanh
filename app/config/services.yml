@@ -60,3 +60,6 @@ services:
         class: AppBundle\Form\ProfileFormType
         tags:
             - { name: form.type, alias: app_user_profile }
+    convertImages:
+        alias: AppBundle\Utils\ConvertImages
+        public: true

@@ -5,6 +5,17 @@
     <div class="post-bxslider-wrapper">
         <div class="post-sidebar-bxslider-recent">
             {% for row in posts %}
+                {% set imagePath = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) %}
+                {% set imagePathFilter = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_70_50') %}
+                                        
+                {% if convert_images.fileExists(imagePath) == false %}
+                    {% set imagePath = imagePath | imagine_filter('news_70_50') %}
+                {% elseif convert_images.webpFileExists(imagePath, 'media/cache/news_70_50') == true %}
+                    {% set imagePath = '/media/cache/news_70_50' ~ imagePath ~ '.webp' %}
+                {% else %}
+                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
+                {% endif %}
+                
                 <div class="item">
                     <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" class="list-group-item td-list-group-item" title="{{ row.getTitle() }}">
                         <img
@@ -13,7 +24,7 @@
                             height="50"
                             class="img-responsive lazyload"
                             src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                            data-src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_70_50') }}" />
+                            data-src="{{ absolute_url(imagePath) }}" />
                         <span>{{ row.getTitle() }}</span>
                     </a>
                 </div>
