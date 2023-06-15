@@ -10,11 +10,10 @@
                                                 
                         {% if convert_images.fileExists(imagePath) == false %}
                             {% set imagePath = imagePath | imagine_filter('news_406_280') %}
-                        {% elseif convert_images.webpFileExists(imagePath, 'media/cache/news_406_280') == true %}
-                            {% set imagePath = '/media/cache/news_406_280' ~ imagePath ~ '.webp' %}
                         {% else %}
                             {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
                         {% endif %}
+                        
                         <div class="col-xs-12 col-sm-4 col-md-3">
                             <div class="related-wrapper">
                                 <div class="related-img">
@@ -23,7 +22,7 @@
                                         height="140"
                                         class="img-thumbnail lazyload"
                                         src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                        data-src="{{ absolute_url(imagePath) }}"
+                                        data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
                                         alt="{{row.getTitle()}}" />
                                     {% if category is defined %}
                                         <a href="{{ path('news_show', {'slug': row.getUrl(), 'danh-muc': category.getUrl() }) }}" title="{{ row.getTitle() }}">

@@ -11,6 +11,7 @@
 
                     {% if loopComment != positionAds %}
                         {% set userPath = asset('/assets/images/user.png') | imagine_filter('user') %}
+                        
                         <li class="media{{ loop.first ? ' first' : '' }}" id="comment-{{ comment.getId() }}">
                             <div class="media-left">
                                 <img
