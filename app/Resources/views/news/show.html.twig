@@ -2,6 +2,7 @@
 
 {% block stylesheets %}
     <link href="{{ asset('build/css/news.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
+    <link href="{{ asset('build/css/new.css?v') ~ date().timestamp }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
     <noscript><link rel="stylesheet" href="{{ asset('build/css/news.css') }}" ></noscript>
 {% endblock %}
 

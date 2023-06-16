@@ -43,7 +43,7 @@
                 <div class="col-md-4" id="logo_top">
                     <div id="logo">								
                         <a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
-                            <img alt="{{ get_setting('siteName') }}" src="{{ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}" width="274" height="99">
+                            <img alt="{{ get_setting('siteName') }}" src="{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}" width="274" height="99">
                         </a>
                     </div>
                 </div>
