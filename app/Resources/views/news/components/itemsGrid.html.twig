@@ -16,15 +16,15 @@
             <picture>
                 <!--[if IE 9]><video style="display: none"><![endif]-->
                 <source
-                    data-srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
+                    data-srcset="{{ imagePathMobile != false ? asset(imagePathMobile) : asset(imagePathFilterMobile) }}"
                     media="(max-width: 800px)" />
                 <source
-                    data-srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
+                    data-srcset="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
                     media="(min-width: 801px)" />
                 <!--[if IE 9]></video><![endif]-->
                 <img
                     src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                    data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
+                    data-src="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
                     class="mr-3 img-thumbnail lazyload"
                     alt="{{row.getTitle()}}"
                     width="282"
