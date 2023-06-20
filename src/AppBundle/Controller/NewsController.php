@@ -439,7 +439,12 @@ class NewsController extends Controller
 
             $amp_tag = '<amp-img ';
             foreach ($attributes as $attribute => $val) {
-                $amp_tag .= $attribute .'="'. $val .'" ';
+                if ($attribute == 'src') {
+                    $src = !is_bool($this->convertImages->webpConvert2($val, '')) ? '/' . $this->convertImages->webpConvert2($val, '') : $val;
+                    $amp_tag .= $attribute .'="'. $src .'" ';
+                } else {
+                    $amp_tag .= $attribute .'="'. $val .'" ';
+                }
             }
 
             $amp_tag .= 'layout="responsive"';
@@ -494,11 +499,7 @@ class NewsController extends Controller
 
             list($width, $height) = @getimagesize(substr($src, 1));
 
-            if ($this->convertImages->webpFileExists($src, '')) {
-                $src = $src . '.webp';
-            } else {
-                $src = !is_bool($this->convertImages->webpConvert2($src, '')) ? $this->convertImages->webpConvert2($src, '') : $src;
-            }
+            $src = !is_bool($this->convertImages->webpConvert2($src, '')) ? $this->convertImages->webpConvert2($src, '') : $src;
 
             $img->setAttribute('data-src', $src);
             $img->setAttribute('alt', $alt);

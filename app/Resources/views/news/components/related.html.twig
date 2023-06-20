@@ -22,7 +22,7 @@
                                         height="140"
                                         class="img-thumbnail lazyload"
                                         src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                        data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
+                                        data-src="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
                                         alt="{{row.getTitle()}}" />
                                     {% if category is defined %}
                                         <a href="{{ path('news_show', {'slug': row.getUrl(), 'danh-muc': category.getUrl() }) }}" title="{{ row.getTitle() }}">
