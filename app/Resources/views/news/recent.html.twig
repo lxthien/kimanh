@@ -10,8 +10,6 @@
                                         
                 {% if convert_images.fileExists(imagePath) == false %}
                     {% set imagePath = imagePath | imagine_filter('news_70_50') %}
-                {% elseif convert_images.webpFileExists(imagePath, 'media/cache/news_70_50') == true %}
-                    {% set imagePath = '/media/cache/news_70_50' ~ imagePath ~ '.webp' %}
                 {% else %}
                     {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
                 {% endif %}
@@ -24,7 +22,7 @@
                             height="50"
                             class="img-responsive lazyload"
                             src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                            data-src="{{ absolute_url(imagePath) }}" />
+                            data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
                         <span>{{ row.getTitle() }}</span>
                     </a>
                 </div>
