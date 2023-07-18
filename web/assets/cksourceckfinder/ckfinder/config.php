@@ -115,7 +115,7 @@ $config['accessControl'][] = array(
     'FILE_VIEW'           => true,
     'FILE_CREATE'         => true,
     'FILE_RENAME'         => false,
-    'FILE_DELETE'         => false,
+    'FILE_DELETE'         => true,
 
     'IMAGE_RESIZE'        => true,
     'IMAGE_RESIZE_CUSTOM' => true
@@ -133,7 +133,7 @@ $config['checkSizeAfterScaling'] = true;
 $config['htmlExtensions'] = array('html', 'htm', 'xml', 'js');
 $config['hideFolders'] = array('.*', 'CVS', '__thumbs');
 $config['hideFiles'] = array('.*');
-$config['forceAscii'] = false;
+$config['forceAscii'] = true;
 $config['xSendfile'] = false;
 
 // http://docs.cksource.com/ckfinder3-php/configuration.html#configuration_options_debug
