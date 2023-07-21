@@ -162,24 +162,27 @@
             <div class="col-12 col-sm-6 col-md-3 col-lg-3">
                 <h3 class="text-uppercase">Fanpage</h3>
                 <div>
-                    <div class="fb-page"
-                        data-href="https://www.facebook.com/xaydungkimanh/"
-                        data-tabs=""
-                        data-width="555"
-                        data-height="277"
-                        data-small-header="false"
-                        data-adapt-container-width="true"
-                        data-hide-cover="false"
-                        data-show-facepile="true"
-                        data-lazy="true">
-                        <blockquote cite="https://www.facebook.com/xaydungkimanh/" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/xaydungkimanh/">Xây Nhà, Sửa Chữa Nhà Kim Anh</a></blockquote>
-                    </div>
+                    <a href="https://www.facebook.com/xaydungkimanh/" title="Xây Nhà, Sửa Chữa Nhà Kim Anh">
+                        <img
+                            class="lazyload"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                            data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/fanpage.jpg'), '')) }}"
+                            width="277"
+                            height="130"
+                            alt="Xây Nhà, Sửa Chữa Nhà Kim Anh" />
+                    </a>
                 </div>
             </div>
         </div>
         <div class="row footer-middle">
             <div class="col-12 col-md-12 col-lg-12">
-                <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}" alt="{{ get_setting('siteName') }}" width="293" height="106" />
+                <img
+                    class="lazyload"
+                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                    data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}"
+                    alt="{{ get_setting('siteName') }}"
+                    width="293"
+                    height="106" />
                 <div class="footer-text-wrap  text-center">
                     <p>Xây Dựng Kim Anh : Công ty, nhà thầu xây dựng chuyên thi công xây dựng nhà phố, biệt thự, sửa chữa nhà uy tín và chất lượng tại Thành phố Hồ Chí Minh. Chúng tôi luôn mang đến sự hài lòng đến toàn thể quý khách hàng đã tin tưởng đến công ty. Công ty chúng tôi rất hân hạnh khi được làm việc với toàn thể quý khách hàng đã tin tưởng chúng tôi.</p>
                 </div>
@@ -188,7 +191,7 @@
         <div class="row copyright">
             <div class="col-sm-12 text-center">
                 <p>
-                    Copyright © {{ "now"|date('Y') }} <a href="https://xaydungkimanh.com" title="Xây Dựng Kim Anh">Xây Dựng Kim Anh</a>, all rights reserved. <a href="//www.dmca.com/Protection/Status.aspx?ID=84046f70-7f9a-4ad3-b0bb-167751a2b498" title="DMCA.com Protection Status" class="dmca-badge" rel="noreferrer"> <img src ="{{ asset('assets/images/dmca.png') }}"  alt="DMCA.com Protection Status" width="109" height="22" /></a>  <script src="{{ asset('assets/libs/dmca/DMCABadgeHelper.min.js') }}"> </script>
+                    Copyright © {{ "now"|date('Y') }} <a href="https://xaydungkimanh.com" title="Xây Dựng Kim Anh">Xây Dựng Kim Anh</a>, all rights reserved. <a href="//www.dmca.com/Protection/Status.aspx?ID=84046f70-7f9a-4ad3-b0bb-167751a2b498" title="DMCA.com Protection Status" class="dmca-badge" rel="noreferrer"> <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src ="{{ asset(convert_images.webpConvert2(asset('/assets/images/dmca.png'), '')) }}"  alt="DMCA.com Protection Status" width="109" height="22" /></a>  <script src="{{ asset('assets/libs/dmca/DMCABadgeHelper.min.js') }}"> </script>
                 </p>
             </div>
         </div>
