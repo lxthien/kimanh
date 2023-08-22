@@ -270,6 +270,7 @@ class NewsController extends Controller
 
             return $this->render('news/page.html.twig', [
                 'post'          => $post,
+                'contentsLazy'  => $contentsLazy,
                 'form'          => $form->createView(),
                 'formRating'    => $formRating->createView(),
                 'rating'        => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
@@ -486,7 +487,7 @@ class NewsController extends Controller
         // set error level
         $internalErrors = libxml_use_internal_errors(true);
 
-        $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'));
 
         // Restore error level
         libxml_use_internal_errors($internalErrors);
@@ -509,7 +510,8 @@ class NewsController extends Controller
             $img->setAttribute('src', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
         }
         
-        return html_entity_decode($dom->saveHTML());
+        $newContent = html_entity_decode($dom->saveHTML());
+        return preg_replace('/^<!DOCTYPE.+?>/', '', str_replace( array('<html>', '</html>', '<body>', '</body>'), array('', '', '', ''), $newContent));
     }
 
     /**
