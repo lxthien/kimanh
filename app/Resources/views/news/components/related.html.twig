@@ -34,6 +34,7 @@
                                         </a>
                                     {% endif %}
                                 </div>
+                                <h2>
                                 {% if category is defined %}
                                     <a class="related-title" href="{{ path('news_show', {'slug': row.getUrl(), 'danh-muc': category.getUrl() }) }}" title="{{ row.getTitle() }}">
                                         {{ row.getTitle() }}
@@ -43,6 +44,7 @@
                                         {{ row.getTitle() }}
                                     </a>
                                 {% endif %}
+                                </h2>
                             </div>
                         </div>
                     {% endfor %}
