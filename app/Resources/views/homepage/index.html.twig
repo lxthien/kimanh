@@ -2,7 +2,9 @@
 
 {% block stylesheets %}
     <link href="{{ asset('build/css/homepage.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
+    <link href="{{ asset('build/css/new.css?v=') ~ date().timestamp }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
     <noscript><link rel="stylesheet" href="{{ asset('build/css/homepage.css') }}" ></noscript>
+    <noscript><link rel="stylesheet" href="{{ asset('build/css/new.css?v=') ~ date().timestamp }}" ></noscript>
 {% endblock %}
 
 {% block structuredOpenGraph %}
