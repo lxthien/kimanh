@@ -5,6 +5,10 @@
                 {{ include('news/prices.html.twig') }}
                 {{ include('widgets/hotNews.html.twig') }}
                 {{ include('widgets/recentNews.html.twig') }}
+                {{ render(controller(
+                    'AppBundle:News:sidebarPosts',
+                    {'sidebarPosts':get_setting('xaydungnhahcm')}
+                )) }}
             </div>
         </div>
     </div>

@@ -110,12 +110,13 @@ function initFixedSidebar() {
             pageDetailHeight =  $pageDetail.outerHeight(),
             sidebarHeight = $sidebar.height(),
             positionFixedMax = pageDetailHeight - sidebarHeight,
-            positionFixed = scrollTop < 65 ? 65 : positionFixedMax > scrollTop ? 65 : positionFixedMax - scrollTop + 65 ;
+            positionFixed = scrollTop < 65 ? 65 : positionFixedMax > scrollTop ? 65 : positionFixedMax - scrollTop + 160;
         
         if (scrollTop > 160) {
             $sidebar.css({
                 'top': positionFixed,
-                'position': 'fixed'
+                'position': 'fixed',
+                'width': $sidebar.width()
             });
         } else {
             $sidebar.removeAttr("style");
@@ -280,7 +281,7 @@ exports.init = function () {
     initProtectedContent();
     initGoToTop();
     initFixedMenu();
-    //initFixedSidebar();
+    initFixedSidebar();
     initCostConstruction();
     initFancybox();
     initTypewriterEffect();

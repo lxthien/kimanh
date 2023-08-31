@@ -573,7 +573,7 @@ class NewsController extends Controller
             ->findBy(
                 array('postType' => 'post', 'enable' => 1),
                 array('createdAt' => 'DESC'),
-                20
+                25
             );
 
         $response = $this->render('news/recent.html.twig', [
@@ -600,7 +600,7 @@ class NewsController extends Controller
             ->findBy(
                 array('postType' => 'post', 'enable' => 1),
                 array('viewCounts' => 'DESC'),
-                15
+                25
             );
 
         $response = $this->render('news/hot.html.twig', [
@@ -614,6 +614,32 @@ class NewsController extends Controller
         $response->headers->addCacheControlDirective('must-revalidate', true);
 
         return $response;
+    }
+
+    public function sidebarPostsAction ($sidebarPosts) {
+        $sidebarPostsArray = array();
+
+        if (!empty($sidebarPosts)) {
+            $sidebarPostsObject = json_decode($sidebarPosts);
+
+            if (is_object($sidebarPostsObject)) {
+                $listPosts = explode(',', $sidebarPostsObject->IDs);
+
+                for ($i = 0; $i < count($listPosts); $i++) {
+                    $post = $this->getDoctrine()
+                                ->getRepository(News::class)
+                                ->find($listPosts[$i]);
+                    if ($post) {
+                        $sidebarPostsArray[] = $post;
+                    }
+                }
+            }
+
+            return $this->render('news/sidebarPosts.html.twig', [
+                'title' => $sidebarPostsObject->title,
+                'posts' => $sidebarPostsArray
+            ]);
+        }
     }
 
     /**
