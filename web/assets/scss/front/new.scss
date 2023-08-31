@@ -38,6 +38,14 @@
             font-weight: 500;
             margin-bottom: 0;
         }
+
+        .td-list-group-item {
+            height: 85px;
+
+            span {
+                -webkit-line-clamp: 3;
+            }
+        }
     }
 }
 

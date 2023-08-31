@@ -51,7 +51,7 @@
         }
 
         .td-list-group-item {
-            height: 75px;
+            height: 85px;
             color: $black;
             padding: 10px;
 
@@ -69,7 +69,7 @@
             span {
                 line-height: 22px;
                 display: -webkit-box;
-                -webkit-line-clamp: 2;
+                -webkit-line-clamp: 3;
                 -webkit-box-orient: vertical;
                 overflow: hidden;
             }
