@@ -25,7 +25,8 @@
 /web/uploads/
 /web/BingSiteAuth.xml
 /web/google33e2b6000dc649d2.html
+/web/list-non-index.txt
+/web/ads.txt
 web/sitemap.xml
 *.sql
-web/ads.txt
 *.webp

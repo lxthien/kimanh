@@ -4,5 +4,6 @@ Disallow: /admin
 Disallow: /wp-content
 Disallow: /wp-json
 Disallow: /cdn-cgi
+Disallow: /*?*
 
 Sitemap: https://xaydungkimanh.com/sitemap.xml

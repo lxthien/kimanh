@@ -11,7 +11,9 @@ CKEDITOR.editorConfig = function( config ) {
     config.htmlEncodeOutput = false;
     config.entities = false;
     config.basicEntities = false;
+    config.tabSpaces = 0;
     config.allowedContent = true;
+    config.fillEmptyBlocks = false;
     config.extraPlugins = "toc";
     config.toolbar_MyEditor =
     [

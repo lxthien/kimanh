@@ -18,7 +18,7 @@ class Builder implements ContainerAwareInterface
             ),
         ));
 
-        $menu->addChild('<i class="fa fa-home"></i>', [
+        $menu->addChild('<span class="hidden">Trang chủ</span><i class="fa fa-home"></i>', [
             'route' => 'homepage',
             'extras' => ['safe_label' => true]
         ])

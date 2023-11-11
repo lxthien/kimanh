@@ -2,9 +2,9 @@
 
 {% block stylesheets %}
     <link href="{{ asset('build/css/news.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
-    <link href="{{ asset('build/css/new.css?v=') ~ date().timestamp }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
+    <link href="{{ asset('build/css/new.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
     <noscript><link rel="stylesheet" href="{{ asset('build/css/news.css') }}" ></noscript>
-    <noscript><link rel="stylesheet" href="{{ asset('build/css/new.css?v=') ~ date().timestamp }}" ></noscript>
+    <noscript><link rel="stylesheet" href="{{ asset('build/css/new.css') }}" ></noscript>
 {% endblock %}
 
 {% block title %}{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}{% endblock %}
@@ -74,10 +74,33 @@
                 {# breadcrumbs #}
                 {{ include('news/components/breadcrumbs.html.twig') }}
 
-                <article id="post-{{ post.getId() }}" class="news">
-                    <h1 class="entry-title block-title">{{ post.getTitle() }}</h1>
+                <article id="post-{{ post.getId() }}" class="news" itemscope itemtype="http://schema.org/Article">
+                    {# Begin google snippet #}
+                    <meta itemscope itemprop="mainEntityOfPage" itemType="https://schema.org/WebPage" itemid="{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}"/>
+                    <div itemprop="author" itemscope itemtype="https://schema.org/Person">
+                        <meta itemprop="name" content="{{ get_setting('siteName') }}"/>
+                        <meta itemprop="url" content="https://xaydungkimanh.business.site/"/>
+                    </div>
+                    <div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
+                        <meta itemprop="url" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}">
+                        <meta itemprop="width" content="800">
+                        <meta itemprop="height" content="420">
+                    </div>
+                    <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
+                        <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+                            <meta itemprop="url" content="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}">
+                            <meta itemprop="width" content="274">
+                            <meta itemprop="height" content="99">
+                        </div>
+                        <meta itemprop="name" content="{{ get_setting('siteName') }}">
+                    </div>
+                    <meta itemprop="datePublished" content="{{ post.getCreatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}"/>
+                    <meta itemprop="dateModified" content="{{ post.getUpdatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}"/>
+                    {# End google snippet #}
 
-                    <div class="news-container">
+                    <h1 class="entry-title block-title" itemprop="headline"><a href="#">{{ post.getTitle() }}</a></h1>
+
+                    <div class="news-container" itemprop="articleBody">
                         {{ contentsLazy|replace({'50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh':'C40 - KDC Hiệp Thành - Nguyễn Thị Búp, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh', '088.609.4455':'0966.289.559'})|raw }}
                     </div>
 

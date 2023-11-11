@@ -24,110 +24,152 @@
                 </ul>
                 <div class="event-footer row">
                     <div class="col-12 col-sm-12 col-md-12">
-                        <div class="event-footer-item" itemtype="http://schema.org/Event" itemscope="">
-                            <meta content="⭐Bảng giá sửa nhà" itemprop="name">
-                            <meta content="⭐Bảng giá sửa nhà" itemprop="description">
-                            <a href="{{ path('news_show', {'slug': 'bao-gia-sua-chua-nha-moi-nhat' }) }}" itemprop="url">
-                                <span>⭐Bảng giá sửa nhà</span>
+                        <div class="event-footer-item">
+                            <a href="{{ path('news_show', {'slug': 'bao-gia-sua-chua-nha-moi-nhat' }) }}">
+                                <span>⭐ Giá sửa nhà trọn gói</span>
                             </a>
-                            <meta content="2023-01-01T4:00-05:00" itemprop="startDate">
-                            <meta content="2025-01-01T4:00-05:00" itemprop="endDate">
-                            <meta content="https://schema.org/OnlineEventAttendanceMode" itemprop="eventAttendanceMode">
-                            <meta content="https://schema.org/EventScheduled" itemprop="eventStatus">
-                            <meta content="{{ asset('assets/images/logo.png') }}" itemprop="image">
-                            <div itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                <meta content="☎️ Báo Giá 0974.776.305" itemprop="name">
-                                <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-                                    <meta content="C40 - KDC Hiệp Thành - Nguyễn Thị Búp, P. Hiệp Thành, Quận 12" itemprop="streetAddress">
-                                    <meta content="Ho Chi Minh" itemprop="addressLocality">
-                                    <meta content="VN" itemprop="addressRegion">
-                                    <meta content="70000" itemprop="postalCode">
-                                </div>
-                            </div>
-                            <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                                <meta content="{{ path('news_show', {'slug': 'bao-gia-sua-chua-nha-moi-nhat' }) }}" itemprop="url">
-                                <meta content="0" itemprop="price">
-                                <meta content="VND" itemprop="priceCurrency">
-                                <meta content="https://schema.org/InStock" itemprop="availability">
-                                <meta content="2023-01-01T4:00" itemprop="validFrom">
-                            </div>
-                            <div itemprop="performer" itemscope itemtype="http://schema.org/Person">
-                                <meta content="Xây Dựng Kim Anh" itemprop="name">
-                            </div>
-                            <div itemprop="organizer" itemscope itemtype="http://schema.org/Organization">
-                                <meta content="Xây Dựng Kim Anh" itemprop="name">
-                                <meta content="https://xaydungkimanh.com/" itemprop="url">
-                            </div>
+                            <script type="application/ld+json">
+                            {
+                                "@context": "https://schema.org",
+                                "@type": "Event",
+                                "name": "⭐ Giá sửa nhà trọn gói",
+                                "startDate": "2023-01-01T4:00-05:00",
+                                "endDate": "2025-01-01T4:00-05:00",
+                                "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                                "eventStatus": "https://schema.org/EventScheduled",
+                                "location": {
+                                    "@type": "Place",
+                                    "name": "☎️ Báo Giá 0974.776.305",
+                                    "address": {
+                                        "@type": "PostalAddress",
+                                        "streetAddress": "C40 - KDC Hiệp Thành - Nguyễn Thị Búp, P. Hiệp Thành, Quận 12",
+                                        "addressLocality": "Ho Chi Minh",
+                                        "postalCode": "700000",
+                                        "addressRegion": "VN",
+                                        "addressCountry": "VN"
+                                    }
+                                },
+                                "image": [
+                                    "{{ asset('assets/images/logo.png') }}"
+                                ],
+                                "description": "⭐ Giá sửa nhà trọn gói",
+                                "offers": {
+                                    "@type": "Offer",
+                                    "url": "{{ path('news_show', {'slug': 'bao-gia-sua-chua-nha-moi-nhat' }) }}",
+                                    "price": "0",
+                                    "priceCurrency": "VND",
+                                    "availability": "https://schema.org/InStock",
+                                    "validFrom": "2023-01-01T4:00"
+                                },
+                                "performer": {
+                                    "@type": "PerformingGroup",
+                                    "name": "Xây Dựng Kim Anh"
+                                },
+                                "organizer": {
+                                    "@type": "Organization",
+                                    "name": "Xây Dựng Kim Anh",
+                                    "url": "https://xaydungkimanh.com/"
+                                }
+                            }
+                            </script>
                         </div>
-                        <div class="event-footer-item" itemtype="http://schema.org/Event" itemscope="">
-                            <meta content="⭐Bảng giá xây nhà" itemprop="name">
-                            <meta content="⭐Bảng giá xây nhà" itemprop="description">
-                            <a href="{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi-moi-nhat' }) }}" itemprop="url">
-                                <span>⭐Bảng giá xây nhà</span>
+                        <div class="event-footer-item">
+                            <a href="{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi-moi-nhat' }) }}">
+                                <span>⭐ Giá xây nhà trọn gói</span>
                             </a>
-                            <meta content="2023-02-02T5:00-05:00" itemprop="startDate">
-                            <meta content="2025-02-02T5:00-05:00" itemprop="endDate">
-                            <meta content="https://schema.org/OnlineEventAttendanceMode" itemprop="eventAttendanceMode">
-                            <meta content="https://schema.org/EventScheduled" itemprop="eventStatus">
-                            <meta content="{{ asset('assets/images/logo.png') }}" itemprop="image">
-                            <div itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                <meta content="☎️ Báo Giá 0974.776.305" itemprop="name">
-                                <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-                                    <meta content="C40 - KDC Hiệp Thành - Nguyễn Thị Búp, P. Hiệp Thành, Quận 12" itemprop="streetAddress">
-                                    <meta content="Ho Chi Minh" itemprop="addressLocality">
-                                    <meta content="VN" itemprop="addressRegion">
-                                    <meta content="70000" itemprop="postalCode">
-                                </div>
-                            </div>
-                            <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                                <meta content="{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi-moi-nhat' }) }}" itemprop="url">
-                                <meta content="4300000" itemprop="price">
-                                <meta content="VND" itemprop="priceCurrency">
-                                <meta content="https://schema.org/InStock" itemprop="availability">
-                                <meta content="2023-02-02T5:00" itemprop="validFrom">
-                            </div>
-                            <div itemprop="performer" itemscope itemtype="http://schema.org/Person">
-                                <meta content="Xây Dựng Kim Anh" itemprop="name">
-                            </div>
-                            <div itemprop="organizer" itemscope itemtype="http://schema.org/Organization">
-                                <meta content="Xây Dựng Kim Anh" itemprop="name">
-                                <meta content="https://xaydungkimanh.com/" itemprop="url">
-                            </div>
+                            <script type="application/ld+json">
+                            {
+                                "@context": "https://schema.org",
+                                "@type": "Event",
+                                "name": "⭐ Giá xây nhà trọn gói",
+                                "startDate": "2023-02-02T5:00-05:00",
+                                "endDate": "2025-02-02T5:00-05:00",
+                                "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                                "eventStatus": "https://schema.org/EventScheduled",
+                                "location": {
+                                    "@type": "Place",
+                                    "name": "☎️ Báo Giá 0974.776.305",
+                                    "address": {
+                                        "@type": "PostalAddress",
+                                        "streetAddress": "C40 - KDC Hiệp Thành - Nguyễn Thị Búp, P. Hiệp Thành, Quận 12",
+                                        "addressLocality": "Ho Chi Minh",
+                                        "postalCode": "700000",
+                                        "addressRegion": "VN",
+                                        "addressCountry": "VN"
+                                    }
+                                },
+                                "image": [
+                                    "{{ asset('assets/images/logo.png') }}"
+                                ],
+                                "description": "⭐ Giá xây nhà trọn gói",
+                                "offers": {
+                                    "@type": "Offer",
+                                    "url": "{{ path('news_show', {'slug': 'bao-gia-xay-nha-tron-goi-moi-nhat' }) }}",
+                                    "price": "4950000",
+                                    "priceCurrency": "VND",
+                                    "availability": "https://schema.org/InStock",
+                                    "validFrom": "2023-02-02T5:00"
+                                },
+                                "performer": {
+                                    "@type": "PerformingGroup",
+                                    "name": "Xây Dựng Kim Anh"
+                                },
+                                "organizer": {
+                                    "@type": "Organization",
+                                    "name": "Xây Dựng Kim Anh",
+                                    "url": "https://xaydungkimanh.com/"
+                                }
+                            }
+                            </script>
                         </div>
-                        <div class="event-footer-item" itemtype="http://schema.org/Event" itemscope="">
-                            <meta content="⭐Xây nhà phần thô" itemprop="name">
-                            <meta content="⭐Xây nhà phần thô" itemprop="description">
-                            <a href="{{ path('news_show', {'slug': 'bang-bao-gia-xay-nha-phan-tho-moi-nhat' }) }}" itemprop="url">
-                                <span>⭐Xây nhà phần thô</span>
+                        <div class="event-footer-item">
+                            <a href="{{ path('news_show', {'slug': 'bang-bao-gia-xay-nha-phan-tho-moi-nhat' }) }}">
+                                <span>⭐ Giá xây nhà phần thô</span>
                             </a>
-                            <meta content="2023-03-03T6:00-05:00" itemprop="startDate">
-                            <meta content="2025-03-03T6:00-05:00" itemprop="endDate">
-                            <meta content="https://schema.org/OnlineEventAttendanceMode" itemprop="eventAttendanceMode">
-                            <meta content="https://schema.org/EventScheduled" itemprop="eventStatus">
-                            <meta content="{{ asset('assets/images/logo.png') }}" itemprop="image">
-                            <div itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                <meta content="☎️ Báo Giá 0974.776.305" itemprop="name">
-                                <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-                                    <meta content="C40 - KDC Hiệp Thành - Nguyễn Thị Búp, P. Hiệp Thành, Quận 12" itemprop="streetAddress">
-                                    <meta content="Ho Chi Minh" itemprop="addressLocality">
-                                    <meta content="VN" itemprop="addressRegion">
-                                    <meta content="70000" itemprop="postalCode">
-                                </div>
-                            </div>
-                            <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                                <meta content="{{ path('news_show', {'slug': 'bang-bao-gia-xay-nha-phan-tho-moi-nhat' }) }}" itemprop="url">
-                                <meta content="4300000" itemprop="price">
-                                <meta content="VND" itemprop="priceCurrency">
-                                <meta content="https://schema.org/InStock" itemprop="availability">
-                                <meta content="2023-03-03T6:00" itemprop="validFrom">
-                            </div>
-                            <div itemprop="performer" itemscope itemtype="http://schema.org/Person">
-                                <meta content="Xây Dựng Kim Anh" itemprop="name">
-                            </div>
-                            <div itemprop="organizer" itemscope itemtype="http://schema.org/Organization">
-                                <meta content="Xây Dựng Kim Anh" itemprop="name">
-                                <meta content="https://xaydungkimanh.com/" itemprop="url">
-                            </div>
+                            <script type="application/ld+json">
+                            {
+                                "@context": "https://schema.org",
+                                "@type": "Event",
+                                "name": "⭐ Giá xây nhà phần thô",
+                                "startDate": "2023-03-03T6:00-05:00",
+                                "endDate": "2025-03-03T6:00-05:00",
+                                "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                                "eventStatus": "https://schema.org/EventScheduled",
+                                "location": {
+                                    "@type": "Place",
+                                    "name": "☎️ Báo Giá 0974.776.305",
+                                    "address": {
+                                        "@type": "PostalAddress",
+                                        "streetAddress": "C40 - KDC Hiệp Thành - Nguyễn Thị Búp, P. Hiệp Thành, Quận 12",
+                                        "addressLocality": "Ho Chi Minh",
+                                        "postalCode": "700000",
+                                        "addressRegion": "VN",
+                                        "addressCountry": "VN"
+                                    }
+                                },
+                                "image": [
+                                    "{{ asset('assets/images/logo.png') }}"
+                                ],
+                                "description": "⭐ Giá xây nhà phần thô",
+                                "offers": {
+                                    "@type": "Offer",
+                                    "url": "{{ path('news_show', {'slug': 'bang-bao-gia-xay-nha-phan-tho-moi-nhat' }) }}",
+                                    "price": "3300000",
+                                    "priceCurrency": "VND",
+                                    "availability": "https://schema.org/InStock",
+                                    "validFrom": "2023-03-03T6:00"
+                                },
+                                "performer": {
+                                    "@type": "PerformingGroup",
+                                    "name": "Xây Dựng Kim Anh"
+                                },
+                                "organizer": {
+                                    "@type": "Organization",
+                                    "name": "Xây Dựng Kim Anh",
+                                    "url": "https://xaydungkimanh.com/"
+                                }
+                            }
+                            </script>
                         </div>
                     </div>
                 </div>
@@ -176,13 +218,16 @@
         </div>
         <div class="row footer-middle">
             <div class="col-12 col-md-12 col-lg-12">
-                <img
-                    class="lazyload"
-                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                    data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}"
-                    alt="{{ get_setting('siteName') }}"
-                    width="293"
-                    height="106" />
+                <a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
+                    <img
+                        class="lazyload"
+                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                        data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}"
+                        alt="{{ get_setting('siteName') }}"
+                        width="293"
+                        height="106"
+                    />
+                </a>
                 <div class="footer-text-wrap  text-center">
                     <p>Xây Dựng Kim Anh : Công ty, nhà thầu xây dựng chuyên thi công xây dựng nhà phố, biệt thự, sửa chữa nhà uy tín và chất lượng tại Thành phố Hồ Chí Minh. Chúng tôi luôn mang đến sự hài lòng đến toàn thể quý khách hàng đã tin tưởng đến công ty. Công ty chúng tôi rất hân hạnh khi được làm việc với toàn thể quý khách hàng đã tin tưởng chúng tôi.</p>
                 </div>
