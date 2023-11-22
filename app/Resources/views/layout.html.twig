@@ -51,12 +51,18 @@
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
         
-        {% block robots %}
-        <meta name="robots" content="index, follow" />
-        {% endblock %}
+        {% block robots %}<meta name="robots" content="index, follow" />{% endblock %}
         <meta name="revisit-after" content="1 days">
         <meta name="google" content="notranslate" />
         <meta http-equiv="content-language" content="vi">
+        <meta name="author" content="Xây Dựng Kim Anh">
+        <meta name="copyright" content="Xây Dựng Kim Anh [xaydungkimanh@gmail.com]">
+        <meta name="DC.title" content="{{ block('title') }}">
+        <meta name="geo.region" content="VN" />
+        <meta name="geo.placename" content="C40 - KDC Hiệp Thành - Nguyễn Thị Búp, Hiệp Thành, Quận 12, Hồ Chí Minh" />
+        <meta name="geo.position" content="10.874693185096623;106.63002070835866" />
+        <meta name="ICBM" content="10.874693185096623;106.63002070835866">
+        <meta name="DC.identifier" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}">
 
         {% if app.request.attributes.get('_route') is not null %}
         <link rel="canonical" href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}"/>

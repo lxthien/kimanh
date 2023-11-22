@@ -2,11 +2,11 @@
 <html ⚡ lang="{{ app.request.locale }}">
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
         <title>{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}</title>
         <meta name="description" content="{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}">
         <meta name="keywords" content="{{ post.getPageKeyword() }}">
         <link rel="canonical" href="{{ url('news_show', { slug: post.getUrl() }) }}">
-        <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org/",
@@ -388,6 +388,12 @@
                                 </li>
                                 <li>
                                     <a href="{{ path('news_category', {'level1': 'phong-thuy-xay-dung' }) }}" title="Phong thủy xây dựng">Phong thủy xây dựng</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('news_show', {'slug': 'chinh-sach-bao-mat-thong-tin' }) }}" title="Chính sách bảo mật thông tin">Chính sách bảo mật thông tin</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('news_show', {'slug': 'dieu-khoan-dich-vu' }) }}" title="Điều khoản dịch vụ">Điều khoản dịch vụ</a>
                                 </li>
                             </ul>
                         </div>
