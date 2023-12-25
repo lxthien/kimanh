@@ -136,6 +136,13 @@ class News
     /**
      * @var string
      *
+     * @ORM\Column(name="relatedNews", type="string", length=255, nullable=true)
+     */
+    private $relatedNews = null;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="contactHotline", type="text", nullable=true)
      */
     private $contactHotline = null;
@@ -490,6 +497,18 @@ class News
     public function getPageKeyword()
     {
         return $this->pageKeyword;
+    }
+
+    public function setRelatedNews($relatedNews)
+    {
+        $this->relatedNews = $relatedNews;
+
+        return $this;
+    }
+
+    public function getRelatedNews()
+    {
+        return $this->relatedNews;
     }
 
     public function setContactHotline($contactHotline)

@@ -62,8 +62,10 @@
         <meta name="geo.placename" content="C40 - KDC Hiệp Thành - Nguyễn Thị Búp, Hiệp Thành, Quận 12, Hồ Chí Minh" />
         <meta name="geo.position" content="10.874693185096623;106.63002070835866" />
         <meta name="ICBM" content="10.874693185096623;106.63002070835866">
+        {% if app.request.attributes.get('_route') is not null %}
         <meta name="DC.identifier" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}">
-
+        {% endif %}
+        
         {% if app.request.attributes.get('_route') is not null %}
         <link rel="canonical" href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}"/>
         {% endif %}

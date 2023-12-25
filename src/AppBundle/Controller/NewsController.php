@@ -205,6 +205,10 @@ class NewsController extends Controller
                 ->getRepository(NewsCategory::class)
                 ->find($categoryPrimary);
 
+            $ordering = $category->getSortBy() == null ? '{"createdAt":"DESC"}' : $category->getSortBy();
+            $orderingData = (array)(json_decode($ordering));
+            $orderingKey = array_keys($orderingData);
+
             // Get news related
             $relatedNews = $this->getDoctrine()
                 ->getRepository(News::class)
@@ -218,8 +222,8 @@ class NewsController extends Controller
                 ->setParameter('id', $post->getId())
                 ->setParameter('postType', $post->getPostType())
                 ->setParameter('enable', 1)
-                ->setMaxResults( 8 )
-                ->orderBy('r.createdAt', 'DESC')
+                ->setMaxResults( 12 )
+                ->orderBy('r.'.$orderingKey[0], $orderingData[$orderingKey[0]])
                 ->getQuery()
                 ->getResult();
         }
@@ -604,6 +608,39 @@ class NewsController extends Controller
             );
 
         $response = $this->render('news/hot.html.twig', [
+            'posts' => $posts,
+        ]);
+
+        // cache for 3600 seconds
+        $response->setSharedMaxAge(3600);
+
+        // (optional) set a custom Cache-Control directive
+        $response->headers->addCacheControlDirective('must-revalidate', true);
+
+        return $response;
+    }
+
+    /**
+     * Render list related news in sidebar
+     * @return News
+     */
+    public function relatedNewsAction($relatedNews)
+    {
+        $posts = $this->getDoctrine()
+            ->getRepository(News::class)
+            ->createQueryBuilder('p')
+            ->where('p.title LIKE :q')
+            ->andWhere('p.enable = :enable')
+            ->andWhere('p.postType = :postType')
+            ->setParameter('q', '%'.$relatedNews.'%')
+            ->setParameter('enable', 1)
+            ->setParameter('postType', 'post')
+            ->orderBy('p.createdAt', 'DESC')
+            ->setMaxResults( 25 )
+            ->getQuery()
+            ->getResult();
+
+        $response = $this->render('news/relatedNews.html.twig', [
             'posts' => $posts,
         ]);
 

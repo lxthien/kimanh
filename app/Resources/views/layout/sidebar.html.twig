@@ -3,7 +3,11 @@
         <div class="col-md-12">
             <div class="sidebar">
                 {{ include('news/prices.html.twig') }}
+                {% if post is not empty and post.getRelatedNews() is not null %}
+                {{ include('widgets/relatedNews.html.twig') }}
+                {% else %}
                 {{ include('widgets/hotNews.html.twig') }}
+                {% endif %}
                 {{ include('widgets/recentNews.html.twig') }}
                 {{ render(controller(
                     'AppBundle:News:sidebarPosts',

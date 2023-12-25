@@ -284,6 +284,10 @@
                 <source>label.pageKeyword</source>
                 <target>Page keyword</target>
             </trans-unit>
+            <trans-unit id="label.relatedNews">
+                <source>label.relatedNews</source>
+                <target>Tin cùng chủ đề</target>
+            </trans-unit>
             <trans-unit id="label.status">
                 <source>label.status</source>
                 <target>Status</target>
