@@ -353,6 +353,10 @@ class NewsController extends Controller
                 ->getRepository(NewsCategory::class)
                 ->find($categoryPrimary);
 
+            $ordering = $category->getSortBy() == null ? '{"createdAt":"DESC"}' : $category->getSortBy();
+            $orderingData = (array)(json_decode($ordering));
+            $orderingKey = array_keys($orderingData);
+            
             // Get news related
             $relatedNews = $this->getDoctrine()
                 ->getRepository(News::class)
@@ -367,7 +371,7 @@ class NewsController extends Controller
                 ->setParameter('postType', $post->getPostType())
                 ->setParameter('enable', 1)
                 ->setMaxResults( 8 )
-                ->orderBy('r.createdAt', 'DESC')
+                ->orderBy('r.'.$orderingKey[0], $orderingData[$orderingKey[0]])
                 ->getQuery()
                 ->getResult();
         }
