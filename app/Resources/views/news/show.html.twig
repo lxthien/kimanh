@@ -21,7 +21,7 @@
 {% endif %}
 
 {% block structuredOpenGraph %}
-    <link rel="amphtml" href="{{ url('amp_show', { slug: post.getUrl() }) }}">
+    {# <link rel="amphtml" href="{{ url('amp_show', { slug: post.getUrl() }) }}"> #}
     <meta property="og:type" content="article" />
     <meta property="og:title" content="{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}" />
     <meta property="og:description" content="{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}" />
@@ -101,7 +101,7 @@
                     <meta itemprop="dateModified" content="{{ post.getUpdatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}"/>
                     {# End google snippet #}
 
-                    <h1 class="entry-title block-title" itemprop="headline"><a href="#">{{ post.getTitle() }}</a></h1>
+                    <h1 class="entry-title block-title" itemprop="headline">{{ post.getTitle() }}</h1>
 
                     <div class="news-container" itemprop="articleBody">
                         {{ contentsLazy|replace({'50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh':'C40 - KDC Hiệp Thành - Nguyễn Thị Búp, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh', '088.609.4455':'0966.289.559'})|raw }}
