@@ -281,8 +281,8 @@ exports.init = function () {
     initProtectedContent();
     initGoToTop();
     initFixedMenu();
-    initFixedSidebar();
-    initCostConstruction();
+    //initFixedSidebar();
+    //initCostConstruction();
     initFancybox();
     initTypewriterEffect();
 };
