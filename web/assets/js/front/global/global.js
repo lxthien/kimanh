@@ -105,12 +105,12 @@ function initFixedMenu() {
 function initFixedSidebar() {
     $(window).scroll(function() {
         var $sidebar = $("#sidebar .sidebar"),
-            $pageDetail = $('.page-detail'),
+            $pageDetail = $('.page-detail-container'),
             scrollTop = $(this).scrollTop(),
             pageDetailHeight =  $pageDetail.outerHeight(),
             sidebarHeight = $sidebar.height(),
             positionFixedMax = pageDetailHeight - sidebarHeight,
-            positionFixed = scrollTop < 65 ? 65 : positionFixedMax > scrollTop ? 65 : positionFixedMax - scrollTop + 160;
+            positionFixed = scrollTop < 65 ? 65 : positionFixedMax > scrollTop ? 65 : positionFixedMax - scrollTop + 200;
         
         if (scrollTop > 160) {
             $sidebar.css({
@@ -281,7 +281,7 @@ exports.init = function () {
     initProtectedContent();
     initGoToTop();
     initFixedMenu();
-    //initFixedSidebar();
+    initFixedSidebar();
     //initCostConstruction();
     initFancybox();
     initTypewriterEffect();

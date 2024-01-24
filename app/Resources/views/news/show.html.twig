@@ -69,11 +69,9 @@
 {% block body %}
     <div class="container wrapper-container page-detail">
         <div class="row">
-            {# Side bar #}
             {{ include('layout/sidebar.html.twig') }}
 
             <div class="col-12 col-md-12 col-lg-9 page-detail-container">
-                {# breadcrumbs #}
                 {{ include('news/components/breadcrumbs.html.twig') }}
 
                 <article id="post-{{ post.getId() }}" class="news">
@@ -90,9 +88,6 @@
                     <div class="rating-share-container">
                         {{ include('news/rating/rating.html.twig') }}
                     </div>
-
-                    {# Related news #}
-                    {{ include('news/components/related.html.twig') }}
                     
                     {# List comments #}
                     {# {{ include('news/comments/list.html.twig') }} #}
@@ -100,6 +95,10 @@
                     {# Render form comment #}
                     {# {{ include('news/comments/form.html.twig') }} #}
                 </article>
+            </div>
+
+            <div class="col-12 col-md-12 col-lg-12">
+                {{ include('news/components/related.html.twig') }}
             </div>
         </div>
     </div>
