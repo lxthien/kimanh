@@ -41,6 +41,16 @@
                                             {{ form_widget(settings_form.googleAnalytic) }}
                                         </div>
                                         <div class="form-group">
+                                            {{ form_label(settings_form.fbApp) }}
+                                            {{ form_errors(settings_form.fbApp) }}
+                                            {{ form_widget(settings_form.fbApp) }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_label(settings_form.GTM) }}
+                                            {{ form_errors(settings_form.GTM) }}
+                                            {{ form_widget(settings_form.GTM) }}
+                                        </div>
+                                        <div class="form-group">
                                             {{ form_label(settings_form.ampGTM) }}
                                             {{ form_errors(settings_form.ampGTM) }}
                                             {{ form_widget(settings_form.ampGTM) }}

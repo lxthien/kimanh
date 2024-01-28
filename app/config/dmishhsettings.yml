@@ -66,6 +66,14 @@ dmishh_settings:
                 required: false
                 attr:
                     rows: 7
+        fbApp:
+            type: Symfony\Component\Form\Extension\Core\Type\TextType
+            options:
+                required: false
+        GTM:
+            type: Symfony\Component\Form\Extension\Core\Type\TextType
+            options:
+                required: false
         ampGTM:
             type: Symfony\Component\Form\Extension\Core\Type\TextType
             options:

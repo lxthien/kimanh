@@ -38,6 +38,7 @@
 {% endblock %}
 
 {% block structuredReview %}
+    {% if ratingCount > 0 %}
     <script type="application/ld+json">
     {
         "@context": "https://schema.org/",
@@ -52,6 +53,7 @@
         }
     }
     </script>
+    {% endif %}
 {% endblock %}
 
 {% block contactHotline %}

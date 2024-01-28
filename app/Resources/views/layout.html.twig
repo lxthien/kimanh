@@ -81,7 +81,7 @@
             <meta property="og:url" content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
         {% endif %}
         <meta property="og:site_name" content="{{ get_setting('siteName') }}" />
-        <meta property="fb:app_id" content="1479532332779174" />
+        <meta property="fb:app_id" content="{{ get_setting('fbApp') }}" />
         <!-- Open Graph data -->
 
         <!-- Twitter Card data -->
@@ -105,14 +105,36 @@
 
         {{ get_setting('googleAnalytic')|raw }}
 
-        <!-- Google Tag Manager -->
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-W23BJ8Q');</script>
-        <!-- End Google Tag Manager -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => { /** init gtm after 3500 seconds - this could be adjusted */
+                setTimeout(initGTM, 3500);
+            });
+            document.addEventListener('scroll', initGTMOnEvent);
+            document.addEventListener('mousemove', initGTMOnEvent);
+            document.addEventListener('touchstart', initGTMOnEvent);
 
+            function initGTMOnEvent(event) {
+                initGTM();
+                event.currentTarget.removeEventListener(event.type, initGTMOnEvent); // remove the event listener that got triggered
+            }
+            
+            function initGTM() {
+                if (window.gtmDidInit) {
+                    return false;
+                }
+                window.gtmDidInit = true; // flag to ensure script does not get added to DOM more than once.
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.async = true;
+                // ensure PageViews is always tracked (on script load)
+                script.onload = () => {
+                    dataLayer.push({event: 'gtm.js', 'gtm.start': new Date().getTime(), 'gtm.uniqueEventId': 0});
+                };
+                script.src = 'https://www.googletagmanager.com/gtm.js?id={{ get_setting('GTM') }}';
+                document.head.appendChild(script);
+            }
+        </script>
+        <!-- End Google Tag Manager -->
         <!-- Custom css -->
         <link
             rel="preload"
@@ -135,7 +157,7 @@
     </head>
     <body>
         <!-- Google Tag Manager (noscript) -->
-        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W23BJ8Q"
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ get_setting('GTM') }}"
         height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <!-- End Google Tag Manager (noscript) -->
 
