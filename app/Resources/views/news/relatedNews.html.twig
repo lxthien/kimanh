@@ -19,9 +19,8 @@
                                 alt="{{ row.getTitle() }}"
                                 width="70"
                                 height="65"
-                                class="img-responsive lazyload"
-                                src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
+                                loading="lazy"
+                                src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
                             <span>{{ row.getTitle() }}</span>
                         </a>
                     </h2>

@@ -14,10 +14,58 @@
                         </div>
 
                         <div class="collapse navbar-collapse" id="navbar-collapse">
-                            {# <div class="skew-divider"></div> #}
-                            {{ knp_menu_render('AppBundle:Builder:mainMenu', {
-                                'allow_safe_labels': true,
-                            })|raw }}
+                            <ul class="nav navbar-nav">
+                                <li class="first">
+                                    <a href="/" class="home" aria-label="Xây Dựng Kim Anh">
+                                        <span class="hidden">Trang chủ</span>
+                                        <i class="fa fa-home" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="/gioi-thieu.html" class="dropdown-toggle" data-toggle="dropdown">Giới thiệu</a>
+                                    <ul class="dropdown-menu menu_level_1">
+                                        <li class="first">
+                                            <a href="/gioi-thieu.html">Về chúng tôi</a>
+                                        </li>
+                                        <li class="last">
+                                            <a href="/tuyen-dung-kien-truc-su-xay-dung.html">Tuyển dụng</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="/xay-dung-nha-pho">Xây nhà</a>
+                                </li>
+                                <li>
+                                    <a href="/sua-chua-nha-dep">Sửa chữa nhà</a>
+                                </li>
+                                <li>
+                                    <a href="/thiet-ke-nha-pho">Thiết kế</a>
+                                </li>
+                                <li>
+                                    <a href="/bang-gia">Bảng giá</a>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="/du-an" class="dropdown-toggle" data-toggle="dropdown">Dự án</a>
+                                    <ul class="dropdown-menu menu_level_1">
+                                        <li class="first">
+                                            <a href="/du-an/du-an-xay-dung-nha-pho">Xây dựng nhà phố</a>
+                                        </li>
+                                        <li class="last">
+                                            <a href="/du-an/du-an-sua-chua-nha">Sửa chữa nhà</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="/tu-van">Tư vấn</a>
+                                </li>
+                                <li>
+                                    <a href="/y-kien-khach-hang">Ý kiến khách hàng</a>
+                                </li>
+                                <li class="last">
+                                    <a href="/lien-he">Liên hệ</a>
+                                </li>
+                            </ul>
+
                             <form class="navbar-form navbar-right" action="{{ path('news_search') }}" method="get">
                                 <div class="form-group">
                                     <input name="q" type="text" class="form-control" placeholder="{{ 'search'|trans }}">
