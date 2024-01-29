@@ -19,7 +19,7 @@
                                 alt="{{ row.getTitle() }}"
                                 width="70"
                                 height="65"
-                                loading="lazy"
+                                {{ loop.index != 1 ? 'loading="lazy"' : '' }}
                                 src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
                             <span>{{ row.getTitle() }}</span>
                         </a>

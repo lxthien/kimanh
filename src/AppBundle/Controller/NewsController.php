@@ -510,12 +510,12 @@ class NewsController extends Controller
 
             $src = !is_bool($this->convertImages->webpConvert2($src, '')) ? $this->convertImages->webpConvert2($src, '') : $src;
 
-            $img->setAttribute('data-src', $src);
+            $img->setAttribute('src', $src);
+            $img->setAttribute('loading', 'lazy');
+            $img->setAttribute('width', !empty($width) ? $width > 850 ? 850 : $width : 500);
+            $img->setAttribute('height', !empty($height) ? $width > 850 ? round(($height*850)/$width) : $height : 500);
+            
             $img->setAttribute('alt', $alt);
-            $img->setAttribute('width', !empty($width) ? $width > 870 ? 870 : $width : 500);
-            $img->setAttribute('height', !empty($height) ? $width > 870 ? round(($height*870)/$width) : $height : 500);
-            $img->setAttribute('class', 'lazyload');
-            $img->setAttribute('src', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
         }
         
         $newContent = html_entity_decode($dom->saveHTML());
