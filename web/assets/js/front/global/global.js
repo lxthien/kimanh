@@ -92,7 +92,7 @@ function initFixedMenu() {
         var $scrollUp = $('.td-scroll-up');
         var scroll = $(window).scrollTop();
     
-        if (scroll > 120) {
+        if (scroll > 160) {
             $nav.addClass("navbar-fixed-top");
             $scrollUp.removeClass("hidden");
         } else {
