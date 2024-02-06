@@ -74,6 +74,11 @@
 
             a {
                 padding: 0 5px;
+
+                img {
+                    background: $white;
+                    border-radius: 20px;
+                }
             }
         }
     }

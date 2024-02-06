@@ -140,6 +140,9 @@
         </script>
         <!-- End Google Tag Manager -->
         <!-- Custom css -->
+        <style type="text/css">
+            {{ source('@web/css/first.css', ignore_missing = true) }}
+        </style>
         <link href="{{ asset('build/css/app.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
         <noscript><link rel="stylesheet" href="{{ asset('build/css/app.css') }}" ></noscript>
         {% block stylesheets %}

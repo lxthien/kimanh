@@ -16,19 +16,19 @@
                         <a href="mailto:xaydungkimanh@gmail.com">xaydungkimanh@gmail.com</a>
                     </span>
                     <a target="_blank" href="{{ get_setting('linkToFacebook') }}" title="Xây Dựng Kim Anh trên Facebook" rel="noreferrer">
-                        <i class="fab fa-facebook"></i>
+                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/facebook.png'), '')) }}" alt="Xây Dựng Kim Anh trên Facebook" width="20" height="20" />
                     </a>
                     <a target="_blank" href="{{ get_setting('linkToInstagram') }}" title="Xây Dựng Kim Anh trên Instagram" rel="noreferrer">
-                        <i class="fab fa-instagram"></i>
+                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/instagram.png'), '')) }}" alt="Xây Dựng Kim Anh trên Instagram" width="20" height="20" />
                     </a>
                     <a target="_blank" href="{{ get_setting('linkToTwitter') }}" title="Xây Dựng Kim Anh trên Twitter" rel="noreferrer">
-                        <i class="fab fa-twitter"></i>
+                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/twitter.png'), '')) }}" alt="Xây Dựng Kim Anh trên Twitter" width="20" height="20" />
                     </a>
                     <a target="_blank" href="{{ get_setting('linkToYoutube') }}" title="Xây Dựng Kim Anh trên Youtube" rel="noreferrer">
-                        <i class="fab fa-youtube"></i>
+                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/youtube.png'), '')) }}" alt="Xây Dựng Kim Anh trên Youtube" width="20" height="20" />
                     </a>
                     <a target="_blank" href="{{ get_setting('linkToLinkedin') }}" title="Xây Dựng Kim Anh trên Linkedin" rel="noreferrer">
-                        <i class="fab fa-linkedin"></i>
+                        <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/linkedin.png'), '')) }}" alt="Xây Dựng Kim Anh trên Linkedin" width="20" height="20" />
                     </a>
                 </div>
             </div>
@@ -64,7 +64,9 @@
                     <div class="info-top hotline-top">
                         <div class="wp90 pull-right">
                             <div class="info-nd">
-                                <p class="tel text-uppercase"><i class="fas fa-mobile-alt"></i> <a href="tel:0974776305">0974776305</a></p>
+                                <p class="tel text-uppercase">
+                                    <a href="tel:0974776305"><img class="icon-price" src="{{ asset(convert_images.webpConvert2(asset('/assets/images/hotline.jpg'), '')) }}" alt="{{ get_setting('siteName') }}" width="125" height="17" /></a>
+                                </p>
                             </div>
                         </div>
                     </div>
