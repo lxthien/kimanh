@@ -6,10 +6,10 @@
                 <div class="row">
                     {% for row in relatedNews %}
                         {% set imagePath = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) %}
-                        {% set imagePathFilter = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_406_400') %}
+                        {% set imagePathFilter = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_554_400') %}
                                                 
                         {% if convert_images.fileExists(imagePath) == false %}
-                            {% set imagePath = imagePath | imagine_filter('news_406_400') %}
+                            {% set imagePath = imagePath | imagine_filter('news_554_400') %}
                         {% else %}
                             {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
                         {% endif %}
@@ -17,20 +17,25 @@
                         <div class="col-xs-12 col-sm-4 col-md-3">
                             <div class="related-wrapper">
                                 <div class="related-img">
-                                    <img
-                                        width="203"
-                                        height="140"
-                                        class="img-thumbnail lazyload"
-                                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                        data-src="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
-                                        alt="{{row.getTitle()}}" />
                                     {% if category is defined %}
                                         <a href="{{ path('news_show', {'slug': row.getUrl(), 'danh-muc': category.getUrl() }) }}" title="{{ row.getTitle() }}">
-                                            <i class="fa fa-link"></i>
+                                            <img
+                                                width="277"
+                                                height="200"
+                                                class="img-thumbnail"
+                                                loading="lazy"
+                                                src="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
+                                                alt="{{row.getTitle()}}" />
                                         </a>
                                     {% else %}
                                         <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
-                                            <i class="fa fa-link"></i>
+                                            <img
+                                                width="277"
+                                                height="200"
+                                                class="img-thumbnail"
+                                                loading="lazy"
+                                                src="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
+                                                alt="{{row.getTitle()}}" />
                                         </a>
                                     {% endif %}
                                 </div>
@@ -120,20 +125,25 @@
                     <div class="col-xs-12 col-sm-4 col-md-3">
                         <div class="related-wrapper">
                             <div class="related-img">
-                                <img
-                                    width="203"
-                                    height="140"
-                                    class="img-thumbnail lazyload"
-                                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                    data-src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_406_280') }}"
-                                    alt="{{row.getTitle()}}" />
                                 {% if category is defined %}
                                     <a href="{{ path('news_show', {'slug': row.getUrl(), 'danh-muc': category.getUrl() }) }}" title="{{ row.getTitle() }}">
-                                        <i class="fa fa-link"></i>
+                                        <img
+                                            width="277"
+                                            height="200"
+                                            class="img-thumbnail"
+                                            loading="lazy"
+                                            src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_554_400') }}"
+                                            alt="{{row.getTitle()}}" />
                                     </a>
                                 {% else %}
                                     <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
-                                        <i class="fa fa-link"></i>
+                                        <img
+                                            width="277"
+                                            height="200"
+                                            class="img-thumbnail"
+                                            loading="lazy"
+                                            src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_554_400') }}"
+                                            alt="{{row.getTitle()}}" />
                                     </a>
                                 {% endif %}
                             </div>

@@ -279,44 +279,7 @@
                 }
 
                 a {
-                    position: absolute;
-                    width: 100%;
-                    height: 100%;
-                    top: 0;
-                    left: 0;
-                    background-color: rgba(0, 0, 0, 0.5);
-                    overflow: hidden;
-                    opacity: 0;
-                    -webkit-transition: all 0.4s ease;
-                    -moz-transition: all 0.4s ease;
-                    -ms-transition: all 0.4s ease;
-                    transition: all 0.4s ease;
-
-                    i {
-                        display: block;
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        width: 50px;
-                        height: 50px;
-                        line-height: 46px;
-                        font-size: 1.3em;
-                        border: 2px solid #fff;
-                        color: #fff;
-                        text-align: center;
-                        -webkit-border-radius: 50%;
-                        -moz-border-radius: 50%;
-                        -ms-border-radius: 50%;
-                        border-radius: 50%;
-                        -webkit-transform: translate(-50%, -50%) rotate(270deg);
-                        -moz-transform: translate(-50%, -50%) rotate(270deg);
-                        -ms-transform: translate(-50%, -50%) rotate(270deg);
-                        transform: translate(-50%, -50%) rotate(270deg);
-                        -webkit-transition: all 0.4s ease;
-                        -moz-transition: all 0.4s ease;
-                        -ms-transition: all 0.4s ease;
-                        transition: all 0.4s ease;
-                    }
+                    display: block;
                 }
             }
     

@@ -1,9 +1,15 @@
+@import "global/fonts";
+
 #nav {
     overflow: hidden;
 
     @media only screen and (min-width: 979.98px) {
         max-height: 47px;
     }
+}
+
+#nav .nav-container .navbar .navbar-collapse ul li a {
+    font-family: $robotoCondesed;
 }
 
 .slogin {
@@ -19,5 +25,14 @@
                 margin-bottom: 0;
             }
         }
+    }
+}
+
+.hotline {
+    font-family: $robotoCondesed;
+
+    @media only screen and (min-width: 979.98px) {
+        max-height: 50px;
+        overflow: hidden;
     }
 }

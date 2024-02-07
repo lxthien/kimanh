@@ -192,6 +192,10 @@ liip_imagine:
             quality: 75
             filters:
                 thumbnail: { size: [406, 400], mode: outbound }
+        news_554_400:
+            quality: 75
+            filters:
+                thumbnail: { size: [554, 400], mode: outbound }
         news_345_250:
             quality: 75
             filters:
