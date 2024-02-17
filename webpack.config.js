@@ -16,6 +16,7 @@ Encore
     .addEntry('js/search', './web/assets/js/admin/search.js')
     .addEntry('js/login', './web/assets/js/admin/login.js')
     .addStyleEntry('css/app', ['./web/assets/scss/front/app.scss'])
+    .addStyleEntry('css/first', ['./web/assets/scss/front/first.scss'])
     .addStyleEntry('css/homepage', ['./web/assets/scss/front/homepage.scss'])
     .addStyleEntry('css/news', ['./web/assets/scss/front/news.scss'])
     .addStyleEntry('css/list', ['./web/assets/scss/front/list.scss'])
