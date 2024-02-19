@@ -501,7 +501,6 @@ class NewsController extends Controller
         libxml_use_internal_errors($internalErrors);
 
         $imgs = $dom->getElementsByTagName('img');
-        $index = 0;
 
         foreach ( $imgs as $img) {
             $src = $img->getAttribute('src');
@@ -512,15 +511,10 @@ class NewsController extends Controller
             $src = !is_bool($this->convertImages->webpConvert2($src, '')) ? $this->convertImages->webpConvert2($src, '') : $src;
 
             $img->setAttribute('src', $src);
+            $img->setAttribute('loading', 'lazy');
             $img->setAttribute('width', !empty($width) ? $width > 800 ? 800 : $width : 500);
             $img->setAttribute('height', !empty($height) ? $width > 800 ? round(($height*800)/$width) : $height : 500);
             $img->setAttribute('alt', $alt);
-
-            if ($index > 0) {
-                $img->setAttribute('loading', 'lazy');
-            }
-
-            $index++;
         }
         
         $newContent = html_entity_decode($dom->saveHTML());
