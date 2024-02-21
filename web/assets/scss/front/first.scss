@@ -1,6 +1,8 @@
 @import "global/fonts";
 
 #nav {
+    overflow: hidden;
+    
     @media only screen and (min-width: 979.98px) {
         max-height: 47px;
     }
@@ -27,7 +29,7 @@
 }
 
 .hotline {
-    font-family: $robotoCondesed;
+    font-family: $arial;
 
     @media only screen and (min-width: 979.98px) {
         max-height: 50px;

@@ -18,7 +18,7 @@ var app = {
 $(document).ready(function () {
     app.init();
 
-    $('#nav').removeAttr("style");
+    $('#nav').css('overflow','visible');
 
     var video_wrapper = $('.youtube-video-place');
     

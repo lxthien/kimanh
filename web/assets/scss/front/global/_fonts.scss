@@ -140,8 +140,10 @@
 
 @font-face {
     font-family: "Roboto Condensed-fallback";
-    size-adjust: 117.1%;
-    ascent-override: 86%;
+    ascent-override: 100%;
+    descent-override: 20%;
+    line-gap-override: normal;
+    advance-override: 10;
     src: local("Arial");
 }
 
