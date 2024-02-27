@@ -15,6 +15,10 @@
     <meta property="og:description" content="{{ category.getPageDescription() ~ ' - Trang ' ~ pagination.currentPageNumber }}" />
 {% endblock %}
 
+{% block robots %}
+<meta name="robots" content="noindex,follow" />
+{% endblock %}
+
 {% block body %}
     {# breadcrumbs #}
     {{ include('news/components/breadcrumbs.html.twig',

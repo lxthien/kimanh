@@ -15,6 +15,10 @@
 <meta property="og:description" content="{{ 'post.archives.description'|trans({'%description%': tag.getPageDescription() is not null ? tag.getPageDescription() : tag.getName(), '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}" />
 {% endblock %}
 
+{% block robots %}
+<meta name="robots" content="noindex,follow" />
+{% endblock %}
+
 {% block body %}
     {# breadcrumbs #}
     {{ include('news/components/breadcrumbs.html.twig', {type: 'category', title: tag.getName(), description: tag.getContents() }) }}
