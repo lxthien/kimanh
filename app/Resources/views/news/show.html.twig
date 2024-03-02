@@ -37,25 +37,6 @@
     <meta property="twitter:image" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
 {% endblock %}
 
-{% block structuredReview %}
-    {% if ratingCount > 0 %}
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org/",
-        "@type": "CreativeWorkSeries",
-        "name": "{{ post.getTitle() }}",
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "{{ rating }}",
-            "ratingCount": "{{ ratingCount ? ratingCount : 1 }}",
-            "bestRating" : "5",
-            "worstRating": "1"
-        }
-    }
-    </script>
-    {% endif %}
-{% endblock %}
-
 {% block contactHotline %}
     {% if post.getContactHotline() is empty %}
         <div class="hotline">
@@ -87,9 +68,9 @@
                     {{ include('news/components/tags.html.twig') }}
 
                     {# Rating and Share #}
-                    <div class="rating-share-container">
+                    {# <div class="rating-share-container">
                         {{ include('news/rating/rating.html.twig') }}
-                    </div>
+                    </div> #}
                     
                     {# List comments #}
                     {# {{ include('news/comments/list.html.twig') }} #}

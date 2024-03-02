@@ -13,6 +13,16 @@
     <meta property="og:type" content="object" />
     <meta property="og:title" content="{{ (category.getPageTitle() is not null ? category.getPageTitle() : category.getName()) ~ ' - Trang ' ~ pagination.currentPageNumber }}" />
     <meta property="og:description" content="{{ category.getPageDescription() ~ ' - Trang ' ~ pagination.currentPageNumber }}" />
+    {% if pagination.currentPageNumber == 1 and pagination.pageCount > 1 %}
+        <link rel="next" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber + 1) }}" />
+    {% endif %}
+    {% if pagination.currentPageNumber > 1 and pagination.currentPageNumber < pagination.pageCount %}
+        <link rel="prev" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber - 1) }}" />
+        <link rel="next" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber + 1) }}" />
+    {% endif %}
+    {% if pagination.currentPageNumber == pagination.pageCount and pagination.pageCount > 1 %}
+        <link rel="prev" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber - 1) }}" />
+    {% endif %}
 {% endblock %}
 
 {% block robots %}

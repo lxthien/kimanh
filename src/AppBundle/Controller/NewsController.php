@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Entity\News;
@@ -146,6 +147,7 @@ class NewsController extends Controller
         );
 
         return $this->render('news/list.html.twig', [
+            'baseUrl' => !empty($level2) ? $this->generateUrl('list_category', array('level1' => $level1, 'level2' => $level2), UrlGeneratorInterface::ABSOLUTE_URL) : $this->generateUrl('news_category', array('level1' => $level1), UrlGeneratorInterface::ABSOLUTE_URL),
             'category' => !empty($level2) ? $subCategory : $category,
             'listCategories' => count($listCategories) > 0 ? $listCategories : NULL,
             'pagination' => $pagination
@@ -242,16 +244,16 @@ class NewsController extends Controller
         $form = $this->renderFormComment($post);
 
         // Render form rating for post.
-        $formRating = $this->createFormBuilder(null, array(
+        /* $formRating = $this->createFormBuilder(null, array(
                 'csrf_protection' => false,
             ))
             ->setAction($this->generateUrl('rating'))
             ->add('rating', RatingType::class)
-            ->getForm();
+            ->getForm(); */
 
 
         // Get rating of the post
-        $repositoryRating = $this->getDoctrine()->getManager();
+        /* $repositoryRating = $this->getDoctrine()->getManager();
 
         $queryRating = $repositoryRating->createQuery(
             'SELECT AVG(r.rating) as ratingValue, COUNT(r) as ratingCount
@@ -259,7 +261,7 @@ class NewsController extends Controller
             WHERE r.news_id = :news_id'
         )->setParameter('news_id', $post->getId());
 
-        $rating = $queryRating->setMaxResults(1)->getOneOrNullResult();
+        $rating = $queryRating->setMaxResults(1)->getOneOrNullResult(); */
 
         // Init breadcrum for the post
         $breadcrumbs = $this->buildBreadcrums(null, $post, null, $categoryPrimary);
@@ -276,11 +278,6 @@ class NewsController extends Controller
                 'post'          => $post,
                 'contentsLazy'  => $contentsLazy,
                 'form'          => $form->createView(),
-                'formRating'    => $formRating->createView(),
-                'rating'        => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
-                'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),
-                'ratingValue'   => round($rating['ratingValue']),
-                'ratingCount'   => round($rating['ratingCount']),
                 'comments'      => $comments,
                 'imageSize'     => $imageSize
             ]);
@@ -294,11 +291,6 @@ class NewsController extends Controller
                 'contentsLazy'  => $contentsLazy,
                 'relatedNews'   => !empty($relatedNews) ? $relatedNews : NULL,
                 'form'          => $form->createView(),
-                'formRating'    => $formRating->createView(),
-                'rating'        => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
-                'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),
-                'ratingValue'   => round($rating['ratingValue']),
-                'ratingCount'   => round($rating['ratingCount']),
                 'comments'      => $comments,
                 'imageSize'     => $imageSize,
                 'category'     => !empty($category) ? $category : NULL
@@ -564,6 +556,7 @@ class NewsController extends Controller
         $breadcrumbs->addItem('Tags > ' . $tag->getName());
 
         return $this->render('news/tags.html.twig', [
+            'baseUrl' => $this->generateUrl('tags', array('slug' => $slug), UrlGeneratorInterface::ABSOLUTE_URL),
             'tag' => $tag,
             'pagination' => $pagination
         ]);
@@ -803,6 +796,7 @@ class NewsController extends Controller
         $breadcrumbs->addItem(ucfirst($request->query->get('q')));
 
         return $this->render('news/search.html.twig', [
+            'baseUrl' => $this->generateUrl('news_search', array('q' => $request->query->get('q')), UrlGeneratorInterface::ABSOLUTE_URL),
             'q' => ucfirst($request->query->get('q')),
             'pagination' => $pagination
         ]);

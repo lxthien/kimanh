@@ -10,9 +10,19 @@
 {% block keyword %}{{ tag.getPageKeyword() }}{% endblock %}
 
 {% block structuredOpenGraph %}
-<meta property="og:type" content="object" />
-<meta property="og:title" content="{{ 'post.archives.title'|trans({'%title%': tag.getPageTitle() is not null ? tag.getPageTitle() : tag.getName(), '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}" />
-<meta property="og:description" content="{{ 'post.archives.description'|trans({'%description%': tag.getPageDescription() is not null ? tag.getPageDescription() : tag.getName(), '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}" />
+    <meta property="og:type" content="object" />
+    <meta property="og:title" content="{{ 'post.archives.title'|trans({'%title%': tag.getPageTitle() is not null ? tag.getPageTitle() : tag.getName(), '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}" />
+    <meta property="og:description" content="{{ 'post.archives.description'|trans({'%description%': tag.getPageDescription() is not null ? tag.getPageDescription() : tag.getName(), '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}" />
+    {% if pagination.currentPageNumber == 1 and pagination.pageCount > 1 %}
+        <link rel="next" href="{{ baseUrl ~ '?page=' ~ (pagination.currentPageNumber + 1) }}" />
+    {% endif %}
+    {% if pagination.currentPageNumber > 1 and pagination.currentPageNumber < pagination.pageCount %}
+        <link rel="prev" href="{{ baseUrl ~ '?page=' ~ (pagination.currentPageNumber - 1) }}" />
+        <link rel="next" href="{{ baseUrl ~ '?page=' ~ (pagination.currentPageNumber + 1) }}" />
+    {% endif %}
+    {% if pagination.currentPageNumber == pagination.pageCount and pagination.pageCount > 1 %}
+        <link rel="prev" href="{{ baseUrl ~ '?page=' ~ (pagination.currentPageNumber - 1) }}" />
+    {% endif %}
 {% endblock %}
 
 {% block robots %}
