@@ -506,7 +506,7 @@ class NewsController extends Controller
             $img->setAttribute('loading', 'lazy');
             $img->setAttribute('width', !empty($width) ? $width > 800 ? 800 : $width : 500);
             $img->setAttribute('height', !empty($height) ? $width > 800 ? round(($height*800)/$width) : $height : 500);
-            $img->setAttribute('alt', $alt);
+            $img->setAttribute('alt', !empty($alt) ? $alt : $post->getTitle());
         }
         
         $newContent = html_entity_decode($dom->saveHTML());
