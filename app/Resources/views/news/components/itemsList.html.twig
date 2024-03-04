@@ -1,4 +1,4 @@
-<li class="media news-item-list" itemscope itemtype="http://schema.org/Article">
+<li class="media news-item-list" itemscope itemtype="https://schema.org/Article">
     <meta itemscope itemprop="mainEntityOfPage"  itemType="https://schema.org/WebPage" itemid="{{ absolute_url(path('news_show', {'slug': row.getUrl() })) }}"/>
     <a class="media-thumb" title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl() }) }}" itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
         <img class="mr-3 img-thumbnail" src="{{ (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) | imagine_filter('news_thumb') }}" alt="{{row.getTitle()}}">
