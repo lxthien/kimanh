@@ -1,8 +1,8 @@
 {% extends 'layout.html.twig' %}
 
 {% block stylesheets %}
-    <link href="{{ asset('build/css/list.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
-    <noscript><link rel="stylesheet" href="{{ asset('build/css/list.css') }}" ></noscript>
+    <link href="{{ absolute_url(asset('build/css/list.css')) }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
+    <noscript><link rel="stylesheet" href="{{ absolute_url(asset('build/css/list.css')) }}" ></noscript>
 {% endblock %}
 
 {% block title %}{{ (category.getPageTitle() is not null ? category.getPageTitle() : category.getName()) ~ ' - Trang ' ~ pagination.currentPageNumber }}{% endblock %}

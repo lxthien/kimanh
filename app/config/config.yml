@@ -64,7 +64,7 @@ framework:
 
 # Twig Configuration (used for rendering application templates)
 twig:
-    cache: '%kernel.cache_dir%/twig'
+    cache: false
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:

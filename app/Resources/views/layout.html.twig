@@ -139,19 +139,19 @@
             }
         </script>
         <!-- End Google Tag Manager -->
-        <link rel="preload" href="/build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-19-7DRs5.woff2" crossorigin="anonymous" as="font" type="font/woff2">
-        <link rel="preload" href="/build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-19a7DRs5.woff2" crossorigin="anonymous" as="font" type="font/woff2">
-        <link rel="preload" href="/build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-19G7DRs5.woff2" crossorigin="anonymous" as="font" type="font/woff2">
-        <link rel="preload" href="/build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-19K7DQ.woff2" crossorigin="anonymous" as="font" type="font/woff2">
-        <link rel="preload" href="/build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-19y7DRs5.woff2" crossorigin="anonymous" as="font" type="font/woff2">
-        <link rel="preload" href="/build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-1927DRs5.woff2" crossorigin="anonymous" as="font" type="font/woff2">
-        <link rel="preload" href="/build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-1967DRs5.woff2" crossorigin="anonymous" as="font" type="font/woff2">
+        <link rel="preload" href="{{ absolute_url(asset('build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-19-7DRs5.woff2')) }}" crossorigin="anonymous" as="font" type="font/woff2">
+        <link rel="preload" href="{{ absolute_url(asset('build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-19a7DRs5.woff2')) }}" crossorigin="anonymous" as="font" type="font/woff2">
+        <link rel="preload" href="{{ absolute_url(asset('build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-19G7DRs5.woff2')) }}" crossorigin="anonymous" as="font" type="font/woff2">
+        <link rel="preload" href="{{ absolute_url(asset('build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-19K7DQ.woff2')) }}" crossorigin="anonymous" as="font" type="font/woff2">
+        <link rel="preload" href="{{ absolute_url(asset('build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-19y7DRs5.woff2')) }}" crossorigin="anonymous" as="font" type="font/woff2">
+        <link rel="preload" href="{{ absolute_url(asset('build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-1927DRs5.woff2')) }}" crossorigin="anonymous" as="font" type="font/woff2">
+        <link rel="preload" href="{{ absolute_url(asset('build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-1967DRs5.woff2')) }}" crossorigin="anonymous" as="font" type="font/woff2">
         <!-- Custom css -->
         <style type="text/css">
             {{ source('@web/css/first.css', ignore_missing = true) }}
         </style>
-        <link href="{{ asset('build/css/app.css') }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
-        <noscript><link rel="stylesheet" href="{{ asset('build/css/app.css') }}" ></noscript>
+        <link href="{{ absolute_url(asset('build/css/app.css')) }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
+        <noscript><link rel="stylesheet" href="{{ absolute_url(asset('build/css/app.css')) }}" ></noscript>
         {% block stylesheets %}
         {% endblock %}
     </head>
