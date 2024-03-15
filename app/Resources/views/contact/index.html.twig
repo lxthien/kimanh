@@ -18,9 +18,7 @@
 {% block body %}
     <div class="container contacts page-detail">
         <div class="row">
-            {{ include('layout/sidebar.html.twig') }}
-
-            <div class="col-xs-12 col-sm-12 col-md-9">
+            <div class="col-xs-12 col-sm-12 col-md-9 page-detail-container">
                 {{ include('news/components/breadcrumbs.html.twig') }}
 
                 <div class="company">
@@ -67,6 +65,8 @@
                 {{ form_widget(form) }}
                 {{ form_end(form) }}
             </div>
+
+            {{ include('layout/sidebar.html.twig') }}
         </div>
     </div>
 {% endblock %}

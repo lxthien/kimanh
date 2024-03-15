@@ -52,8 +52,6 @@
 {% block body %}
     <div class="container wrapper-container page-detail">
         <div class="row">
-            {{ include('layout/sidebar.html.twig') }}
-
             <div class="col-12 col-md-12 col-lg-9 page-detail-container">
                 {{ include('news/components/breadcrumbs.html.twig') }}
 
@@ -79,6 +77,8 @@
                     {# {{ include('news/comments/form.html.twig') }} #}
                 </article>
             </div>
+
+            {{ include('layout/sidebar.html.twig') }}
 
             <div class="col-12 col-md-12 col-lg-12">
                 {{ include('news/components/related.html.twig') }}
