@@ -2,9 +2,9 @@
 
 {% block stylesheets %}
     <link href="{{ absolute_url(asset('build/css/news.css')) }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
-    <link href="{{ absolute_url(asset('build/css/new.css?v=')) ~ date().timestamp }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
+    <link href="{{ absolute_url(asset('build/css/new.css')) }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
     <noscript><link rel="stylesheet" href="{{ absolute_url(asset('build/css/news.css')) }}" ></noscript>
-    <noscript><link rel="stylesheet" href="{{ absolute_url(asset('build/css/new.css?v=')) ~ date().timestamp }}" ></noscript>
+    <noscript><link rel="stylesheet" href="{{ absolute_url(asset('build/css/new.css')) }}" ></noscript>
 {% endblock %}
 
 {% block title %}{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}{% endblock %}
@@ -63,7 +63,7 @@
                     </div>
 
                     {# List tags #}
-                    {{ include('news/components/tags.html.twig') }}
+                    {# {{ include('news/components/tags.html.twig') }} #}
 
                     {# Rating and Share #}
                     {# <div class="rating-share-container">

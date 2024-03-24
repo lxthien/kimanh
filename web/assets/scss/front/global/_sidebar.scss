@@ -1,4 +1,20 @@
 #sidebar {
+    @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+        display: none;
+    }
+
+    @media all and (device-width: 1024px) and (device-height: 768px) and (orientation:landscape) {
+        display: none;
+    }
+
+    @media all and (device-width: 1024px) and (device-height: 1366px) and (orientation:portrait) {
+        display: none;
+    }
+
+    @media all and (device-width: 1180px) and (device-height: 820px) and (orientation:landscape) {
+        display: none;
+    }
+
     .sidebar {
         position: relative;
 
