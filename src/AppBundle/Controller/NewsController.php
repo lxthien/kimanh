@@ -228,6 +228,12 @@ class NewsController extends Controller
                 ->orderBy('r.'.$orderingKey[0], $orderingData[$orderingKey[0]])
                 ->getQuery()
                 ->getResult();
+            
+            if ($category->getParentcat() === 'root') {
+                $categoryUrl = $this->generateUrl("news_category", array('level1' => $category->getUrl()), UrlGeneratorInterface::ABSOLUTE_URL);
+            } else {
+                $categoryUrl = $this->generateUrl("list_category", array('level1' => $category->getParentcat()->getUrl(), 'level2' => $category->getUrl()), UrlGeneratorInterface::ABSOLUTE_URL);
+            }
         }
 
         // Get the list comment for post
@@ -293,7 +299,8 @@ class NewsController extends Controller
                 'form'          => $form->createView(),
                 'comments'      => $comments,
                 'imageSize'     => $imageSize,
-                'category'     => !empty($category) ? $category : NULL
+                'category'      => !empty($category) ? $category : NULL,
+                'categoryUrl'   => $categoryUrl
             ]);
         }
     }

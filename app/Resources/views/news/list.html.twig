@@ -59,7 +59,11 @@
                                 {% for cat in listCategories %}
                                     <div class="col-xs-6 col-sm-4 col-md-3">
                                         <div class="category-item">
+                                            {% if cat.getUrlReplace() != NULL %}
+                                            <a href="{{ cat.getUrlReplace() }}">{{ cat.getName() }}</a>
+                                            {% else %}
                                             <a href="{{ path('list_category', {'level1': category.getUrl(), 'level2': cat.getUrl() }) }}">{{ cat.getName() }}</a>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 {% endfor %}

@@ -33,6 +33,10 @@ class NewsCategoryType extends AbstractType
                 'attr' => ['class' => 'url', 'readonly' => 'readonly'],
                 'label' => 'label.url',
             ])
+            ->add('urlReplace', TextType::class, [
+                'attr' => ['class' => 'url'],
+                'label' => 'URL thay thế',
+            ])
             ->add('description', TextareaType::class, [
                 'attr' => ['class' => 'txt-ckeditor', 'data-height' => '300'],
                 'label' => 'label.description',

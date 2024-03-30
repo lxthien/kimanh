@@ -13,6 +13,7 @@
 
 {% set imagePath = (vich_uploader_asset(post, 'imageFile') ? vich_uploader_asset(post, 'imageFile') : absolute_url(asset('assets/images/no-image.png'))) %}
 {% set imagePathFilter = (vich_uploader_asset(post, 'imageFile') ? vich_uploader_asset(post, 'imageFile') : absolute_url(asset('assets/images/no-image.png'))) | imagine_filter('news_share_800_420') %}
+{% set userPath = asset('/assets/images/user.png') | imagine_filter('user') %}
 
 {% if convert_images.fileExists(imagePath) == false %}
     {% set imagePath = imagePath | imagine_filter('news_share_800_420') %}
@@ -47,6 +48,81 @@
     {% else %}
         {{ post.getContactHotline()|raw }}
     {% endif %}
+{% endblock %}
+
+{% block blogPosting %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "WebPage",
+        "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage",
+        "url": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}",
+        "name": "{{ post.getTitle() }}",
+        "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
+        "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
+        "isPartOf": {
+            "@id": "https://xaydungkimanh.com/#website"
+        },
+        "primaryImageOfPage": {
+            "@id": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
+        },
+        "inLanguage": "vi-VN"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "BlogPosting",
+        "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#BlogPosting",
+        "mainEntityOfPage": {
+            "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage"
+        },
+        "headline": "{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}",
+        "name": "{{ post.getTitle() }}",
+        "description": "{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}",
+        "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
+        "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
+        "articleSection": "{{ category.getName() }}",
+        "author": {
+            "@type": "Person",
+            "@id": "{{ absolute_url(path('author', {'slug': 'kimanh' })) }}#Person",
+            "name": "Xây Dựng Kim Anh",
+            "url": "{{ absolute_url(path('author', {'slug': 'kimanh' })) }}",
+            "image": {
+                "@type": "ImageObject",
+                "@id": "{{ absolute_url(convert_images.webpConvert(userPath, '', true)) }}",
+                "url": "{{ absolute_url(convert_images.webpConvert(userPath, '', true)) }}",
+                "height": "65",
+                "width": "65"
+            }
+        },
+        "publisher": {
+            "@type": "Organization",
+            "@id": "https://xaydungkimanh.com/",
+            "name": "Xây Dựng Kim Anh",
+            "logo": {
+                "@type": "ImageObject",
+                "@id": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
+                "url": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
+                "width": "274",
+                "height": "99"
+            }
+        },
+        "image": {
+            "@type": "ImageObject",
+            "@id": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}",
+            "url": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}",
+            "height": "800",
+            "width": "420"
+        },
+        "url": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}",
+        "wordCount": "{{ contentsLazy|replace({'50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh':'C40 - KDC Hiệp Thành - Nguyễn Thị Búp, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh', '088.609.4455':'0966.289.559'})|raw|length }}",
+        "inLanguage": "vi-VN",
+        "isPartOf": {
+            "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage"
+        }
+    }
+    </script>
 {% endblock %}
 
 {% block body %}
