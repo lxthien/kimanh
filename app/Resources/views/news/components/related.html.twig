@@ -39,7 +39,7 @@
                                         </a>
                                     {% endif %}
                                 </div>
-                                <h3>
+                                <h4>
                                 {% if category is defined %}
                                     <a class="related-title" href="{{ path('news_show', {'slug': row.getUrl(), 'danh-muc': category.getUrl() }) }}" title="{{ row.getTitle() }}">
                                         {{ row.getTitle() }}
@@ -49,7 +49,7 @@
                                         {{ row.getTitle() }}
                                     </a>
                                 {% endif %}
-                                </h3>
+                                </h4>
                             </div>
                         </div>
                     {% endfor %}
@@ -58,7 +58,7 @@
         {% endif %}
     {% else %}
         <div class="related-news">
-            <h3>Khách hàng đánh giá về chúng tôi</h3>
+            <h2>Khách hàng đánh giá về chúng tôi</h2>
             <div class="row">
                 <div class="col-xs-12 col-sm-3 col-md-3">
                     <div class="related-wrapper video-related">
@@ -147,7 +147,7 @@
                                     </a>
                                 {% endif %}
                             </div>
-                            <h3>
+                            <h4>
                             {% if category is defined %}
                                 <a class="related-title" href="{{ path('news_show', {'slug': row.getUrl(), 'danh-muc': category.getUrl() }) }}" title="{{ row.getTitle() }}">
                                     {{ row.getTitle() }}
@@ -157,7 +157,7 @@
                                     {{ row.getTitle() }}
                                 </a>
                             {% endif %}
-                            </h3>
+                            </h4>
                         </div>
                     </div>
                 {% endfor %}
