@@ -2,7 +2,7 @@
     {% if category.getUrl() != 'bang-gia' %}
         {% if relatedNews|length > 0 %}
             <div class="related-news">
-                <h3>{{ 'news.news_related'|trans }}</h3>
+                <h2>Dịch vụ liên quan</h2>
                 <div class="row">
                     {% for row in relatedNews %}
                         {% set imagePath = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) %}
@@ -39,7 +39,7 @@
                                         </a>
                                     {% endif %}
                                 </div>
-                                <h2>
+                                <h3>
                                 {% if category is defined %}
                                     <a class="related-title" href="{{ path('news_show', {'slug': row.getUrl(), 'danh-muc': category.getUrl() }) }}" title="{{ row.getTitle() }}">
                                         {{ row.getTitle() }}
@@ -49,7 +49,7 @@
                                         {{ row.getTitle() }}
                                     </a>
                                 {% endif %}
-                                </h2>
+                                </h3>
                             </div>
                         </div>
                     {% endfor %}
@@ -119,7 +119,7 @@
             </div>
 
             <br>
-            <h3>Tham khảo bảng giá xây dựng khác</h3>
+            <h2>Bảng báo giá xây dựng liên quan</h2>
             <div class="row">
                 {% for row in relatedNews %}
                     <div class="col-xs-12 col-sm-4 col-md-3">
@@ -147,6 +147,7 @@
                                     </a>
                                 {% endif %}
                             </div>
+                            <h3>
                             {% if category is defined %}
                                 <a class="related-title" href="{{ path('news_show', {'slug': row.getUrl(), 'danh-muc': category.getUrl() }) }}" title="{{ row.getTitle() }}">
                                     {{ row.getTitle() }}
@@ -156,6 +157,7 @@
                                     {{ row.getTitle() }}
                                 </a>
                             {% endif %}
+                            </h3>
                         </div>
                     </div>
                 {% endfor %}

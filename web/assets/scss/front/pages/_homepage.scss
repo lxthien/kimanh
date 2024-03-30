@@ -65,7 +65,7 @@
                     bottom: 28%;
                 }
 
-                h2 {
+                .widget-title-slide {
                     margin: 0 0 5px 0;
                     font-size: 40px;
 
@@ -387,6 +387,7 @@
 
     h2 {
         color: #3c3950;
+        display: block;
 
         @media only screen and (max-width : 768px) {
             font-size: 28px;

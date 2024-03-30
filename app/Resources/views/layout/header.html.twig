@@ -40,7 +40,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4" id="logo_top">
-                <div id="logo">								
+                <div id="logo">
                     <a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
                         <img
                             src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}"
@@ -74,4 +74,14 @@
         </div>
     </div>
 </div>
+
+<header>
+    <a class="hidden-sm hidden-md hidden-lg" href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
+        <img
+            src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}"
+            alt="{{ get_setting('siteName') }}"
+            width="274"
+            height="99">
+    </a>
+</header>
 <!-- End header -->

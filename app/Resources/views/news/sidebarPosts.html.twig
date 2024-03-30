@@ -1,5 +1,5 @@
 <div class="list-group">
-    <h3 class="list-group-item list-group-item-action active text-uppercase">{{ title }}</h3>
+    <div class="list-group-item list-group-item-action active text-uppercase">{{ title }}</div>
     <div class="post-bxslider-wrapper">
         <div class="post-sidebar-bxslider-recent">
             {% for row in posts %}
@@ -13,18 +13,16 @@
                 {% endif %}
                 
                 <div class="item">
-                    <h2>
-                        <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" class="list-group-item td-list-group-item" title="{{ row.getTitle() }}">
-                            <img
-                                alt="{{ row.getTitle() }}"
-                                width="70"
-                                height="65"
-                                class="img-responsive lazyload"
-                                src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                                data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
-                            <span>{{ row.getTitle() }}</span>
-                        </a>
-                    </h2>
+                    <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" class="list-group-item td-list-group-item" title="{{ row.getTitle() }}">
+                        <img
+                            alt="{{ row.getTitle() }}"
+                            width="70"
+                            height="65"
+                            class="img-responsive lazyload"
+                            src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                            data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
+                        <span>{{ row.getTitle() }}</span>
+                    </a>
                 </div>
             {% endfor %}
         </div>

@@ -1,5 +1,25 @@
 @import "global/fonts";
 
+header {
+    a {
+        width: 100%;
+        text-align: center;
+        display: block;
+        margin: 8px auto;
+    }
+}
+
+.cat-widget-title {
+    display: inline-block;
+    margin-bottom: 0;
+}
+
+.widget-title {
+    font-size: 26px;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
 #nav {
     overflow: hidden;
     
