@@ -34,7 +34,11 @@
 {% endblock %}
 
 {% block robots %}
+{% if category.getRobots() != NULL %}
+<meta name="robots" content="{{ category.getRobots() }}" />
+{% else %}
 <meta name="robots" content="follow, noindex" />
+{% endif %}
 {% endblock %}
 
 {% block body %}

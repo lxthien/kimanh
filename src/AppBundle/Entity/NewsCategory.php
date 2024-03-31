@@ -54,7 +54,7 @@ class NewsCategory
     /**
      * @var string
      *
-     * @ORM\Column(name="urlReplace", type="string", length=255)
+     * @ORM\Column(name="urlReplace", type="string", length=255, nullable=true)
      */
     private $urlReplace;
 
@@ -71,6 +71,13 @@ class NewsCategory
      * @ORM\Column(name="enable", type="boolean")
      */
     private $enable = true;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="robots", type="string", length=255, nullable=true)
+     */
+    private $robots = null;
 
     /**
      * @var string
@@ -220,6 +227,18 @@ class NewsCategory
     public function getEnable()
     {
         return $this->enable;
+    }
+
+    public function setRobots($robots)
+    {
+        $this->robots = $robots;
+
+        return $this;
+    }
+
+    public function getRobots()
+    {
+        return $this->robots;
     }
 
     public function setPageTitle($pageTitle)

@@ -34,6 +34,7 @@ class NewsCategoryType extends AbstractType
                 'label' => 'label.url',
             ])
             ->add('urlReplace', TextType::class, [
+                'required' => false,
                 'attr' => ['class' => 'url'],
                 'label' => 'URL thay thế',
             ])
@@ -50,6 +51,10 @@ class NewsCategoryType extends AbstractType
                 'label' => 'label.sortBy',
                 'choices' => ['label.default' => '{"createdAt":"desc"}', 'label.ordering' => '{"ordering":"asc"}'],
                 'empty_data' => '"createdAt":"desc"}'
+            ])
+            ->add('robots', TextType::class, [
+                'required' => false,
+                'label' => 'Robots',
             ])
             ->add('pageTitle', TextType::class, [
                 'required' => false,
