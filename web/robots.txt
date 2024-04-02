@@ -7,3 +7,4 @@ Disallow: /cdn-cgi
 Disallow: /tag/
 Disallow: /search?=*
 Sitemap: https://xaydungkimanh.com/sitemap.xml
+Sitemap: https://xaydungkimanh.com/images_sitemap.xml

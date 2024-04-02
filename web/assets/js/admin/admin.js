@@ -125,11 +125,14 @@ $(function() {
         $('#news_category .checkbox input[type="checkbox"]').change(function() {
             if (!this.checked) {
                 $(this).closest('.checkbox').find('label.label-primary').remove();
+            } else {
+                $(this).parent().parent('.checkbox').append('<label class="label-primary"> <input type="radio" name="categoryPrimary"></input> Chọn làm danh mục chính</label>');
             }
         });
 
-        $('#news_category .checkbox .label-primary input[type="radio"]').change(function() {
+        $(document).on('change', '#news_category .checkbox .label-primary input[type="radio"]', function(e) {
             var categoryId = $(this).closest('.checkbox').find('input[type="checkbox"]').val();
+
             if (categoryId > 0 ) {
                 $('#news_categoryPrimary').val(categoryId);
             }
