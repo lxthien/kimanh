@@ -38,6 +38,14 @@
     <meta property="twitter:image" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
 {% endblock %}
 
+{% block robots %}
+{% if post.getRobots() != NULL %}
+<meta name="robots" content="{{ post.getRobots() }}" />
+{% else %}
+<meta name="robots" content="index, follow" />
+{% endif %}
+{% endblock %}
+
 {% block contactHotline %}
     {% if post.getContactHotline() is empty %}
         <div class="hotline">

@@ -69,6 +69,10 @@ class NewsType extends AbstractType
                 'label' => 'label.tags',
                 'required' => false,
             ])
+            ->add('robots', TextType::class, [
+                'required' => false,
+                'label' => 'Robots',
+            ])
             ->add('pageTitle', TextType::class, [
                 'required' => false,
                 'label' => 'label.pageTitle',

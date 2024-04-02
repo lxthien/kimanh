@@ -6,5 +6,6 @@ Disallow: /wp-json
 Disallow: /cdn-cgi
 Disallow: /tag/
 Disallow: /search?=*
+Disallow: /author/
 Sitemap: https://xaydungkimanh.com/sitemap.xml
 Sitemap: https://xaydungkimanh.com/images_sitemap.xml

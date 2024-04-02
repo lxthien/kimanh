@@ -201,6 +201,13 @@ class News
      */
     private $tags;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="robots", type="string", length=255, nullable=true)
+     */
+    private $robots = null;
+
     public function __toString()
     {
         return (string)$this->getTitle();
@@ -610,5 +617,17 @@ class News
     {
         $comment->setNews(null);
         $this->comments->removeElement($comment);
+    }
+
+    public function setRobots($robots)
+    {
+        $this->robots = $robots;
+
+        return $this;
+    }
+
+    public function getRobots()
+    {
+        return $this->robots;
     }
 }
