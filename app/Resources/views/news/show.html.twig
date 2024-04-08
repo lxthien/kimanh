@@ -39,11 +39,15 @@
 {% endblock %}
 
 {% block robots %}
-{% if post.getRobots() != NULL %}
-<meta name="robots" content="{{ post.getRobots() }}" />
-{% else %}
-<meta name="robots" content="index, follow" />
-{% endif %}
+    {% if urlParameters != NULL %}
+        <meta name="robots" content="follow, noindex" />
+    {% else %}
+        {% if post.getRobots() != NULL %}
+        <meta name="robots" content="{{ post.getRobots() }}" />
+        {% else %}
+        <meta name="robots" content="index, follow" />
+        {% endif %}
+    {% endif %}
 {% endblock %}
 
 {% block contactHotline %}

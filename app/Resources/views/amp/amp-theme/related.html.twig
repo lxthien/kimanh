@@ -17,39 +17,20 @@
                         <div class="col-xs-12 col-sm-4 col-md-3">
                             <div class="related-wrapper">
                                 <div class="related-img">
-                                    {% if category is defined %}
-                                        <a href="{{ path('news_show', {'slug': row.getUrl(), 'danh-muc': category.getUrl() }) }}" title="{{ row.getTitle() }}">
-                                            <amp-img
-                                                alt="{{row.getTitle()}}"
-                                                src="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
-                                                width="406"
-                                                height="280"
-                                                layout="responsive"
-                                            >
-                                            </amp-img>
-                                        </a>
-                                    {% else %}
-                                        <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
-                                            <amp-img
-                                                alt="{{row.getTitle()}}"
-                                                src="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
-                                                width="406"
-                                                height="280"
-                                                layout="responsive"
-                                            >
-                                            </amp-img>
-                                        </a>
-                                    {% endif %}
+                                    <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
+                                        <amp-img
+                                            alt="{{row.getTitle()}}"
+                                            src="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
+                                            width="406"
+                                            height="280"
+                                            layout="responsive"
+                                        >
+                                        </amp-img>
+                                    </a>
                                 </div>
-                                {% if category is defined %}
-                                    <a class="related-title" href="{{ path('news_show', {'slug': row.getUrl(), 'danh-muc': category.getUrl() }) }}" title="{{ row.getTitle() }}">
-                                        {{ row.getTitle() }}
-                                    </a>
-                                {% else %}
-                                    <a class="related-title" href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
-                                        {{ row.getTitle() }}
-                                    </a>
-                                {% endif %}
+                                <a class="related-title" href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
+                                    {{ row.getTitle() }}
+                                </a>
                             </div>
                         </div>
                     {% endfor %}
@@ -135,39 +116,20 @@
                     <div class="col-xs-12 col-sm-4 col-md-3">
                         <div class="related-wrapper">
                             <div class="related-img">
-                                {% if category is defined %}
-                                    <a href="{{ path('news_show', {'slug': row.getUrl(), 'danh-muc': category.getUrl() }) }}" title="{{ row.getTitle() }}">
-                                        <amp-img
-                                            alt="{{row.getTitle()}}"
-                                            src="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
-                                            width="406"
-                                            height="280"
-                                            layout="responsive"
-                                        >
-                                        </amp-img>
-                                    </a>
-                                {% else %}
-                                    <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
-                                        <amp-img
-                                            alt="{{row.getTitle()}}"
-                                            src="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
-                                            width="406"
-                                            height="280"
-                                            layout="responsive"
-                                        >
-                                        </amp-img>
-                                    </a>
-                                {% endif %}
+                                <a href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
+                                    <amp-img
+                                        alt="{{row.getTitle()}}"
+                                        src="{{ imagePath != false ? asset(imagePath) : asset(imagePathFilter) }}"
+                                        width="406"
+                                        height="280"
+                                        layout="responsive"
+                                    >
+                                    </amp-img>
+                                </a>
                             </div>
-                            {% if category is defined %}
-                                <a class="related-title" href="{{ path('news_show', {'slug': row.getUrl(), 'danh-muc': category.getUrl() }) }}" title="{{ row.getTitle() }}">
-                                    {{ row.getTitle() }}
-                                </a>
-                            {% else %}
-                                <a class="related-title" href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
-                                    {{ row.getTitle() }}
-                                </a>
-                            {% endif %}
+                            <a class="related-title" href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}">
+                                {{ row.getTitle() }}
+                            </a>
                         </div>
                     </div>
                 {% endfor %}

@@ -282,7 +282,8 @@ class NewsController extends Controller
                 'comments'      => $comments,
                 'imageSize'     => $imageSize,
                 'category'      => !empty($category) ? $category : NULL,
-                'categoryUrl'   => $categoryUrl
+                'categoryUrl'   => $categoryUrl,
+                'urlParameters' => !empty($request->query->get('danh-muc')) ? $request->query->get('danh-muc') : NULL
             ]);
         }
     }
