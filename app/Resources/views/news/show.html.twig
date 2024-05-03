@@ -14,6 +14,7 @@
 {% set imagePath = (vich_uploader_asset(post, 'imageFile') ? vich_uploader_asset(post, 'imageFile') : absolute_url(asset('assets/images/no-image.png'))) %}
 {% set imagePathFilter = (vich_uploader_asset(post, 'imageFile') ? vich_uploader_asset(post, 'imageFile') : absolute_url(asset('assets/images/no-image.png'))) | imagine_filter('news_share_800_420') %}
 {% set userPath = asset('/assets/images/user.png') | imagine_filter('user') %}
+{% set keywords = post.getPageKeyword() is not null ? post.getPageKeyword()|split(',') : null %}
 
 {% if convert_images.fileExists(imagePath) == false %}
     {% set imagePath = imagePath | imagine_filter('news_share_800_420') %}
@@ -36,6 +37,25 @@
 
 {% block twitterImage %}
     <meta property="twitter:image" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
+{% endblock %}
+
+{% block structuredReview %}
+    {# {% if ratingCount > 0 %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "CreativeWorkSeries",
+        "name": "{{ post.getTitle() }}",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "{{ rating }}",
+            "ratingCount": "{{ ratingCount }}",
+            "bestRating" : "5",
+            "worstRating": "1"
+        }
+    }
+    </script>
+    {% endif %} #}
 {% endblock %}
 
 {% block robots %}
@@ -69,7 +89,7 @@
         "@type": "WebPage",
         "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage",
         "url": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}",
-        "name": "{{ post.getTitle() }}",
+        "name": "{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}",
         "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
         "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
         "isPartOf": {
@@ -78,6 +98,8 @@
         "primaryImageOfPage": {
             "@id": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
         },
+        "description": "{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}",
+        "breadcrumb": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#breadcrumb",
         "inLanguage": "vi-VN"
     }
     </script>
@@ -89,12 +111,13 @@
         "mainEntityOfPage": {
             "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage"
         },
-        "headline": "{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}",
-        "name": "{{ post.getTitle() }}",
+        "headline": "{{ post.getTitle() }}",
+        "name": "{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}",
         "description": "{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}",
         "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
         "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
         "articleSection": "{{ category.getName() }}",
+        "articleBody": "{{ contentsLazy|replace({'50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh':'C40 - KDC Hiệp Thành - Nguyễn Thị Búp, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh', '088.609.4455':'0966.289.559', 'www.xaydungkimanh.com':'xaydungkimanh.com'})|striptags|replace({"\r":" ", "\n":" ", "\t":" "}) }}",
         "author": {
             "@type": "Person",
             "@id": "{{ absolute_url(path('author', {'slug': 'kimanh' })) }}#Person",
@@ -132,7 +155,13 @@
         "inLanguage": "vi-VN",
         "isPartOf": {
             "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage"
-        }
+        }{% if keywords is not null %},
+        "keywords": [
+            {% for keyword in keywords %}
+            "{{ keyword|trim }}"{% if loop.last == false %},{% endif %}
+            {% endfor %}
+        ]
+        {% endif %}
     }
     </script>
 {% endblock %}
@@ -147,16 +176,16 @@
                     <h1 class="entry-title block-title">{{ post.getTitle() }}</h1>
 
                     <div class="news-container">
-                        {{ contentsLazy|replace({'50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh':'C40 - KDC Hiệp Thành - Nguyễn Thị Búp, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh', '088.609.4455':'0966.289.559'})|raw }}
+                        {{ contentsLazy|replace({'50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh':'C40 - KDC Hiệp Thành - Nguyễn Thị Búp, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh', '088.609.4455':'0966.289.559', 'www.xaydungkimanh.com':'xaydungkimanh.com'})|raw }}
                     </div>
 
                     {# List tags #}
                     {# {{ include('news/components/tags.html.twig') }} #}
 
                     {# Rating and Share #}
-                    {# <div class="rating-share-container">
+                    <div class="rating-share-container">
                         {{ include('news/rating/rating.html.twig') }}
-                    </div> #}
+                    </div>
                     
                     {# List comments #}
                     {# {{ include('news/comments/list.html.twig') }} #}

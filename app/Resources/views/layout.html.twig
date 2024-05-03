@@ -101,7 +101,7 @@
         {% endblock %}
         <!-- Twitter Card data -->
 
-        {% block structuredOrganization %}
+        {% block localBusiness %}
         {% endblock %}
 
         {% block structuredWebSite %}
@@ -109,8 +109,23 @@
             {
                 "@context": "https://schema.org",
                 "@type": "WebSite",
-                "name": "Xây Dựng Kim Anh",
+                "@id": "https://xaydungkimanh.com/#website",
                 "url": "https://xaydungkimanh.com/",
+                "name": "Xây Dựng Kim Anh",
+                "alternateName": "Xây Dựng Kim Anh, công ty xây dựng kim anh",
+                "inLanguage": "vi-VN",
+                "publisher": {
+                    "@type": "Organization",
+                    "@id": "https://xaydungkimanh.com/",
+                    "name": "Xây Dựng Kim Anh",
+                    "logo": {
+                        "@type": "ImageObject",
+                        "@id": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
+                        "url": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
+                        "width": "274",
+                        "height": "99"
+                    }
+                },
                 "potentialAction": {
                     "@type": "SearchAction",
                     "target": "https://xaydungkimanh.com/search?q={search_term_string}",
@@ -123,7 +138,8 @@
         {% block blogPosting %}
         {% endblock %}
 
-        {{ get_setting('googleAnalytic')|raw }}
+        {% block structuredReview %}
+        {% endblock %}
 
         <script>
             document.addEventListener('DOMContentLoaded', () => { /** init gtm after 3500 seconds - this could be adjusted */

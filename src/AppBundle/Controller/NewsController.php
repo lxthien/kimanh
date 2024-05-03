@@ -232,16 +232,16 @@ class NewsController extends Controller
         $form = $this->renderFormComment($post);
 
         // Render form rating for post.
-        /* $formRating = $this->createFormBuilder(null, array(
+        $formRating = $this->createFormBuilder(null, array(
                 'csrf_protection' => false,
             ))
             ->setAction($this->generateUrl('rating'))
             ->add('rating', RatingType::class)
-            ->getForm(); */
+            ->getForm();
 
 
         // Get rating of the post
-        /* $repositoryRating = $this->getDoctrine()->getManager();
+        $repositoryRating = $this->getDoctrine()->getManager();
 
         $queryRating = $repositoryRating->createQuery(
             'SELECT AVG(r.rating) as ratingValue, COUNT(r) as ratingCount
@@ -249,7 +249,7 @@ class NewsController extends Controller
             WHERE r.news_id = :news_id'
         )->setParameter('news_id', $post->getId());
 
-        $rating = $queryRating->setMaxResults(1)->getOneOrNullResult(); */
+        $rating = $queryRating->setMaxResults(1)->getOneOrNullResult();
 
         // Init breadcrum for the post
         $breadcrumbs = $this->buildBreadcrums(null, $post, null, $categoryPrimary);
@@ -279,6 +279,11 @@ class NewsController extends Controller
                 'contentsLazy'  => $contentsLazy,
                 'relatedNews'   => !empty($relatedNews) ? $relatedNews : NULL,
                 'form'          => $form->createView(),
+                'formRating'    => $formRating->createView(),
+                'rating'        => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
+                'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),
+                'ratingValue'   => round($rating['ratingValue']),
+                'ratingCount'   => round($rating['ratingCount']),
                 'comments'      => $comments,
                 'imageSize'     => $imageSize,
                 'category'      => !empty($category) ? $category : NULL,

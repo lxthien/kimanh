@@ -1,5 +1,9 @@
 {% extends 'layout.html.twig' %}
 
+{% block robots %}
+<meta name="robots" content="nofollow, noindex" />
+{% endblock %}
+
 {% block body %}
     <h1 class="text-danger">{{ 'http_error.name'|trans({ '%status_code%': 500 }) }}</h1>
 
