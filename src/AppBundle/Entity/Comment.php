@@ -65,10 +65,16 @@ class Comment
     /**
      * @var string
      *
-     * @Assert\NotBlank()
-     * @ORM\Column(name="email", type="text")
+     * @ORM\Column(name="email", type="text", nullable=true)
      */
     private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phone", type="text", nullable=true)
+     */
+    private $phone;
 
     /**
      * @var string
@@ -142,22 +148,11 @@ class Comment
         return $this;
     }
 
-    /**
-     * Get news_id
-     *
-     * @return int
-     */
     public function getNewsId()
     {
         return $this->news_id;
     }
 
-    /**
-     * Set comment_id
-     *
-     * @param int $commentId
-     * @return Comment
-     */
     public function setCommentId($commentId)
     {
         $this->comment_id = $commentId;
@@ -165,22 +160,11 @@ class Comment
         return $this;
     }
 
-    /**
-     * Get comment_id
-     *
-     * @return int
-     */
     public function getCommentId()
     {
         return $this->comment_id;
     }
 
-    /**
-     * Set content
-     *
-     * @param string $content
-     * @return Comment
-     */
     public function setContent($content)
     {
         $this->content = $content;
@@ -188,22 +172,11 @@ class Comment
         return $this;
     }
 
-    /**
-     * Get content
-     *
-     * @return string
-     */
     public function getContent()
     {
         return $this->content;
     }
 
-    /**
-     * Set approved
-     *
-     * @param bool $approved
-     * @return Comment
-     */
     public function setApproved($approved)
     {
         $this->approved = $approved;
@@ -211,22 +184,11 @@ class Comment
         return $this;
     }
 
-    /**
-     * Get approved
-     *
-     * @return bool
-     */
     public function getApproved()
     {
         return $this->approved;
     }
 
-    /**
-     * Set email
-     *
-     * @param string $email
-     * @return Comment
-     */
     public function setEmail($email)
     {
         $this->email = $email;
@@ -234,22 +196,23 @@ class Comment
         return $this;
     }
 
-    /**
-     * Get email
-     *
-     * @return string
-     */
     public function getEmail()
     {
         return $this->email;
     }
 
-    /**
-     * Set author
-     *
-     * @param string $author
-     * @return Comment 
-     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
     public function setAuthor($author)
     {
         $this->author = $author;
@@ -257,22 +220,11 @@ class Comment
         return $this;
     }
 
-    /**
-     * Get author
-     *
-     * @return User
-     */
     public function getAuthor()
     {
         return $this->author;
     }
 
-    /**
-     * Set ip
-     *
-     * @param string $ip
-     * @return Comment
-     */
     public function setIp($ip)
     {
         $this->ip = $ip;
@@ -280,11 +232,6 @@ class Comment
         return $this;
     }
 
-    /**
-     * Get ip
-     *
-     * @return string
-     */
     public function getIp()
     {
         return $this->ip;
