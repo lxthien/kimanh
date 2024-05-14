@@ -7,7 +7,6 @@ Disallow: /cdn-cgi
 Disallow: /tag/
 Disallow: /amp/
 Disallow: /search?=*
-Disallow: /author/
 Disallow: /*?danh-muc=*
 Disallow: /*?filter_by=*
 Disallow: /*?PageSpeed=*

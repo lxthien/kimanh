@@ -105,34 +105,129 @@
         {% endblock %}
 
         {% block structuredWebSite %}
-            <script type="application/ld+json">
+        <script type="application/ld+json">
             {
-                "@context": "https://schema.org",
-                "@type": "WebSite",
-                "@id": "https://xaydungkimanh.com/#website",
-                "url": "https://xaydungkimanh.com/",
-                "name": "Xây Dựng Kim Anh",
-                "alternateName": "Xây Dựng Kim Anh, công ty xây dựng kim anh",
-                "inLanguage": "vi-VN",
-                "publisher": {
-                    "@type": "Organization",
-                    "@id": "https://xaydungkimanh.com/",
-                    "name": "Xây Dựng Kim Anh",
-                    "logo": {
-                        "@type": "ImageObject",
-                        "@id": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
-                        "url": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
-                        "width": "274",
-                        "height": "99"
+                "@context": "http://schema.org",
+                "@graph": [
+                    {
+                        "@type": "Organization",
+                        "@id": "https://xaydungkimanh.com/#organization",
+                        "url": "https://xaydungkimanh.com/",
+                        "name": "Xây Dựng Kim Anh",
+                        "logo": {
+                            "@type": "ImageObject",
+                            "@id": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
+                            "url": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
+                            "width": "274",
+                            "height": "99"
+                        }
+                    },
+                    {
+                        "@context": "https://schema.org",
+                        "@type": "WebSite",
+                        "@id": "https://xaydungkimanh.com/#website",
+                        "url": "https://xaydungkimanh.com/",
+                        "name": "Xây Dựng Kim Anh",
+                        "alternateName": [
+                            "CÔNG TY THIẾT KẾ, XÂY DỰNG NHÀ PHỐ, SỬA CHỮA NHÀ",
+                            "công ty Xây dựng Kim Anh",
+                            "thiết kế nhà Xây dựng Kim Anh",
+                            "xây dựng nhà Xây dựng Kim Anh",
+                            "xây nhà trọn gói Xây dựng Kim Anh",
+                            "sửa chữa nhà Xây dựng Kim Anh",
+                            "dịch vụ sửa nhà Xây dựng Kim Anh",
+                            "sửa nhà trọn gói Xây dựng Kim Anh"
+                        ],
+                        "inLanguage": "vi-VN",
+                        "publisher": {
+                            "@type": "Organization",
+                            "@id": "https://xaydungkimanh.com/#organization"
+                        },
+                        "potentialAction": {
+                            "@type": "SearchAction",
+                            "target": "https://xaydungkimanh.com/search?q={search_term_string}",
+                            "query-input": "required name=search_term_string"
+                        }
+                    },
+                    {
+                        "@type": "Person",
+                        "url": "https://xaydungkimanh.com/author/kimanh",
+                        "@id": "https://xaydungkimanh.com/author/kimanh#Person",
+                        "name": "Nguyễn Duy Tuấn",
+                        "alternateName": [
+                            "Kimanh Kimanh"
+                        ],
+                        "familyName": "Nguyễn",
+                        "additionalName": "Duy",
+                        "givenName": "Tuấn",
+                        "mainentityofpage": "https://xaydungkimanh.com/nguyenduytuan.html",
+                        "birthDate": "1975-05-16",
+                        "description": "CEO Nguyễn Duy Tuấn là người lãnh đạo công ty Xây dựng Kim Anh, ông là người có chuyên môn cao trong lĩnh vực thiết kế, thi công xây dựng nhà ở, nhà công nghiệp.",
+                        "jobTitle": [
+                            "CEO",
+                            "Founder"
+                        ],
+                        "gender": "https://schema.org/Male",
+                        "height": "1m75",
+                        "email": "nguyenduytuan.xaydungkimanh@gmail.com",
+                        "image": "https://xaydungkimanh.com/assets/images/nguyenduytuan.jpg",
+                        "sameAs": [
+                            "https://www.facebook.com/profile.php?id=100025112408398",
+                            "https://www.linkedin.com/in/nguyenduytuanxaydungkimanh/",
+                            "https://www.pinterest.com/nguyenduytuanxaydungkimanh/",
+                            "https://www.youtube.com/@nguyenduytuan75/about",
+                            "https://twitter.com/nguyenduytuan75"
+                        ],
+                        "alumniOf": {
+                            "@type": "EducationalOrganization",
+                            "name": "University of Architecture Ho Chi Minh City",
+                            "url": "http://en.uah.edu.vn/",
+                            "@id": "kg:/m/02pydq7",
+                            "description": "Ho Chi Minh City University of Architecture (Vietnamese: Đại học Kiến trúc Thành phố Hồ Chí Minh), is the flagship university in architecture, civil engineering, design education and research in Vietnam. In addition to architecture and civil/structural engineering, the university provides higher education in several relating disciplines including urban planning, infrastructural engineering, fine arts, fashion design and building interior design. Its main campus is located in District 3, Ho Chi Minh City in addition to two provincial campuses in Da Lat and Can Tho.",
+                            "mainEntityOfPage": "http://en.uah.edu.vn/"
+                        },
+                        "contactPoint": {
+                            "@type": "ContactPoint",
+                            "telephone": "0974776305",
+                            "email": "nguyenduytuan.xaydungkimanh@gmail.com",
+                            "availableLanguage": [
+                                "Vietnamese",
+                                "English"
+                            ]
+                        },
+                        "worksFor": {
+                            "@type": "Organization",
+                            "@id": "https://xaydungkimanh.com/#organization"
+                        },
+                        "nationality": {
+                            "@type": "Country",
+                            "@id": "kg:/m/01crd5",
+                            "url": "https://vi.wikipedia.org/wiki/Việt_Nam",
+                            "name": "Việt Nam"
+                        },
+                        "address": {
+                            "@type": "PostalAddress",
+                            "streetAddress": "C40 - KDC Hiệp Thành, Nguyễn Thị Búp, Phường Hiệp Thành",
+                            "addressLocality": "Quận 12",
+                            "addressRegion": "Hồ Chí Minh",
+                            "postalCode": "700000",
+                            "addressCountry": "VN"
+                        },
+                        "birthPlace": {
+                            "@type": "Place",
+                            "url": "https://vi.wikipedia.org/wiki/%C4%90%E1%BB%93ng_Nai",
+                            "name": "Đồng Nai",
+                            "description": "Đồng Nai là một tỉnh thuộc vùng Đông Nam Bộ trên cơ sở hợp nhất 2 tỉnh cũ là Biên Hòa và Long Khánh, Việt Nam. Đây là tỉnh đông dân thứ 5 cả nước sau Thành phố Hồ Chí Minh, thành phố Hà Nội."
+                        },
+                        "knowsLanguage": [
+                            "English",
+                            "Vietnamese"
+                        ]
                     }
-                },
-                "potentialAction": {
-                    "@type": "SearchAction",
-                    "target": "https://xaydungkimanh.com/search?q={search_term_string}",
-                    "query-input": "required name=search_term_string"
-                }
+                ]
             }
-            </script>
+        </script>
+
         {% endblock %}
 
         {% block blogPosting %}

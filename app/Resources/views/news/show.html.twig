@@ -121,7 +121,7 @@
         "author": {
             "@type": "Person",
             "@id": "{{ absolute_url(path('author', {'slug': 'kimanh' })) }}#Person",
-            "name": "Xây Dựng Kim Anh",
+            "name": "Nguyễn Duy Tuấn",
             "url": "{{ absolute_url(path('author', {'slug': 'kimanh' })) }}",
             "image": {
                 "@type": "ImageObject",
@@ -133,15 +133,7 @@
         },
         "publisher": {
             "@type": "Organization",
-            "@id": "https://xaydungkimanh.com/",
-            "name": "Xây Dựng Kim Anh",
-            "logo": {
-                "@type": "ImageObject",
-                "@id": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
-                "url": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
-                "width": "274",
-                "height": "99"
-            }
+            "@id": "https://xaydungkimanh.com/#organization"
         },
         "image": {
             "@type": "ImageObject",
@@ -175,7 +167,7 @@
 
                 <article id="post-{{ post.getId() }}" class="news">
                     <h1 class="entry-title block-title">{{ post.getTitle() }}</h1>
-
+                    <p class="post-modified-info">Cập nhật ngày: {{ post.getUpdatedAt()|date('d/m/Y') }} by <a href="{{ path('news_show', {'slug': 'nguyenduytuan' }) }}" target="_blank" class="last-modified-author">Nguyễn Duy Tuấn</a></p>
                     <div class="news-container">
                         {{ contentsLazy|replace({'50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh':'C40 - KDC Hiệp Thành - Nguyễn Thị Búp, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh', '088.609.4455':'0966.289.559', 'www.xaydungkimanh.com':'xaydungkimanh.com'})|raw }}
                     </div>
