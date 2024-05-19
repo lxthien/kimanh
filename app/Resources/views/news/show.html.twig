@@ -93,7 +93,7 @@
         "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
         "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
         "isPartOf": {
-            "@id": "https://xaydungkimanh.com/#website"
+            "@id": "{{ path('homepage') }}#website"
         },
         "primaryImageOfPage": {
             "@id": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
@@ -111,12 +111,17 @@
         "mainEntityOfPage": {
             "@id": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#webpage"
         },
+        "isFamilyFriendly":true,
+        "isAccessibleForFree":true,
         "headline": "{{ post.getTitle() }}",
         "name": "{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}",
         "description": "{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}",
         "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
         "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') ~ '+07:00' }}",
         "articleSection": "{{ category.getName() }}",
+        "accessMode":[
+            "textual"
+        ],
         "articleBody": "{{ contentsLazy|replace({'50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh':'C40 - KDC Hiệp Thành - Nguyễn Thị Búp, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh', '088.609.4455':'0966.289.559', 'www.xaydungkimanh.com':'xaydungkimanh.com'})|striptags|replace({"\r":" ", "\n":" ", "\t":" "}) }}",
         "author": {
             "@type": "Person",
@@ -133,7 +138,7 @@
         },
         "publisher": {
             "@type": "Organization",
-            "@id": "https://xaydungkimanh.com/#organization"
+            "@id": "{{ path('homepage') }}#organization"
         },
         "image": {
             "@type": "ImageObject",
@@ -144,6 +149,19 @@
         },
         "url": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}",
         "wordCount": "{{ contentsLazy|replace({'50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh':'C40 - KDC Hiệp Thành - Nguyễn Thị Búp, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh', '088.609.4455':'0966.289.559'})|raw|length }}",
+        "acquireLicensePage": "{{ absolute_url(path('news_show', {'slug': 'chinh-sach-bao-mat-thong-tin' })) }}",
+        "copyrightHolder": {
+            "@id": "{{ path('homepage') }}#organization"
+        },
+        "accountablePerson": {
+            "@id": "{{ absolute_url(path('author', {'slug': 'kimanh' })) }}#Person"
+        },
+        "creator": {
+            "@id": "{{ absolute_url(path('author', {'slug': 'kimanh' })) }}#Person"
+        },
+        "sourceOrganization": {
+            "@id": "{{ path('homepage') }}#organization"
+        },
         "inLanguage": "vi-VN",
         "commentCount": "{{ comments|length }}",
         "isPartOf": {
@@ -167,7 +185,7 @@
 
                 <article id="post-{{ post.getId() }}" class="news">
                     <h1 class="entry-title block-title">{{ post.getTitle() }}</h1>
-                    <p class="post-modified-info">Cập nhật ngày: {{ post.getUpdatedAt()|date('d/m/Y') }} by <a href="{{ path('news_show', {'slug': 'nguyenduytuan' }) }}" target="_blank" class="last-modified-author">Nguyễn Duy Tuấn</a></p>
+                    <p class="post-modified-info">Cập nhật ngày: {{ post.getUpdatedAt()|date('d/m/Y') }} bởi <a href="{{ path('news_show', {'slug': 'nguyenduytuan' }) }}" target="_blank" class="last-modified-author">Nguyễn Duy Tuấn</a></p>
                     <div class="news-container">
                         {{ contentsLazy|replace({'50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh':'C40 - KDC Hiệp Thành - Nguyễn Thị Búp, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh', '088.609.4455':'0966.289.559', 'www.xaydungkimanh.com':'xaydungkimanh.com'})|raw }}
                     </div>

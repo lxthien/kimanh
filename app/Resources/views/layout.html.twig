@@ -111,8 +111,8 @@
                 "@graph": [
                     {
                         "@type": "Organization",
-                        "@id": "https://xaydungkimanh.com/#organization",
-                        "url": "https://xaydungkimanh.com/",
+                        "@id": "{{ path('homepage') }}#organization",
+                        "url": "{{ path('homepage') }}",
                         "name": "Xây Dựng Kim Anh",
                         "logo": {
                             "@type": "ImageObject",
@@ -125,8 +125,8 @@
                     {
                         "@context": "https://schema.org",
                         "@type": "WebSite",
-                        "@id": "https://xaydungkimanh.com/#website",
-                        "url": "https://xaydungkimanh.com/",
+                        "@id": "{{ path('homepage') }}#website",
+                        "url": "{{ path('homepage') }}",
                         "name": "Xây Dựng Kim Anh",
                         "alternateName": [
                             "CÔNG TY THIẾT KẾ, XÂY DỰNG NHÀ PHỐ, SỬA CHỮA NHÀ",
@@ -141,7 +141,7 @@
                         "inLanguage": "vi-VN",
                         "publisher": {
                             "@type": "Organization",
-                            "@id": "https://xaydungkimanh.com/#organization"
+                            "@id": "{{ path('homepage') }}#organization"
                         },
                         "potentialAction": {
                             "@type": "SearchAction",
@@ -197,7 +197,7 @@
                         },
                         "worksFor": {
                             "@type": "Organization",
-                            "@id": "https://xaydungkimanh.com/#organization"
+                            "@id": "{{ path('homepage') }}#organization"
                         },
                         "nationality": {
                             "@type": "Country",
@@ -227,7 +227,6 @@
                 ]
             }
         </script>
-
         {% endblock %}
 
         {% block blogPosting %}
