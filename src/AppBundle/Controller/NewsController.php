@@ -619,31 +619,24 @@ class NewsController extends Controller
      */
     public function relatedNewsAction($relatedNews)
     {
-        $posts = $this->getDoctrine()
-            ->getRepository(News::class)
-            ->createQueryBuilder('p')
-            ->where('p.title LIKE :q')
-            ->andWhere('p.enable = :enable')
-            ->andWhere('p.postType = :postType')
-            ->setParameter('q', '%'.$relatedNews.'%')
-            ->setParameter('enable', 1)
-            ->setParameter('postType', 'post')
-            ->orderBy('p.createdAt', 'DESC')
-            ->setMaxResults( 25 )
-            ->getQuery()
-            ->getResult();
+        $sidebarPostsArray = array();
 
-        $response = $this->render('news/relatedNews.html.twig', [
-            'posts' => $posts,
-        ]);
+        if (!empty($relatedNews)) {
+            $listPosts = explode(',', $relatedNews);
 
-        // cache for 3600 seconds
-        $response->setSharedMaxAge(3600);
+            for ($i = 0; $i < count($listPosts); $i++) {
+                $post = $this->getDoctrine()
+                            ->getRepository(News::class)
+                            ->find($listPosts[$i]);
+                if ($post) {
+                    $sidebarPostsArray[] = $post;
+                }
+            }
 
-        // (optional) set a custom Cache-Control directive
-        $response->headers->addCacheControlDirective('must-revalidate', true);
-
-        return $response;
+            return $this->render('news/relatedNews.html.twig', [
+                'posts' => $sidebarPostsArray
+            ]);
+        }
     }
 
     public function sidebarPostsAction ($sidebarPosts) {

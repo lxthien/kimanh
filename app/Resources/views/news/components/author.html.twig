@@ -1,7 +1,7 @@
 <div class="author">
     <div class="row">
         <div class="col-xs-12 col-sm-2 col-md-2 author-avatar">
-            <img src="https://xaydungkimanh.com/assets/images/nguyenduytuan.jpg" alt="CEO Nguyễn Duy Tuấn" />
+            <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/nguyenduytuan.jpg'), '')) }}" alt="CEO Nguyễn Duy Tuấn" loading="lazy" width="258" height="258" />
         </div>
         <div class="col-xs-12 col-sm-10 col-md-10">
             <b class="author-name"><a href="{{ absolute_url(path('author', {'slug': 'kimanh' })) }}" title="CEO Nguyễn Duy Tuấn">Nguyễn Duy Tuấn</a></b>
