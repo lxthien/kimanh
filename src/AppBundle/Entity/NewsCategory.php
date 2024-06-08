@@ -66,6 +66,13 @@ class NewsCategory
     private $description = null;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="content", type="text", nullable=true)
+     */
+    private $content = null;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="enable", type="boolean")
@@ -215,6 +222,18 @@ class NewsCategory
     public function getDescription()
     {
         return $this->description;
+    }
+
+    public function setContent($content)
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
     }
 
     public function setEnable($enable)

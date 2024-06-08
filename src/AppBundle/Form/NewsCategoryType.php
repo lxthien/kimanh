@@ -39,8 +39,12 @@ class NewsCategoryType extends AbstractType
                 'label' => 'URL thay thế',
             ])
             ->add('description', TextareaType::class, [
-                'attr' => ['class' => 'txt-ckeditor', 'data-height' => '300'],
+                'attr' => ['class' => 'txt-ckeditor', 'data-height' => '200'],
                 'label' => 'label.description',
+            ])
+            ->add('content', TextareaType::class, [
+                'attr' => ['class' => 'txt-ckeditor', 'data-height' => '600'],
+                'label' => 'Nội dung',
             ])
             ->add('enable', CheckboxType::class, [
                 'required' => false,
@@ -50,7 +54,8 @@ class NewsCategoryType extends AbstractType
                 'required' => false,
                 'label' => 'label.sortBy',
                 'choices' => ['label.default' => '{"createdAt":"desc"}', 'label.ordering' => '{"ordering":"asc"}'],
-                'empty_data' => '"createdAt":"desc"}'
+                'empty_data' => '"createdAt":"desc"}',
+                'placeholder' => false
             ])
             ->add('robots', TextType::class, [
                 'required' => false,

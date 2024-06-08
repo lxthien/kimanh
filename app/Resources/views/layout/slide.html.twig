@@ -97,9 +97,9 @@
                 </div>
             </div>
             <div class="item">
-                {% set imagePath = asset('/assets/images/banner/banner-05.jpg') %}
-                {% set imagePathFilter = asset('/assets/images/banner/banner-05.jpg') | imagine_filter('banner_1500_550') %}
-                {% set imagePathFilterMobile = asset('/assets/images/banner/banner-05.jpg') | imagine_filter('banner_768_400') %}
+                {% set imagePath = asset('/assets/images/banner/xay-nha-tron-goi-tphcm.jpg') %}
+                {% set imagePathFilter = asset('/assets/images/banner/xay-nha-tron-goi-tphcm.jpg') | imagine_filter('banner_1500_550') %}
+                {% set imagePathFilterMobile = asset('/assets/images/banner/xay-nha-tron-goi-tphcm.jpg') | imagine_filter('banner_768_400') %}
                         
                 {% if convert_images.fileExists(imagePath) == false %}
                     {% set imagePath = imagePath | imagine_filter('banner_1500_550') %}
@@ -108,7 +108,7 @@
                     {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
                     {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
                 {% endif %}
-                <a href="{{ path('news_show', {'slug': 'bang-bao-gia-xay-nha-phan-tho-moi-nhat'}) }}">
+                <a href="{{ path('news_show', {'slug': 'xay-nha-tron-goi'}) }}">
                     <picture>
                         <source
                             data-srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"

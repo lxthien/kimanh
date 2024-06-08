@@ -41,6 +41,11 @@
 {% endif %}
 {% endblock %}
 
+{% block canonical %}
+    <meta name="DC.identifier" content="{{ baseUrl }}">
+    <link rel="canonical" href="{{ baseUrl }}"/>
+{% endblock %}
+
 {% block body %}
     {# breadcrumbs #}
     {{ include('news/components/breadcrumbs.html.twig',
@@ -85,6 +90,10 @@
 
                     {# Pagination #}
                     {{ include('news/components/pagination.html.twig') }}
+
+                    <div class="category-content">
+                        {{ category.getContent()|raw }}
+                    </div>
                 {% else %}
                     {{ include('news/components/noRecord.html.twig') }}
                 {% endif %}
