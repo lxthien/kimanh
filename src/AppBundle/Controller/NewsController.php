@@ -177,6 +177,9 @@ class NewsController extends Controller
                 }
             }
         } else {
+            // Remove all the URLs from google
+            return $this->redirectToRoute('news_show', array('slug' => $slug), 301);
+
             $catPrimary = $this->getDoctrine()
                 ->getRepository(NewsCategory::class)
                 ->findOneByUrl($categoryPrimary);

@@ -10,5 +10,6 @@ Disallow: /search?=*
 Disallow: /*?danh-muc=*
 Disallow: /*?filter_by=*
 Disallow: /*?PageSpeed=*
+Disallow: /*.pdf$
 Sitemap: https://xaydungkimanh.com/sitemap.xml
 Sitemap: https://xaydungkimanh.com/images_sitemap.xml

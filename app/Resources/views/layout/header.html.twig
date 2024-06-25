@@ -43,7 +43,7 @@
                 <div id="logo">
                     <a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
                         <img
-                            src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}"
+                            src="{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}"
                             alt="{{ get_setting('siteName') }}"
                             width="274"
                             height="99">
@@ -78,7 +78,7 @@
 <header>
     <a class="hidden-sm hidden-md hidden-lg" href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
         <img
-            src="{{ asset(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}"
+            src="{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}"
             alt="{{ get_setting('siteName') }}"
             width="274"
             height="99">
