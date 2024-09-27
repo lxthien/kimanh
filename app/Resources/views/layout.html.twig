@@ -115,8 +115,8 @@
                         "name": "Xây Dựng Kim Anh",
                         "logo": {
                             "@type": "ImageObject",
-                            "@id": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
-                            "url": "{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}",
+                            "@id": "{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}",
+                            "url": "{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}",
                             "width": "274",
                             "height": "99"
                         }

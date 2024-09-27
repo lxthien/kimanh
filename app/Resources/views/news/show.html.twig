@@ -29,14 +29,14 @@
     <meta property="article:author" content="{{ post.getAuthor().getName() }}" />
 	<meta property="article:published_time" content="{{ post.getCreatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}" />
 	<meta property="article:modified_time" content="{{ post.getUpdatedAt()|date("Y-m-d h:m:s") ~ "+07:00" }}" />
-    <meta property="og:image" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
+    <meta property="og:image" content="{{ absolute_url(imagePathFilter) }}" />
     <meta property="og:image:alt" content="{{ post.getTitle() }}" />
     <meta property="og:image:width" content="800" />
     <meta property="og:image:height" content="420" />
 {% endblock %}
 
 {% block twitterImage %}
-    <meta property="twitter:image" content="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}" />
+    <meta property="twitter:image" content="{{ absolute_url(imagePathFilter) }}" />
 {% endblock %}
 
 {% block structuredReview %}
@@ -96,7 +96,7 @@
             "@id": "{{ absolute_url(path('homepage')) }}#website"
         },
         "primaryImageOfPage": {
-            "@id": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}"
+            "@id": "{{ absolute_url(imagePathFilter) }}"
         },
         "description": "{{ (post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription())|replace({'%YEAR%': "now"|date('Y')}) }}",
         "breadcrumb": "{{ absolute_url(path('news_show', {'slug': post.getUrl() })) }}#breadcrumb",
@@ -142,8 +142,8 @@
         },
         "image": {
             "@type": "ImageObject",
-            "@id": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}",
-            "url": "{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePathFilter) }}",
+            "@id": "{{ absolute_url(imagePathFilter) }}#image",
+            "url": "{{ absolute_url(imagePathFilter) }}",
             "height": "800",
             "width": "420"
         },

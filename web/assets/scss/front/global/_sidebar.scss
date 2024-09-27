@@ -110,6 +110,22 @@
                 }
             }
         }
+
+        .video-related {
+            margin-bottom: 10px;
+
+            .play-youtube-video {
+                cursor: pointer;
+            }
+
+            a {
+                display: block;
+                color: #0053a5;
+                padding: 10px 0 0;
+                font-weight: bold;
+                line-height: 22px;
+            }
+        }
     }
 
     .post-bxslider-wrapper {

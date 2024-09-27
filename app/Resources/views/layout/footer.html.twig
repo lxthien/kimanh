@@ -24,25 +24,13 @@
                 </ul>
             </div>
             <div class="col-12 col-sm-6 col-md-3 col-lg-3">
-                <div class="widget-title text-uppercase">Dịch vụ</div>
+                <div class="widget-title text-uppercase">Về chúng tôi</div>
                 <ul class="about-us">
                     <li>
-                        <a href="{{ path('news_category', {'level1': 'xay-dung-nha-pho' }) }}" title="Xây nhà">Xây nhà</a>
+                        <a href="{{ path('news_show', {'slug': 'gioi-thieu' }) }}" title="Giới thiệu">Giới thiệu</a>
                     </li>
                     <li>
-                        <a href="{{ path('news_category', {'level1': 'sua-chua-nha-dep' }) }}" title="Sửa chữa nhà">Sửa chữa nhà</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('news_category', {'level1': 'thiet-ke-nha-pho' }) }}" title="Thiết kế nhà">Thiết kế nhà</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('news_category', {'level1': 'bang-gia' }) }}" title="Báo giá xây dựng">Báo giá xây dựng</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('news_category', {'level1': 'tu-van' }) }}" title="Tư vấn xây dựng">Tư vấn xây dựng</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('news_category', {'level1': 'phong-thuy-xay-dung' }) }}" title="Phong thủy xây dựng">Phong thủy xây dựng</a>
+                        <a href="{{ path('news_show', {'slug': 'ho-so-nang-luc' }) }}" title="Hồ sơ năng lực">Hồ sơ năng lực</a>
                     </li>
                     <li>
                         <a href="{{ path('news_show', {'slug': 'chinh-sach-bao-mat-thong-tin' }) }}" title="Chính sách bảo mật thông tin">Chính sách bảo mật thông tin</a>
@@ -50,10 +38,13 @@
                     <li>
                         <a href="{{ path('news_show', {'slug': 'dieu-khoan-dich-vu' }) }}" title="Điều khoản dịch vụ">Điều khoản dịch vụ</a>
                     </li>
+                    <li>
+                        <a href="{{ path('news_show', {'slug': 'tuyen-dung-kien-truc-su-xay-dung' }) }}" title="Tuyển dụng">Tuyển dụng</a>
+                    </li>
                 </ul>
             </div>
             <div class="col-12 col-sm-6 col-md-3 col-lg-3">
-                <div class="widget-title text-uppercase">Từ khóa</div>
+                <div class="widget-title text-uppercase">Dịch vụ</div>
                 {{ get_setting('topKeyword')|raw }}
             </div>
             <div class="col-12 col-sm-6 col-md-3 col-lg-3">
@@ -77,7 +68,7 @@
                     <img
                         class="lazyload"
                         src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                        data-src="{{ absolute_url(convert_images.webpConvert2(asset('/assets/images/logo.png'), '')) }}"
+                        data-src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}"
                         alt="{{ get_setting('siteName') }}"
                         width="293"
                         height="106"
