@@ -74,7 +74,26 @@
     </div>
     <div class="related-wrapper video-related">
         <div class="youtube-video-place embed-responsive embed-responsive-4by3">
+            <a href="{{ path('news_show', {'slug': 'anh-pham-van-quy-chia-se-ve-xay-dung-kim-anh' }) }}" class="text-center">Anh Quý chia sẻ về dự án xây dựng nhà tại quận 8 của Xây Dựng Kim Anh</a>
+        </div>
+    </div>
+    <div class="related-wrapper video-related">
+        <div class="youtube-video-place embed-responsive embed-responsive-4by3">
             <a href="{{ path('news_show', {'slug': 'ban-giao-du-an-xay-nha-chi-lan-anh-nu-cuoi-chu-dau-tu' }) }}" class="text-center">Bàn giao dự án xây nhà Chị Lan Anh, Quận Phú Nhuận</a>
+        </div>
+    </div>
+    <div class="related-wrapper video-related">
+        <div class="youtube-video-place embed-responsive embed-responsive-4by3">
+            <a href="{{ path('news_show', {'slug': 'quy-trinh-xay-nha' }) }}">
+                <img
+                    src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                    data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/quy-trinh-xay-dung-nha-o.jpg'), '')) }}"
+                    width="277"
+                    height="208"
+                    async
+                    class="play-youtube-video lazyload"
+                    alt="Quy trình xây dựng nhà">
+            </a>
         </div>
     </div>
     {# <a href="{{ path('news_show', {'slug': 'xay-nha-tron-goi' }) }}" class="list-group-item td-list-group-item item-price" title="Đơn giá xây nhà trọn gói">

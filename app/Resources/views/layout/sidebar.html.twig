@@ -9,10 +9,10 @@
                 {{ include('widgets/hotNews.html.twig') }}
                 {% endif %}
                 {{ include('widgets/recentNews.html.twig') }}
-                {{ render(controller(
+                {# {{ render(controller(
                     'AppBundle:News:sidebarPosts',
                     {'sidebarPosts':get_setting('xaydungnhahcm')}
-                )) }}
+                )) }} #}
             </div>
         </div>
     </div>
