@@ -59,6 +59,12 @@
                     <div class="alert alert-success" role="alert">
                         {{ message }}
                     </div>
+                    <script>
+                        window.dataLayer = window.dataLayer || [];
+                        window.dataLayer.push({
+                            'event': 'dang-ky'
+                        });
+                    </script>
                 {% endfor %}
 
                 {{ form_start(form) }}
