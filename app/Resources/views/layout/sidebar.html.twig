@@ -3,16 +3,20 @@
         <div class="col-md-12">
             <div class="sidebar">
                 {{ include('news/prices.html.twig') }}
+                {{ render(controller(
+                    'AppBundle:News:listNewsByCategorySidebar',
+                    {'categoryId': 2, 'title': 'Các mẫu nhà đẹp'}
+                )) }}
+                {{ render(controller(
+                    'AppBundle:News:listNewsByCategorySidebar',
+                    {'categoryId': 8, 'title': 'Dự án tiêu biểu'}
+                )) }}
                 {% if post is not empty and post.getRelatedNews() is not null %}
                 {{ include('widgets/relatedNews.html.twig') }}
                 {% else %}
                 {{ include('widgets/hotNews.html.twig') }}
                 {% endif %}
-                {{ include('widgets/recentNews.html.twig') }}
-                {# {{ render(controller(
-                    'AppBundle:News:sidebarPosts',
-                    {'sidebarPosts':get_setting('xaydungnhahcm')}
-                )) }} #}
+                {# {{ include('widgets/recentNews.html.twig') }} #}
             </div>
         </div>
     </div>

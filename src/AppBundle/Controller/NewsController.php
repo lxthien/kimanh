@@ -53,7 +53,7 @@ class NewsController extends Controller
      * 
      * @return News
      */
-    public function listAction($level1, $level2 = null, $page = 1)
+    public function listAction($level1, $level2 = null, $page = 1, Request $request)
     {
         $category = $this->getDoctrine()
             ->getRepository(NewsCategory::class)
@@ -70,6 +70,16 @@ class NewsController extends Controller
 
             if (!$subCategory) {
                 throw $this->createNotFoundException("The item does not exist");
+            }
+        }
+
+        $danhMuc = $request->query->get('danh-muc');
+
+        if (!empty($danhMuc)) {
+            if (!empty($level2)) {
+                return $this->redirectToRoute('list_category', array('level1' => $level1, 'level2' => $level2), 301);
+            } else {
+                return $this->redirectToRoute('news_category', array('level1' => $level1), 301);
             }
         }
 
@@ -705,6 +715,43 @@ class NewsController extends Controller
 
         return $this->render('news/listByCategory.html.twig', [
             'posts' => $posts,
+        ]);
+    }
+
+    public function listNewsByCategorySidebarAction($categoryId, $title)
+    {
+        $category = $this->getDoctrine()
+            ->getRepository(NewsCategory::class)
+            ->find($categoryId);
+
+        $listCategoriesIds = array($category->getId());
+        $allSubCategories = $this->getDoctrine()
+                            ->getRepository(NewsCategory::class)
+                            ->createQueryBuilder('c')
+                            ->where('c.parentcat = (:parentcat)')
+                            ->setParameter('parentcat', $category->getId())
+                            ->getQuery()->getResult();
+
+        foreach ($allSubCategories as $value) {
+            $listCategoriesIds[] = $value->getId();
+        }
+
+        $posts = $this->getDoctrine()
+            ->getRepository(News::class)
+            ->createQueryBuilder('n')
+            ->innerJoin('n.category', 't')
+            ->where('t.id IN (:listCategoriesIds)')
+            ->andWhere('n.enable = :enable')
+            ->setParameter('listCategoriesIds', $listCategoriesIds)
+            ->setParameter('enable', 1)
+            ->setMaxResults( 15 )
+            ->orderBy('n.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('news/sidebarPosts.html.twig', [
+            'title' => $title,
+            'posts' => $posts
         ]);
     }
 

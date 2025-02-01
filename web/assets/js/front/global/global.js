@@ -61,8 +61,8 @@ function initNewsSlider() {
         stopAutoOnClick: true,
         pager: false,
         controls: false,
-        minSlides: 5,
-        maxSlides: 5,
+        minSlides: 15,
+        maxSlides: 15,
         moveSlides: 1,
         slideWidth: 375,
         touchEnabled: false,
@@ -77,8 +77,8 @@ function initNewsSlider() {
         stopAutoOnClick: true,
         pager: false,
         controls: false,
-        minSlides: 10,
-        maxSlides: 10,
+        minSlides: 15,
+        maxSlides: 15,
         moveSlides: 1,
         slideWidth: 375,
         touchEnabled: false,
@@ -283,7 +283,7 @@ exports.init = function () {
     initProtectedContent();
     initGoToTop();
     initFixedMenu();
-    initFixedSidebar();
+    //initFixedSidebar();
     //initCostConstruction();
     initFancybox();
     initTypewriterEffect();
