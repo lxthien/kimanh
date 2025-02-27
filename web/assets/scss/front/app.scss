@@ -6,6 +6,8 @@ $web-font-path: 'data:text/css;base64,';
 @import "~bootswatch/flatly/variables";
 @import "global/bootstrap";
 
+@import '~jquery-bootstrap-scrolling-tabs/dist/jquery.scrolling-tabs.min.css';
+
 @import "global/fonts";
 @import "global/color_variables";
 @import "global/base_elements";

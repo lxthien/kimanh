@@ -3,6 +3,7 @@
 require('bxslider/dist/jquery.bxslider');
 require('@fancyapps/fancybox');
 require('../../../libs/starrating/js/rating.js');
+require('jquery-bootstrap-scrolling-tabs/dist/jquery.scrolling-tabs.min.js');
 
 function initSearchBox() {
     var $formSearch = $('#form-search');
@@ -276,6 +277,10 @@ function initTypewriterEffect() {
     }, 1000);
 }
 
+function initScrollingTabs() {
+    $('.nav-tabs').scrollingTabs();
+}
+
 exports.init = function () {
     initSearchBox();
     initProjectHotSlider();
@@ -287,4 +292,5 @@ exports.init = function () {
     //initCostConstruction();
     initFancybox();
     initTypewriterEffect();
+    initScrollingTabs();
 };
