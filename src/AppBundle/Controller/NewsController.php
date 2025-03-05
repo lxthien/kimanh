@@ -71,6 +71,10 @@ class NewsController extends Controller
             if (!$subCategory) {
                 throw $this->createNotFoundException("The item does not exist");
             }
+
+            if ($subCategory->getParentcat()->getId() != $category->getId()) {
+                return $this->redirectToRoute('homepage', [], 301);
+            }
         }
 
         $danhMuc = $request->query->get('danh-muc');
