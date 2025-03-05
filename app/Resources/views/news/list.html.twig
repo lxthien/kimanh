@@ -49,7 +49,7 @@
 {% block body %}
     {# breadcrumbs #}
     {{ include('news/components/breadcrumbs.html.twig',
-        { type: 'category', title: category.getName(), description: category.getDescription() })
+        { type: 'category', title: (category.getTitleLandingPage() != null ? category.getTitleLandingPage() : category.getName()), description: category.getDescription() })
     }}
     
     <div class="container wrapper-container">

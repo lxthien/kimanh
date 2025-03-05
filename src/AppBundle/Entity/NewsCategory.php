@@ -47,6 +47,13 @@ class NewsCategory
     /**
      * @var string
      *
+     * @ORM\Column(name="titleLandingPage", type="string", length=255, nullable=true)
+     */
+    private $titleLandingPage;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="url", type="string", length=255)
      */
     private $url;
@@ -172,6 +179,18 @@ class NewsCategory
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setTitleLandingPage($titleLandingPage)
+    {
+        $this->titleLandingPage = $titleLandingPage;
+
+        return $this;
+    }
+
+    public function getTitleLandingPage()
+    {
+        return $this->titleLandingPage;
     }
 
     public function setParentcat(\AppBundle\Entity\NewsCategory $parent = null) {

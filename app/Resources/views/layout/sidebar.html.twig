@@ -11,11 +11,11 @@
                     'AppBundle:News:listNewsByCategorySidebar',
                     {'categoryId': 8, 'title': 'Dự án tiêu biểu'}
                 )) }}
-                {% if post is not empty and post.getRelatedNews() is not null %}
+                {# {% if post is not empty and post.getRelatedNews() is not null %}
                 {{ include('widgets/relatedNews.html.twig') }}
                 {% else %}
                 {{ include('widgets/hotNews.html.twig') }}
-                {% endif %}
+                {% endif %} #}
                 {# {{ include('widgets/recentNews.html.twig') }} #}
             </div>
         </div>

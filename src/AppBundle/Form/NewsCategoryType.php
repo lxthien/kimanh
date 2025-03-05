@@ -29,13 +29,15 @@ class NewsCategoryType extends AbstractType
                 'attr' => ['class' => 'sluggable'],
                 'label' => 'label.name',
             ])
+            ->add('titleLandingPage', TextType::class, [
+                'label' => 'Tiêu đề trang Landing',
+            ])
             ->add('url', TextType::class, [
                 'attr' => ['class' => 'url', 'readonly' => 'readonly'],
                 'label' => 'label.url',
             ])
             ->add('urlReplace', TextType::class, [
                 'required' => false,
-                'attr' => ['class' => 'url'],
                 'label' => 'URL thay thế',
             ])
             ->add('description', TextareaType::class, [
