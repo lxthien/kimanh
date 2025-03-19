@@ -80,6 +80,14 @@
                     <div class="category-content">
                         {{ category.getContent()|raw }}
                     </div>
+                    <div class="list-news-items list-news-items-landing">
+                        <h2>Có thể bạn quan tâm</h2>
+                        <div class="row">
+                            {% for row in pagination %}
+                                {{ include('news/components/itemsGrid.html.twig') }}
+                            {% endfor %}
+                        </div>
+                    </div>
                 {% endif %}
             </div>
         </div>

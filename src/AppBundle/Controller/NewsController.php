@@ -112,27 +112,57 @@ class NewsController extends Controller
                 $listCategoriesIds[] = $value->getId();
             }
 
-            $news = $this->getDoctrine()
-                ->getRepository(News::class)
-                ->createQueryBuilder('n')
-                ->innerJoin('n.category', 't')
-                ->where('t.id IN (:listCategoriesIds)')
-                ->andWhere('n.enable = :enable')
-                ->setParameter('listCategoriesIds', $listCategoriesIds)
-                ->setParameter('enable', 1)
-                ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
-                ->getQuery()->getResult();
+            if ($category->getContent() == NULL) {
+                $news = $this->getDoctrine()
+                    ->getRepository(News::class)
+                    ->createQueryBuilder('n')
+                    ->innerJoin('n.category', 't')
+                    ->where('t.id IN (:listCategoriesIds)')
+                    ->andWhere('n.enable = :enable')
+                    ->setParameter('listCategoriesIds', $listCategoriesIds)
+                    ->setParameter('enable', 1)
+                    ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
+                    ->getQuery()->getResult();
+            } else {
+                $news = $this->getDoctrine()
+                    ->getRepository(News::class)
+                    ->createQueryBuilder('n')
+                    ->innerJoin('n.category', 't')
+                    ->where('t.id = :newscategory_id')
+                    ->andWhere('n.enable = :enable')
+                    ->setParameter('newscategory_id', $category->getId())
+                    ->setParameter('enable', 1)
+                    ->setMaxResults( 8 )
+                    ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
+                    ->getQuery()
+                    ->getResult();
+            }
         } else {
-            $news = $this->getDoctrine()
-                ->getRepository(News::class)
-                ->createQueryBuilder('n')
-                ->innerJoin('n.category', 't')
-                ->where('t.id = :newscategory_id')
-                ->andWhere('n.enable = :enable')
-                ->setParameter('newscategory_id', $subCategory->getId())
-                ->setParameter('enable', 1)
-                ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
-                ->getQuery()->getResult();
+            if ($subCategory->getContent() == NULL) {
+                $news = $this->getDoctrine()
+                    ->getRepository(News::class)
+                    ->createQueryBuilder('n')
+                    ->innerJoin('n.category', 't')
+                    ->where('t.id = :newscategory_id')
+                    ->andWhere('n.enable = :enable')
+                    ->setParameter('newscategory_id', $subCategory->getId())
+                    ->setParameter('enable', 1)
+                    ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
+                    ->getQuery()->getResult();
+            } else {
+                $news = $this->getDoctrine()
+                    ->getRepository(News::class)
+                    ->createQueryBuilder('n')
+                    ->innerJoin('n.category', 't')
+                    ->where('t.id = :newscategory_id')
+                    ->andWhere('n.enable = :enable')
+                    ->setParameter('newscategory_id', $subCategory->getId())
+                    ->setParameter('enable', 1)
+                    ->setMaxResults( 8 )
+                    ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
+                    ->getQuery()
+                    ->getResult();
+            }
         }
 
         $paginator  = $this->get('knp_paginator');
