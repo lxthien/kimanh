@@ -564,8 +564,6 @@ class NewsController extends Controller
      */
     public function tagAction($slug, Request $request)
     {
-        throw $this->createNotFoundException("The item does not exist");
-        
         $tag = $this->getDoctrine()
             ->getRepository(Tag::class)
             ->findOneBy(
@@ -592,12 +590,12 @@ class NewsController extends Controller
         $pagination = $paginator->paginate(
             $posts,
             !empty($request->query->get('page')) ? $request->query->get('page') : 1,
-            $this->get('settings_manager')->get('numberRecordOnPage') ?: 10
+            40
         );
 
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("home", $this->generateUrl("homepage"));
-        $breadcrumbs->addItem('Tags > ' . $tag->getName());
+        $breadcrumbs->addItem($tag->getName());
 
         return $this->render('news/tags.html.twig', [
             'baseUrl' => $this->generateUrl('tags', array('slug' => $slug), UrlGeneratorInterface::ABSOLUTE_URL),
