@@ -2,7 +2,7 @@
     {% if category.getUrl() != 'bang-gia' %}
         {% if relatedNews|length > 0 %}
             <div class="related-news">
-                <h2>Dịch vụ liên quan</h2>
+                <h2>Có thể bạn quan tâm</h2>
                 <div class="row">
                     {% for row in relatedNews %}
                         {% set imagePath = (vich_uploader_asset(row, 'imageFile') ? vich_uploader_asset(row, 'imageFile') : asset('assets/images/no-image.png')) %}

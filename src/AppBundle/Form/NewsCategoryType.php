@@ -30,6 +30,7 @@ class NewsCategoryType extends AbstractType
                 'label' => 'label.name',
             ])
             ->add('titleLandingPage', TextType::class, [
+                'required' => false,
                 'label' => 'Tiêu đề trang Landing',
             ])
             ->add('url', TextType::class, [
@@ -47,6 +48,10 @@ class NewsCategoryType extends AbstractType
             ->add('content', TextareaType::class, [
                 'attr' => ['class' => 'txt-ckeditor', 'data-height' => '600'],
                 'label' => 'Nội dung',
+            ])
+            ->add('showPostRelated', CheckboxType::class, [
+                'required' => false,
+                'label' => 'Hiển thị tin cùng danh mục',
             ])
             ->add('enable', CheckboxType::class, [
                 'required' => false,

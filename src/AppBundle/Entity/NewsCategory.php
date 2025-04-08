@@ -87,6 +87,13 @@ class NewsCategory
     private $enable = true;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="showPostRelated", type="boolean")
+     */
+    private $showPostRelated = false;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="robots", type="string", length=255, nullable=true)
@@ -265,6 +272,18 @@ class NewsCategory
     public function getEnable()
     {
         return $this->enable;
+    }
+
+    public function setShowPostRelated($showPostRelated)
+    {
+        $this->showPostRelated = (bool) $showPostRelated;
+
+        return $this;
+    }
+
+    public function getShowPostRelated()
+    {
+        return $this->showPostRelated;
     }
 
     public function setRobots($robots)
