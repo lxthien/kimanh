@@ -324,6 +324,8 @@ class NewsController extends Controller
             return $this->render('news/show.html.twig', [
                 'post'          => $post,
                 'contentsLazy'  => $contentsLazy,
+                'articleBody'   => $this->strip_tags_content($contentsLazy),
+                'wordCount'     => str_word_count($this->strip_tags_content($contentsLazy)),
                 'relatedNews'   => !empty($relatedNews) ? $relatedNews : NULL,
                 'form'          => $form->createView(),
                 'formRating'    => $formRating->createView(),
@@ -338,6 +340,21 @@ class NewsController extends Controller
                 'urlParameters' => !empty($request->query->get('danh-muc')) ? $request->query->get('danh-muc') : NULL
             ]);
         }
+    }
+
+    private function strip_tags_content($string) { 
+        // ----- remove HTML TAGs -----
+        $string = preg_replace ('/<[^>]*>/', ' ', $string);
+        // ----- remove control characters ----- 
+        $string = str_replace("\r", '', $string);
+        $string = str_replace("\n", ' ', $string);
+        $string = str_replace("\t", ' ', $string);
+        $string = str_replace("50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh", 'C40 - KDC Hiệp Thành - Nguyễn Thị Búp, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh', $string);
+        $string = str_replace("088.609.4455", '0966.289.559', $string);
+        // ----- remove multiple spaces -----
+        $string = trim(preg_replace('/ {2,}/', ' ', $string));
+        
+        return $string;
     }
 
     /**

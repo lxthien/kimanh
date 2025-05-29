@@ -158,6 +158,11 @@
         </div>
 
         {% for blockOnHomepage in blocksOnHomepage %}
+            {% if blockOnHomepage.category.getParentcat() == 'root' %}
+                {% set linkCat = path('news_category', {'level1': blockOnHomepage.category.getUrl() }) %}
+            {% else %}
+                {% set linkCat = path('list_category', {'level1': blockOnHomepage.category.getParentcat().getUrl(), 'level2': blockOnHomepage.category.getUrl() }) %}
+            {% endif %}
             <div class="wrapper-container-item">
                 <div class="container">
                     <div class="row">
@@ -166,11 +171,6 @@
                                 <img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset('assets/images/icon-logo.png') }}" width="35" height="25">
                                 <p class="p-title-news-items-lvht">{{ blockOnHomepage.title }}</p>
                                 <i class="fa fa-angle-right"></i>
-                                {% if blockOnHomepage.category.getParentcat() == 'root' %}
-                                    {% set linkCat = path('news_category', {'level1': blockOnHomepage.category.getUrl() }) %}
-                                {% else %}
-                                    {% set linkCat = path('list_category', {'level1': blockOnHomepage.category.getParentcat().getUrl(), 'level2': blockOnHomepage.category.getUrl() }) %}
-                                {% endif %}
                                 <h2><a href="{{ linkCat }}" title="{{ blockOnHomepage.category.getName() }}">{{ blockOnHomepage.category.getName() }}</a></h2>
                             </div>
                             <span class="block-underline"></span>
@@ -199,7 +199,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12 view-all-category text-center">
-                                            <a href="{{ path('list_category', {'level1': blockOnHomepage.category.getUrl(), 'level2': listSubTab.subCategory.getUrl() }) }}">Xem tất cả bài viết</a>
+                                            <a href="{{ path('list_category', {'level1': blockOnHomepage.category.getUrl(), 'level2': listSubTab.subCategory.getUrl() }) }}">Xem thêm</a>
                                         </div>
                                     </div>
                                 {% endfor %}
@@ -212,7 +212,7 @@
                                     {% endfor %}
                                 </div>
                                 <div class="col-md-12 view-all-category text-center">
-                                    <a href="{{ path('news_category', {'level1': blockOnHomepage.category.getUrl() }) }}">Xem tất cả bài viết</a>
+                                    <a href="{{ linkCat }}">Xem thêm</a>
                                 </div>
                             </div>
                         {% endif %}

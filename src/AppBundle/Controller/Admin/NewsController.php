@@ -39,6 +39,30 @@ class NewsController extends Controller
     }
 
     /**
+     * Lists all News entities by category.
+     *
+     * @Route("/list/{categoryId}", name="admin_news_list_by_category")
+     * @Method("GET")
+     */
+    public function listAction(Request $request, $categoryId)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $news = $em->getRepository(News::class)
+            ->createQueryBuilder('n')
+            ->leftJoin('n.category', 'c')
+            ->where('c.id = :categoryId')
+            ->setParameter('categoryId', $categoryId)
+            ->orderBy('n.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('admin/news/list.html.twig', ['objects' => $news]);
+    }
+
+    
+
+    /**
      * Creates a new News entity.
      *
      * @Route("/new", name="admin_news_new")
