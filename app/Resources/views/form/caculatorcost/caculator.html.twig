@@ -1,19 +1,28 @@
 {% extends 'layout.html.twig' %}
 
+{% block stylesheets %}
+    <link href="{{ absolute_url(asset('build/css/news.css')) }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
+    <link href="{{ absolute_url(asset('build/css/new.css')) }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
+    <noscript><link rel="stylesheet" href="{{ absolute_url(asset('build/css/news.css')) }}" ></noscript>
+    <noscript><link rel="stylesheet" href="{{ absolute_url(asset('build/css/new.css')) }}" ></noscript>
+{% endblock %}
+
 {% block title %}{{ post.getPageTitle() is not null ? post.getPageTitle() : post.getTitle() }}{% endblock %}
 {% block description %}{{ post.getPageDescription() is not null ? post.getPageDescription() : post.getDescription() }}{% endblock %}
 {% block keyword %}{{ post.getPageKeyword() }}{% endblock %}
 
 {% block body %}
-    <div class="container wrapper-container costs">
-        {# breadcrumbs #}
-        {{ include('news/components/breadcrumbs.html.twig') }}
-
+    <div class="container wrapper-container page-detail costs">
         <div class="row">
-            <div class="col-12 col-md-12 col-lg-8">
-                <div class="news-container">
+            <div class="col-12 col-md-12 col-lg-9 page-detail-container">
+                {{ include('news/components/breadcrumbs.html.twig') }}
+
+                <div class="news-container news">
+                    <h1 class="entry-title block-title">Dự toán chi phí xây dựng</h1>
                     {{ post.getContents()|raw }}
                 </div>
+
+                <hr>
                 
                 {% for message in app.flashes('error') %}
                     <div class="alert alert-danger" role="alert">
@@ -84,15 +93,45 @@
                 {% if costs is not null %}
                 <div class="row costs-result">
                     <div class="col-md-12">
-                        <h1 class="text-uppercase">Kết quả tính diện tích và chi phí</h1>
+                        <h2 class="costs-title">Kết quả tính diện tích và chi phí thi công xây dựng nhà</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th colspan="4" class="text-uppercase">{{ costs.title }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Loại</th>
+                                    <th>Diện tích (m<sup>2</sup>)</th>
+                                    <th>Thành tiền</th>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>{{ costs.titleMong }}</td>
+                                    <td>{{ costs.areaMong }} (m<sup>2</sup>)</td>
+                                    <td>Thành tiền</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>{{ costs.titleMai }}</td>
+                                    <td>{{ costs.areaMai }} (m<sup>2</sup>)</td>
+                                    <td>Thành tiền</td>
+                                </tr>
+                                {% if costs.floor > 0 %}
+                                {% for i in range(1, costs.floor - 1) %}
+                                <tr>
+                                    <td>2</td>
+                                    <td>Tầng {{ i }}</td>
+                                    <td>{{ costs.area }} (m<sup>2</sup>)</td>
+                                    <td>Thành tiền</td>
+                                </tr>
+                                {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
                         <p><span>Diện tích tầng trệt:</span> {{ costs.area }} m<sup>2</sup></p>
-                        {% if costs.floor > 1 %}
-                            {% for i in range(1, costs.floor - 1) %}
-                            <p><span>Diện tích tầng {{ i }}:</span> {{ costs.area }} m<sup>2</sup></p>
-                            {% endfor %}
-                        {% endif %}
-                        <p><span>{{ costs.titleMong }}:</span> {{ costs.areaMong }} m<sup>2</sup></p>
-                        <p><span>{{ costs.titleMai }}:</span> {{ costs.areaMai }} m<sup>2</sup></p>
                         <p><span>Tổng diện tích:</span> {{ costs.areaTotal }} m<sup>2</sup></p>
                         <p><span>{{ costs.title }}:</span> {{ costs.cost|number_format(0, '.', ',') }} <sup>đ</sup></p>
                         <p><span>Chi phí dự kiến:</span> {{ costs.costTotal|number_format(0, '.', ',') }} <sup>đ</sup></p>

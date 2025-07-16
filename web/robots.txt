@@ -4,10 +4,7 @@ Disallow: /admin
 Disallow: /wp-content
 Disallow: /wp-json
 Disallow: /cdn-cgi
-Disallow: /tag/
-Disallow: /amp/
 Disallow: /search?=*
-Disallow: /*?danh-muc=*
 Disallow: /*?filter_by=*
 Disallow: /*?PageSpeed=*
 Disallow: /*.pdf$

@@ -204,7 +204,7 @@ function initTypewriterEffect() {
             isParagraph = false;
 
         var textArray = [
-            "CÔNG TY TNHH TƯ VẤN THIẾT KẾ XÂY DỰNG KIM ANH|C40 - KDC HIỆP THÀNH - NGUYỄN THỊ BÚP, P. HIỆP THÀNH, QUẬN 12"
+            "CÔNG TY TNHH TƯ VẤN THIẾT KẾ XÂY DỰNG KIM ANH|98/5 NGUYỄN THỊ ĐẸT, ẤP 25, XÃ ĐÔNG THẠNH, TP.HCM"
         ];
 
         // Speed (in milliseconds) of typing.

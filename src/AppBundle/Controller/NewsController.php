@@ -63,6 +63,10 @@ class NewsController extends Controller
             throw $this->createNotFoundException("The item does not exist");
         }
 
+        if ($category->getParentcat() != 'root') {
+            return $this->redirectToRoute('list_category', array('level1' => $category->getParentcat()->getUrl(), 'level2' => $category->getUrl()), 301);
+        }
+
         if (!empty($level2)) {
             $subCategory = $this->getDoctrine()
                 ->getRepository(NewsCategory::class)
@@ -349,7 +353,9 @@ class NewsController extends Controller
         $string = str_replace("\r", '', $string);
         $string = str_replace("\n", ' ', $string);
         $string = str_replace("\t", ' ', $string);
-        $string = str_replace("50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh", 'C40 - KDC Hiệp Thành - Nguyễn Thị Búp, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh', $string);
+        $string = str_replace("50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $string);
+        $string = str_replace("C40 - Khu DC Hiệp Thành - Đường Nguyễn Thị Búp, KP 4, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $string);
+        $string = str_replace("C40 - Khu DC Hiệp Thành - Đường Nguyễn Thị Búp, KP 4, Phường Hiệp Thành, Quận 12, TP.HCM", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $string);
         $string = str_replace("088.609.4455", '0966.289.559', $string);
         // ----- remove multiple spaces -----
         $string = trim(preg_replace('/ {2,}/', ' ', $string));
@@ -569,6 +575,9 @@ class NewsController extends Controller
         }
         
         $newContent = html_entity_decode($dom->saveHTML());
+        $newContent = str_replace("50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $newContent);
+        $newContent = str_replace("C40 - Khu DC Hiệp Thành - Đường Nguyễn Thị Búp, KP 4, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $newContent);
+        $newContent = str_replace("C40 - Khu DC Hiệp Thành - Đường Nguyễn Thị Búp, KP 4, Phường Hiệp Thành, Quận 12, TP.HCM", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $newContent);
         return preg_replace('/^<!DOCTYPE.+?>/', '', str_replace( array('<html>', '</html>', '<body>', '</body>'), array('', '', '', ''), $newContent));
     }
 
@@ -1087,14 +1096,14 @@ class NewsController extends Controller
                     'Biệt thự' => 2,
                     'Nhà cấp 4' => 3,
                 ),
-                'label' => 'Loại nhà'
+                'label' => 'Chọn loại nhà'
             ))
             ->add('method', ChoiceType::class, array(
                 'choices'  => array(
-                    'Xây phần thô' => 1,
-                    'Xây trọn gói' => 2,
+                    'Xây nhà phần thô' => 1,
+                    'Xây nhà trọn gói' => 2,
                 ),
-                'label' => 'Hình thức xây dựng'
+                'label' => 'Chọn hình thức thi công'
             ))
             ->add('wide', TextType::class, array(
                 'label' => 'Chiều rộng (m)',
@@ -1110,23 +1119,23 @@ class NewsController extends Controller
             ))
             ->add('floor', ChoiceType::class, array(
                 'choices'  => array(
-                    '1 trệt' => 1,
-                    '1 trệt 1 lầu' => 2,
-                    '1 trệt 2 lầu' => 3,
-                    '1 trệt 3 lầu' => 4,
-                    '1 trệt 4 lầu' => 5,
-                    '1 trệt 5 lầu' => 6,
-                    '1 trệt 6 lầu' => 7,
+                    '1' => 1,
+                    '2' => 2,
+                    '3' => 3,
+                    '4' => 4,
+                    '5' => 5,
+                    '6' => 6,
+                    '7' => 7,
                 ),
-                'label' => 'Số tầng'
+                'label' => 'Chọn số tầng'
             ))
             ->add('mong', ChoiceType::class, array(
                 'choices'  => array(
-                    'Móng đài cọc' => 1,
                     'Móng băng' => 2,
                     'Móng đơn' => 3,
+                    'Móng cọc (Móng đài)' => 1,
                 ),
-                'label' => 'Móng nhà'
+                'label' => 'Chọn loại móng'
             ))
             ->add('mai', ChoiceType::class, array(
                 'choices'  => array(
@@ -1135,10 +1144,10 @@ class NewsController extends Controller
                     'Mái xà gồ thép lợp ngói' => 3,
                     'Mái đúc BTCT lợp ngói' => 4,
                 ),
-                'label' => 'Mái nhà'
+                'label' => 'Chọn loại mái'
             ))
             ->add('reset', ResetType::class, array(
-                'label' => 'Nhập lại'
+                'label' => 'Làm lại'
             ))
             ->add('caculator', SubmitType::class, array(
                 'label' => 'Dự toán chi phí'
@@ -1178,10 +1187,10 @@ class NewsController extends Controller
             if ($type === 1) {
                 if ($method === 1) {
                     $cost = 2950000;
-                    $title = "Đơn giá nhà phố phần thô";
+                    $title = "Đơn giá xây nhà phần thô";
                 } else {
                     $cost = 4600000;
-                    $title = "Đơn giá nhà phố trọn gói";
+                    $title = "Đơn giá xây nhà trọn gói";
                 }
             } elseif ($type === 3) {
                 if ($method === 1) {
