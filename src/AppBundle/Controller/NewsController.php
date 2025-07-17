@@ -1139,10 +1139,10 @@ class NewsController extends Controller
             ))
             ->add('mai', ChoiceType::class, array(
                 'choices'  => array(
-                    'Mái bằng đúc BTCT' => 1,
+                    'Mái BTCT đúc bằng' => 1,
                     'Mái lợp tôn lạnh' => 2,
                     'Mái xà gồ thép lợp ngói' => 3,
-                    'Mái đúc BTCT lợp ngói' => 4,
+                    'Mái BTCT lợp ngói' => 4,
                 ),
                 'label' => 'Chọn loại mái'
             ))
@@ -1172,7 +1172,7 @@ class NewsController extends Controller
             $areaMong = 0;
             $titleMai = '';
             $areaMai = 0;
-            $note = 'Chi phí xây dựng trên chỉ áp dụng đối với diện tích xây dựng 80 m<sup>2</sup>/1sàn trở lên. Áp dụng với các nhà phố thông dụng không có các kiến trúc kết cấu đặc biệt.';
+            $note = 'Chi phí xây dựng trên chỉ áp dụng đối với diện tích xây dựng > 60 m<sup>2</sup>/1sàn trở lên. Áp dụng với các nhà phố thông dụng không có các kiến trúc kết cấu đặc biệt.';
 
             if (!is_numeric($long) || !is_numeric($wide) || !is_numeric($type) || !is_numeric($method) || !is_numeric($floor) || !is_numeric($mong) || !is_numeric($mai)) {
                 $this->addFlash(
@@ -1186,27 +1186,27 @@ class NewsController extends Controller
 
             if ($type === 1) {
                 if ($method === 1) {
-                    $cost = 2950000;
-                    $title = "Đơn giá xây nhà phần thô";
+                    $cost = 3200000;
+                    $title = "Đơn giá xây nhà phần thô nhà phố";
                 } else {
-                    $cost = 4600000;
-                    $title = "Đơn giá xây nhà trọn gói";
+                    $cost = 5000000;
+                    $title = "Đơn giá xây nhà trọn gói nhà phố";
                 }
             } elseif ($type === 3) {
                 if ($method === 1) {
-                    $cost = 2750000;
-                    $title = "Đơn giá nhà cấp 4 phần thô";
+                    $cost = 3000000;
+                    $title = "Đơn giá xây nhà cấp 4 phần thô";
                 } else {
-                    $cost = 3900000;
-                    $title = "Đơn giá nhà cấp 4 trọn gói";
+                    $cost = 4900000;
+                    $title = "Đơn giá xây nhà cấp 4 trọn gói";
                 }
             } else {
                 if ($method === 1) {
-                    $cost = 3200000;
-                    $title = "Đơn giá biệt thự phần thô";
+                    $cost = 3600000;
+                    $title = "Đơn giá xây dựng biệt thự phần thô";
                 } else {
                     $cost = 6000000;
-                    $title = "Đơn giá biệt thự trọn gói";
+                    $title = "Đơn giá xây dựng biệt thự trọn gói";
                 }
             }
 
@@ -1220,9 +1220,9 @@ class NewsController extends Controller
                 }
 
                 if ($mai === 1) {
-                    $areaMai = $area * 0.4;
+                    $areaMai = $area * 0.7;
                 } elseif ($mai === 2) {
-                    $areaMai = $area * 0.25;
+                    $areaMai = $area * 0.3;
                 } elseif ($mai === 3) {
                     $areaMai = $area * 0.7;
                 } else {
@@ -1235,7 +1235,7 @@ class NewsController extends Controller
             }
 
             if ($mong === 1) {
-                $titleMong = "Móng đài cọc";
+                $titleMong = "Móng cọc (Móng đài)";
             } elseif ($mong === 2) {
                 $titleMong = "Móng băng";
             } else {
@@ -1243,13 +1243,13 @@ class NewsController extends Controller
             }
 
             if ($mai === 1) {
-                $titleMai = "Mái bằng đúc BTCT";
+                $titleMai = "Mái BTCT đúc bằng";
             } elseif ($mai === 2) {
                 $titleMai = "Mái lợp tôn lạnh";
             } elseif ($mai === 3) {
                 $titleMai = "Mái xà gồ thép lợp ngói";
             } else {
-                $titleMai = "Mái đúc BTCT lợp ngói";
+                $titleMai = "Mái BTCT lợp ngói";
             }
             
             $costs = (object) array(

@@ -1,18 +1,18 @@
 <div class="row list-group costs">
     <div class="col-md-12">
         <h3 class="list-group-item list-group-item-action active text-uppercase">
-            Dự toán chi phí xây dựng
+            Dự toán chi phí
         </h3>
     </div>
     {{ form_start(form) }}
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="form-group">
             {{ form_label(form.type) }}
             {{ form_errors(form.type) }}
             {{ form_widget(form.type) }}
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class="form-group">
             {{ form_label(form.method) }}
             {{ form_errors(form.method) }}
@@ -55,8 +55,8 @@
         </div>
     </div>
     <div class="col-md-12 text-center">
-        {{ form_widget(form.reset) }}
         {{ form_widget(form.caculator) }}
+        {{ form_widget(form.reset) }}
     </div>
     {{ form_end(form) }}
 </div>
