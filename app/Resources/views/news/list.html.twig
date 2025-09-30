@@ -84,16 +84,12 @@
                         <h2>Có thể bạn quan tâm</h2>
                         <div class="row">
                             {% for row in pagination %}
-                                {{ include('news/components/itemsGrid.html.twig') }}
+                                {{ include('news/components/itemsGrid.html.twig', {row: row, target: '_blank', rel: 'noopener'}, with_context = false) }}
                             {% endfor %}
                         </div>
                     </div>
                 {% endif %}
             </div>
         </div>
-        
-        {# {{ render(controller(
-            'AppBundle:News:listNewsByCategory', { 'categoryId': 5 }
-        )) }} #}
     </div>
 {% endblock %}
