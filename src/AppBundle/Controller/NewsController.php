@@ -162,7 +162,7 @@ class NewsController extends Controller
                     ->andWhere('n.enable = :enable')
                     ->setParameter('newscategory_id', $subCategory->getId())
                     ->setParameter('enable', 1)
-                    ->setMaxResults( 8 )
+                    ->setMaxResults( 12 )
                     ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
                     ->getQuery()
                     ->getResult();
@@ -776,7 +776,7 @@ class NewsController extends Controller
         ]);
     }
 
-    public function listNewsByCategorySidebarAction($categoryId, $title)
+    public function listNewsByCategorySidebarAction($categoryId, $title, $postNumber = 10)
     {
         $category = $this->getDoctrine()
             ->getRepository(NewsCategory::class)
@@ -802,7 +802,7 @@ class NewsController extends Controller
             ->andWhere('n.enable = :enable')
             ->setParameter('listCategoriesIds', $listCategoriesIds)
             ->setParameter('enable', 1)
-            ->setMaxResults( 15 )
+            ->setMaxResults( $postNumber )
             ->orderBy('n.createdAt', 'DESC')
             ->getQuery()
             ->getResult();

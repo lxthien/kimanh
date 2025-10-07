@@ -210,12 +210,6 @@
             </div>
 
             {{ include('layout/sidebar.html.twig') }}
-
-            {% if category.getShowPostRelated() %}
-                <div class="col-12 col-md-12 col-lg-12">
-                    {{ include('news/components/related.html.twig') }}
-                </div>
-            {% endif %}
         </div>
     </div>
 {% endblock %}

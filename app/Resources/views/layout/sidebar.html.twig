@@ -7,6 +7,12 @@
                     {'type': 'sidebar'}
                 )) }}
                 {{ include('news/prices.html.twig') }}
+                {% if category is not empty and category.getShowPostRelated() %}
+                    {{ render(controller(
+                        'AppBundle:News:listNewsByCategorySidebar',
+                        {'categoryId': category.getId(), 'title': 'Tin cùng chuyên mục', 'postNumber': 25}
+                    )) }}
+                {% endif %}
                 {{ render(controller(
                     'AppBundle:News:listNewsByCategorySidebar',
                     {'categoryId': 2, 'title': 'Các mẫu nhà đẹp'}
