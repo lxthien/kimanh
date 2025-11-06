@@ -546,7 +546,7 @@ class NewsController extends Controller
     }
 
     private function lazyloadContent($post) {
-        $content = $post->getContents();
+        $content = htmlspecialchars($post->getContents());
         $dom = new \DOMDocument();
 
         // set error level

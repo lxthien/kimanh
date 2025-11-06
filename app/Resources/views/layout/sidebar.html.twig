@@ -6,21 +6,23 @@
                     'AppBundle:News:caculatorCostConstruction',
                     {'type': 'sidebar'}
                 )) }}
-                {{ include('news/prices.html.twig') }}
-                {% if category is not empty and category.getShowPostRelated() %}
+                {% if category is not empty and category.getId() != 1 %}
+                    {{ include('news/prices.html.twig') }}
+                    {% if category is not empty and category.getShowPostRelated() %}
+                        {{ render(controller(
+                            'AppBundle:News:listNewsByCategorySidebar',
+                            {'categoryId': category.getId(), 'title': 'Tin cùng chuyên mục', 'postNumber': 25}
+                        )) }}
+                    {% endif %}
                     {{ render(controller(
                         'AppBundle:News:listNewsByCategorySidebar',
-                        {'categoryId': category.getId(), 'title': 'Tin cùng chuyên mục', 'postNumber': 25}
+                        {'categoryId': 2, 'title': 'Các mẫu nhà đẹp'}
+                    )) }}
+                    {{ render(controller(
+                        'AppBundle:News:listNewsByCategorySidebar',
+                        {'categoryId': 8, 'title': 'Dự án tiêu biểu'}
                     )) }}
                 {% endif %}
-                {{ render(controller(
-                    'AppBundle:News:listNewsByCategorySidebar',
-                    {'categoryId': 2, 'title': 'Các mẫu nhà đẹp'}
-                )) }}
-                {{ render(controller(
-                    'AppBundle:News:listNewsByCategorySidebar',
-                    {'categoryId': 8, 'title': 'Dự án tiêu biểu'}
-                )) }}
                 {# {% if post is not empty and post.getRelatedNews() is not null %}
                 {{ include('widgets/relatedNews.html.twig') }}
                 {% else %}

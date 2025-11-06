@@ -4,9 +4,11 @@ Disallow: /admin
 Disallow: /wp-content
 Disallow: /wp-json
 Disallow: /cdn-cgi
+Disallow: /amp
 Disallow: /search?=*
 Disallow: /*?filter_by=*
 Disallow: /*?PageSpeed=*
+Disallow: /*?danh-muc=*
 Disallow: /*.pdf$
 Sitemap: https://xaydungkimanh.com/sitemap.xml
 Sitemap: https://xaydungkimanh.com/images_sitemap.xml
