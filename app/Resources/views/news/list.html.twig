@@ -10,26 +10,34 @@
 {% block keyword %}{{ category.getPageKeyword() }}{% endblock %}
 
 {% block structuredOpenGraph %}
-    <meta property="og:type" content="object" />
-    <meta property="og:title" content="{{ (category.getPageTitle() is not null ? category.getPageTitle() : category.getName()) }}" />
-    <meta property="og:description" content="{{ category.getPageDescription() }}" />
-    {% if pagination.currentPageNumber == 1 and pagination.pageCount > 1 %}
-        <link rel="next" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber + 1) }}" />
-    {% endif %}
-    {% if pagination.currentPageNumber > 1 and pagination.currentPageNumber < pagination.pageCount %}
-        {% if pagination.currentPageNumber - 1 == 1 %}
-        <link rel="prev" href="{{ baseUrl }}" />
-        {% else %}
-        <link rel="prev" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber - 1) }}" />
+    {% if category.getIsPage() == false %}
+        <meta property="og:type" content="object" />
+        <meta property="og:title" content="{{ (category.getPageTitle() is not null ? category.getPageTitle() : category.getName()) }}" />
+        <meta property="og:description" content="{{ category.getPageDescription() }}" />
+        {% if pagination.currentPageNumber == 1 and pagination.pageCount > 1 %}
+            <link rel="next" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber + 1) }}" />
         {% endif %}
-        <link rel="next" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber + 1) }}" />
-    {% endif %}
-    {% if pagination.currentPageNumber == pagination.pageCount and pagination.pageCount > 1 %}
-        {% if pagination.currentPageNumber - 1 == 1 %}
-        <link rel="prev" href="{{ baseUrl }}" />
-        {% else %}
-        <link rel="prev" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber - 1) }}" />
+        {% if pagination.currentPageNumber > 1 and pagination.currentPageNumber < pagination.pageCount %}
+            {% if pagination.currentPageNumber - 1 == 1 %}
+            <link rel="prev" href="{{ baseUrl }}" />
+            {% else %}
+            <link rel="prev" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber - 1) }}" />
+            {% endif %}
+            <link rel="next" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber + 1) }}" />
         {% endif %}
+        {% if pagination.currentPageNumber == pagination.pageCount and pagination.pageCount > 1 %}
+            {% if pagination.currentPageNumber - 1 == 1 %}
+            <link rel="prev" href="{{ baseUrl }}" />
+            {% else %}
+            <link rel="prev" href="{{ baseUrl ~ '/' ~ (pagination.currentPageNumber - 1) }}" />
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block blogPosting %}
+    {% if category.getSchemaMarkup() != null %}
+        {{ category.getSchemaMarkup()|raw }}
     {% endif %}
 {% endblock %}
 

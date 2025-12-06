@@ -129,6 +129,20 @@ class NewsCategory
     private $sortBy = null;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="schemaMarkup", type="text", nullable=true)
+     */
+    private $schemaMarkup = null;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isPage", type="boolean")
+     */
+    private $isPage = false;
+
+    /**
      * @var \DateTime
      *
      * @Gedmo\Timestampable(on="create")
@@ -378,5 +392,29 @@ class NewsCategory
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    public function setIsPage($isPage)
+    {
+        $this->isPage = (bool) $isPage;
+
+        return $this;
+    }
+
+    public function getIsPage()
+    {
+        return $this->isPage;
+    }
+
+    public function setSchemaMarkup($schemaMarkup)
+    {
+        $this->schemaMarkup = $schemaMarkup;
+
+        return $this;
+    }
+
+    public function getSchemaMarkup()
+    {
+        return $this->schemaMarkup;
     }
 }

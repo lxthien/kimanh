@@ -80,6 +80,15 @@ class NewsCategoryType extends AbstractType
                 'required' => false,
                 'label' => 'label.pageKeyword',
             ])
+            ->add('isPage', CheckboxType::class, [
+                'required' => false,
+                'label' => 'Trang tĩnh?',
+            ])
+            ->add('schemaMarkup', TextareaType::class, [
+                'attr' => ['rows' => '10'],
+                'required' => false,
+                'label' => 'Schema Markup',
+            ])
         ;
     }
 
