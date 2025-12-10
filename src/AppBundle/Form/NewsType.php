@@ -94,6 +94,11 @@ class NewsType extends AbstractType
                 'attr' => ['rows' => '5'],
                 'label' => 'Hotline',
             ])
+            ->add('schemaMarkup', TextareaType::class, [
+                'required' => false,
+                'attr' => ['rows' => '10'],
+                'label' => 'Schema Markup',
+            ])
         ;
     }
 

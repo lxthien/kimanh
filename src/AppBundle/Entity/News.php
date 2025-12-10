@@ -169,6 +169,13 @@ class News
     private $categoryPrimary = 0;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="schemaMarkup", type="text", nullable=true)
+     */
+    private $schemaMarkup = null;
+
+    /**
      * @var \DateTime
      *
      * @Gedmo\Timestampable(on="create")
@@ -629,5 +636,17 @@ class News
     public function getRobots()
     {
         return $this->robots;
+    }
+
+    public function setSchemaMarkup($schemaMarkup)
+    {
+        $this->schemaMarkup = $schemaMarkup;
+
+        return $this;
+    }
+
+    public function getSchemaMarkup()
+    {
+        return $this->schemaMarkup;
     }
 }

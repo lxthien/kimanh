@@ -83,6 +83,9 @@
 {% endblock %}
 
 {% block blogPosting %}
+    {% if post.getSchemaMarkup() != null %}
+        {{ post.getSchemaMarkup()|raw }}
+    {% else %}
     <script type="application/ld+json">
     {
         "@context": "https://schema.org/",
@@ -175,6 +178,7 @@
         {% endif %}
     }
     </script>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
