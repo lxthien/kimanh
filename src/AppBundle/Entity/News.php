@@ -215,6 +215,13 @@ class News
      */
     private $robots = null;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="template", type="string", length=255, nullable=true)
+     */
+    private $template = null;
+
     public function __toString()
     {
         return (string)$this->getTitle();
@@ -648,5 +655,17 @@ class News
     public function getSchemaMarkup()
     {
         return $this->schemaMarkup;
+    }
+
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+
+        return $this;
+    }
+
+    public function getTemplate()
+    {
+        return $this->template;
     }
 }

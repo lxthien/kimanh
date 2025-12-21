@@ -13,6 +13,9 @@
                             <a class="pull-right" target="_blank" href="{{ path('news_show', {'slug': news.url, 'preview' : 'true', 'preview_id' : news.id }) }}">Preview</a>
                         </div>
                         <div class="card-body">
+                            <!-- SEO Checker -->
+                            {# {{ include('admin/components/seo-checker.html.twig') }} #}
+
                             <!-- Credit Card -->
                             <div id="pay-invoice">
                                 <div class="card-body">

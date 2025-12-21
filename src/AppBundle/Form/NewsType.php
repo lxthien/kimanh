@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -69,10 +70,6 @@ class NewsType extends AbstractType
                 'label' => 'label.tags',
                 'required' => false,
             ])
-            ->add('robots', TextType::class, [
-                'required' => false,
-                'label' => 'Robots',
-            ])
             ->add('pageTitle', TextType::class, [
                 'required' => false,
                 'label' => 'label.pageTitle',
@@ -84,6 +81,10 @@ class NewsType extends AbstractType
             ->add('pageKeyword', TextType::class, [
                 'required' => false,
                 'label' => 'label.pageKeyword',
+            ])
+            ->add('robots', TextType::class, [
+                'required' => false,
+                'label' => 'Robots',
             ])
             ->add('relatedNews', TextType::class, [
                 'required' => false,
@@ -98,6 +99,13 @@ class NewsType extends AbstractType
                 'required' => false,
                 'attr' => ['rows' => '10'],
                 'label' => 'Schema Markup',
+            ])
+            ->add('template', ChoiceType::class, [
+                'required' => false,
+                'label' => 'Template',
+                'choices' => ['Mặc định' => '2_columns', 'Landing page' => '1_column'],
+                'empty_data' => '2_column',
+                'placeholder' => false
             ])
         ;
     }

@@ -2,33 +2,34 @@
     <div class="row">
         <div class="col-md-12">
             <div class="sidebar">
-                {{ render(controller(
-                    'AppBundle:News:caculatorCostConstruction',
-                    {'type': 'sidebar'}
-                )) }}
-                {% if category is not empty and category.getId() != 1 %}
-                    {{ include('news/prices.html.twig') }}
-                    {% if category is not empty and category.getShowPostRelated() %}
+                {% if post is defined and post is not empty and post.getTemplate() == '1_column' %}
+                    {{ render(controller(
+                        'AppBundle:News:caculatorCostConstruction',
+                        {'type': 'sidebar'}
+                    )) }}
+                {% else %}
+                    {{ render(controller(
+                        'AppBundle:News:caculatorCostConstruction',
+                        {'type': 'sidebar'}
+                    )) }}
+                    {% if category is defined and category is not empty and category.getId() != 1 %}
+                        {{ include('news/prices.html.twig') }}
+                        {% if category is not empty and category.getShowPostRelated() %}
+                            {{ render(controller(
+                                'AppBundle:News:listNewsByCategorySidebar',
+                                {'categoryId': category.getId(), 'title': 'Tin cùng chuyên mục', 'postNumber': 25}
+                            )) }}
+                        {% endif %}
                         {{ render(controller(
                             'AppBundle:News:listNewsByCategorySidebar',
-                            {'categoryId': category.getId(), 'title': 'Tin cùng chuyên mục', 'postNumber': 25}
+                            {'categoryId': 2, 'title': 'Các mẫu nhà đẹp'}
+                        )) }}
+                        {{ render(controller(
+                            'AppBundle:News:listNewsByCategorySidebar',
+                            {'categoryId': 8, 'title': 'Dự án tiêu biểu'}
                         )) }}
                     {% endif %}
-                    {{ render(controller(
-                        'AppBundle:News:listNewsByCategorySidebar',
-                        {'categoryId': 2, 'title': 'Các mẫu nhà đẹp'}
-                    )) }}
-                    {{ render(controller(
-                        'AppBundle:News:listNewsByCategorySidebar',
-                        {'categoryId': 8, 'title': 'Dự án tiêu biểu'}
-                    )) }}
                 {% endif %}
-                {# {% if post is not empty and post.getRelatedNews() is not null %}
-                {{ include('widgets/relatedNews.html.twig') }}
-                {% else %}
-                {{ include('widgets/hotNews.html.twig') }}
-                {% endif %} #}
-                {# {{ include('widgets/recentNews.html.twig') }} #}
             </div>
         </div>
     </div>
