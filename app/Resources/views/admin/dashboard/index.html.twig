@@ -1,210 +1,477 @@
 {% extends 'admin/layout.html.twig' %}
 
-{% block body_id 'admin_dashboard_index' %}
+{% block title %}Admin Dashboard{% endblock %}
 
 {% block main %}
-    <div class="content mt-3">
-
-        <div class="col-sm-6 col-lg-3">
-            <div class="card text-white bg-flat-color-1">
-                <div class="card-body pb-0">
-                    <div class="dropdown float-right">
-                        <button class="btn bg-transparent dropdown-toggle theme-toggle text-light" type="button" id="dropdownMenuButton" data-toggle="dropdown">
-                            <i class="fa fa-cog"></i>
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <div class="dropdown-menu-content">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </div>
-                    </div>
-                    <h4 class="mb-0">
-                        <span class="count">10468</span>
-                    </h4>
-                    <p class="text-light">Members online</p>
-
-                    <div class="chart-wrapper px-0" style="height:70px;" height="70">
-                        <canvas id="widgetChart1"></canvas>
-                    </div>
-
-                </div>
-
-            </div>
+<div class="container-fluid" id="dashboardContainer">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1 class="page-title">
+                <i class="fas fa-chart-line"></i> Dashboard
+                <small class="text-muted" id="lastUpdate">Updated just now</small>
+            </h1>
         </div>
-        <!--/.col-->
-
-        <div class="col-sm-6 col-lg-3">
-            <div class="card text-white bg-flat-color-2">
-                <div class="card-body pb-0">
-                    <div class="dropdown float-right">
-                        <button class="btn bg-transparent dropdown-toggle theme-toggle text-light" type="button" id="dropdownMenuButton" data-toggle="dropdown">
-                            <i class="fa fa-cog"></i>
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <div class="dropdown-menu-content">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </div>
-                    </div>
-                    <h4 class="mb-0">
-                        <span class="count">10468</span>
-                    </h4>
-                    <p class="text-light">Members online</p>
-
-                    <div class="chart-wrapper px-0" style="height:70px;" height="70">
-                        <canvas id="widgetChart2"></canvas>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <!--/.col-->
-
-        <div class="col-sm-6 col-lg-3">
-            <div class="card text-white bg-flat-color-3">
-                <div class="card-body pb-0">
-                    <div class="dropdown float-right">
-                        <button class="btn bg-transparent dropdown-toggle theme-toggle text-light" type="button" id="dropdownMenuButton" data-toggle="dropdown">
-                            <i class="fa fa-cog"></i>
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <div class="dropdown-menu-content">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </div>
-                    </div>
-                    <h4 class="mb-0">
-                        <span class="count">10468</span>
-                    </h4>
-                    <p class="text-light">Members online</p>
-
-                </div>
-
-                <div class="chart-wrapper px-0" style="height:70px;" height="70">
-                    <canvas id="widgetChart3"></canvas>
-                </div>
-            </div>
-        </div>
-        <!--/.col-->
-
-        <div class="col-sm-6 col-lg-3">
-            <div class="card text-white bg-flat-color-4">
-                <div class="card-body pb-0">
-                    <div class="dropdown float-right">
-                        <button class="btn bg-transparent dropdown-toggle theme-toggle text-light" type="button" id="dropdownMenuButton" data-toggle="dropdown">
-                            <i class="fa fa-cog"></i>
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <div class="dropdown-menu-content">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </div>
-                    </div>
-                    <h4 class="mb-0">
-                        <span class="count">10468</span>
-                    </h4>
-                    <p class="text-light">Members online</p>
-
-                    <div class="chart-wrapper px-3" style="height:70px;" height="70">
-                        <canvas id="widgetChart4"></canvas>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <!--/.col-->
-
-        <div class="col-lg-3 col-md-6">
-            <div class="social-box facebook">
-                <i class="fa fa-facebook"></i>
-                <ul>
-                    <li>
-                        <strong>
-                            <span class="count">40</span>
-                            k</strong>
-                        <span>friends</span>
-                    </li>
-                    <li>
-                        <strong>
-                            <span class="count">450</span></strong>
-                        <span>feeds</span>
-                    </li>
-                </ul>
-            </div>
-            <!--/social-box-->
-        </div>
-        <!--/.col-->
-
-        <div class="col-lg-3 col-md-6">
-            <div class="social-box twitter">
-                <i class="fa fa-twitter"></i>
-                <ul>
-                    <li>
-                        <strong>
-                            <span class="count">30</span>
-                            k</strong>
-                        <span>friends</span>
-                    </li>
-                    <li>
-                        <strong>
-                            <span class="count">450</span></strong>
-                        <span>tweets</span>
-                    </li>
-                </ul>
-            </div>
-            <!--/social-box-->
-        </div>
-        <!--/.col-->
-
-        <div class="col-lg-3 col-md-6">
-            <div class="social-box linkedin">
-                <i class="fa fa-linkedin"></i>
-                <ul>
-                    <li>
-                        <strong>
-                            <span class="count">40</span>
-                            +</strong>
-                        <span>contacts</span>
-                    </li>
-                    <li>
-                        <strong>
-                            <span class="count">250</span></strong>
-                        <span>feeds</span>
-                    </li>
-                </ul>
-            </div>
-            <!--/social-box-->
-        </div>
-        <!--/.col-->
-
-        <div class="col-lg-3 col-md-6">
-            <div class="social-box google-plus">
-                <i class="fa fa-google-plus"></i>
-                <ul>
-                    <li>
-                        <strong>
-                            <span class="count">94</span>
-                            k</strong>
-                        <span>followers</span>
-                    </li>
-                    <li>
-                        <strong>
-                            <span class="count">92</span></strong>
-                        <span>circles</span>
-                    </li>
-                </ul>
-            </div>
-            <!--/social-box-->
-        </div>
-        <!--/.col-->
-
     </div>
+
+    <!-- Quick Stats Widgets Row 1 -->
+    <div class="row mb-4">
+        <!-- Total Posts -->
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-2">Total Posts</h6>
+                            <h2 id="totalPosts" class="mb-0">{{ stats.totalPosts }}</h2>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                    <small class="d-block mt-2">
+                        <i class="fas fa-plus"></i> {{ todayStats.postsToday }} today
+                    </small>
+                </div>
+                <a href="{{ path('admin_news_index') }}" class="card-footer text-white">
+                    View Posts <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Total Comments -->
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-2">Comments</h6>
+                            <h2 id="totalComments" class="mb-0">{{ stats.totalComments }}</h2>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-comments fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                    <small class="d-block mt-2 text-warning">
+                        <i class="fas fa-exclamation-circle"></i> {{ stats.pendingComments }} pending
+                    </small>
+                </div>
+                <a href="{{ path('admin_comment_index') }}" class="card-footer text-white">
+                    View Comments <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Total Views -->
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-2">Total Views</h6>
+                            <h2 id="totalViews" class="mb-0">{{ stats.totalViews | number_format }}</h2>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-eye fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                    <small class="d-block mt-2">
+                        <span id="avgViewsPerPost">{{ (stats.totalViews / (stats.totalPosts ?: 1)) | round(0) }}</span> avg per post
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-2">Notifications</h6>
+                            <h2 id="unreadNotifications" class="mb-0">{{ stats.unreadNotifications }}</h2>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-bell fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                    <small class="d-block mt-2">
+                        Unread alerts
+                    </small>
+                </div>
+                <a href="#" class="card-footer text-white">
+                    View All <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <!-- View Trends Chart -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line"></i> View Trends (Last 30 Days)
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="viewTrendsChart" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Posts by Category Pie Chart -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fas fa-pie-chart"></i> Posts by Category
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="postsByCategoryChart" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row mb-4">
+        <!-- Recent Posts -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-newspaper"></i> Recent Posts
+                    </h5>
+                    <a href="{{ path('admin_news_index') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    {% if recentPosts %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Views</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for post in recentPosts %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ post.title[:40] }}</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-info">{{ post.viewCounts }}</span>
+                                    </td>
+                                    <td>
+                                        {% if post.enable %}
+                                        <span class="badge badge-success">Published</span>
+                                        {% else %}
+                                        <span class="badge badge-secondary">Draft</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>{{ post.createdAt | date('M d, Y') }}</small>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info m-3">No posts yet</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Viewed Posts -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-fire"></i> Top Viewed Posts
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if topViewedPosts %}
+                    <div class="list-group list-group-flush">
+                        {% for post in topViewedPosts %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">{{ post.title }}</h6>
+                                    <small class="text-muted">{{ post.createdAt | date('M d, Y') }}</small>
+                                </div>
+                                <span class="badge badge-pill badge-primary">{{ post.viewCounts }} views</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info m-3">No data</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Comments & Activity Row -->
+    <div class="row">
+        <!-- Pending Comments -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-comment-dots"></i> Pending Comments ({{ stats.pendingComments }})
+                    </h5>
+                    <a href="{{ path('admin_comment_index') }}" class="btn btn-sm btn-outline-primary">Review All</a>
+                </div>
+                <div class="card-body p-0">
+                    {% if pendingComments %}
+                    <div class="list-group list-group-flush">
+                        {% for comment in pendingComments %}
+                        <div class="list-group-item border-left-warning">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">{{ comment.author }}</h6>
+                                    <p class="mb-1 text-muted small">{{ comment.content|slice(0, 60) }}{% if comment.content|length > 60 %}...{% endif %}</p>
+                                    <small class="text-muted">On: {{ comment.postTitle }}</small>
+                                </div>
+                                <small class="text-muted">{{ comment.createdAt | date('M d') }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-success m-3">
+                        <i class="fas fa-check-circle"></i> All comments are approved!
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history"></i> Recent Activity
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if recentActivity %}
+                    <div class="timeline">
+                        {% for activity in recentActivity %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-{{ activity.color }}">
+                                <i class="fas {{ activity.icon }}"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <p class="mb-0">{{ activity.title }}</p>
+                                <small class="text-muted">{{ activity.date | date('M d, H:i') }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info m-3">No activity</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .stat-card {
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .stat-icon {
+        text-align: right;
+    }
+
+    .stat-card .card-footer {
+        background-color: rgba(0,0,0,0.1);
+        border-top: 1px solid rgba(255,255,255,0.2);
+        padding: 10px 15px;
+        display: block;
+        text-decoration: none;
+    }
+
+    .stat-card .card-footer:hover {
+        background-color: rgba(0,0,0,0.15);
+    }
+
+    .timeline {
+        position: relative;
+        padding: 20px 0;
+    }
+
+    .timeline-item {
+        display: flex;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .timeline-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .timeline-marker {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+        margin-right: 15px;
+    }
+
+    .timeline-marker.bg-info {
+        background-color: #17a2b8;
+    }
+
+    .timeline-marker.bg-warning {
+        background-color: #ffc107;
+        color: #333;
+    }
+
+    .timeline-marker.bg-danger {
+        background-color: #dc3545;
+    }
+
+    .timeline-content {
+        padding: 5px 0;
+    }
+
+    .border-left-warning {
+        border-left: 4px solid #ffc107;
+    }
+
+    .opacity-50 {
+        opacity: 0.5;
+    }
+
+    .page-title small {
+        font-size: 0.7rem;
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Parse chart data
+    const viewTrendsData = {{ viewTrends | raw }};
+    const postsCategoryData = {{ postsByCategory | raw }};
+
+    // View Trends Line Chart
+    if (document.getElementById('viewTrendsChart')) {
+        const viewCtx = document.getElementById('viewTrendsChart').getContext('2d');
+        const viewChart = new Chart(viewCtx, {
+            type: 'line',
+            data: {
+                labels: viewTrendsData.labels,
+                datasets: [{
+                    label: 'Views',
+                    data: viewTrendsData.data,
+                    borderColor: '#17a2b8',
+                    backgroundColor: 'rgba(23, 162, 184, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#17a2b8',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Posts by Category Pie Chart
+    if (document.getElementById('postsByCategoryChart')) {
+        const categoryCtx = document.getElementById('postsByCategoryChart').getContext('2d');
+        const categoryChart = new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: postsCategoryData.labels,
+                datasets: [{
+                    data: postsCategoryData.data,
+                    backgroundColor: [
+                        '#007bff',
+                        '#28a745',
+                        '#ffc107',
+                        '#dc3545',
+                        '#17a2b8',
+                        '#6f42c1',
+                        '#e83e8c',
+                        '#fd7e14'
+                    ],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+
+    // Update last update time
+    setInterval(function() {
+        const lastUpdate = document.getElementById('lastUpdate');
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        lastUpdate.textContent = 'Updated at ' + hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0');
+    }, 60000);
+});
+</script>
 {% endblock %}

@@ -11,7 +11,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CommentRepository")
  * @ORM\Table(name="comment", options={"collate"="utf8_general_ci"})
  */
 

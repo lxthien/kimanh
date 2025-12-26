@@ -10,5 +10,21 @@ namespace AppBundle\Repository;
  */
 class CommentRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function countCommentsByDay(\DateTime $from, \DateTime $to, $onlyApproved = true)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select('SUBSTRING(c.createdAt, 1, 10) AS day, COUNT(c.id) AS total')
+            ->where('c.createdAt BETWEEN :from AND :to')
+            ->setParameter('from', $from)
+            ->setParameter('to', $to);
 
+        if ($onlyApproved) {
+            $qb->andWhere('c.approved = 1');
+        }
+
+        return $qb->groupBy('day')
+            ->orderBy('day', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

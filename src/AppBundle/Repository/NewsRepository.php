@@ -31,4 +31,27 @@ class NewsRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter('postType', "page")
             ->getResult();
     }
+
+    public function countPostsByDay(\DateTime $from, \DateTime $to)
+    {
+        return $this->createQueryBuilder('n')
+            ->select("SUBSTRING(n.createdAt, 1, 10) AS day, COUNT(n.id) AS total")
+            ->where('n.createdAt BETWEEN :from AND :to')
+            ->setParameter('from', $from)
+            ->setParameter('to', $to)
+            ->groupBy('day')
+            ->orderBy('day', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    public function topViewed($limit = 10)
+    {
+        return $this->createQueryBuilder('n')
+            ->select('n.id, n.title, n.viewCounts, n.url')
+            ->orderBy('n.viewCounts', 'DESC')
+            ->setMaxResults((int)$limit)
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

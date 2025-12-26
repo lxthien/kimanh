@@ -1,0 +1,327 @@
+{# Notification Bell Component #}
+<div class="notification-bell-container" id="notificationBellContainer">
+    <style>
+        .notification-bell-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            font-size: 24px;
+            color: #4a5568;
+            transition: color 0.3s ease;
+        }
+
+        .notification-bell:hover {
+            color: #2d3748;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #f56565;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .notification-badge.show {
+            display: flex;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-dropdown-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: bold;
+            font-size: 14px;
+            background-color: #f7fafc;
+        }
+
+        .notification-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .notification-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .notification-item:hover {
+            background-color: #f7fafc;
+        }
+
+        .notification-item.unread {
+            background-color: #edf2f7;
+        }
+
+        .notification-item-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .notification-item-message {
+            font-size: 12px;
+            color: #4a5568;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .notification-item-time {
+            font-size: 11px;
+            color: #a0aec0;
+        }
+
+        .notification-item-type {
+            display: inline-block;
+            padding: 2px 6px;
+            background-color: #e6f7ff;
+            color: #0050b3;
+            border-radius: 3px;
+            font-size: 10px;
+            margin-right: 4px;
+            font-weight: 600;
+        }
+
+        .notification-item-type.comment_pending {
+            background-color: #fff7e6;
+            color: #ad6800;
+        }
+
+        .notification-item-type.contact_new {
+            background-color: #f6f0ff;
+            color: #531dab;
+        }
+
+        .notification-dropdown-footer {
+            padding: 12px 16px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            background-color: #f7fafc;
+        }
+
+        .notification-dropdown-footer a {
+            color: #3182ce;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .notification-dropdown-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .notification-empty {
+            padding: 20px 16px;
+            text-align: center;
+            color: #718096;
+            font-size: 13px;
+        }
+    </style>
+
+    <!-- Bell Icon -->
+    <div class="notification-bell" id="notificationBell">
+        🔔
+        <span class="notification-badge" id="notificationBadge">0</span>
+    </div>
+
+    <!-- Dropdown -->
+    <div class="notification-dropdown" id="notificationDropdown">
+        <div class="notification-dropdown-header">Thông báo</div>
+        <ul class="notification-list" id="notificationList">
+            <div class="notification-empty">Không có thông báo mới</div>
+        </ul>
+        <div class="notification-dropdown-footer">
+            <a href="{{ path('admin_comment_index') }}">Xem tất cả</a>
+            <span> | </span>
+            <a href="#" id="markAllRead">Đánh dấu đã đọc</a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const notificationBell = document.getElementById('notificationBell');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    const notificationBadge = document.getElementById('notificationBadge');
+    const notificationList = document.getElementById('notificationList');
+    const markAllReadBtn = document.getElementById('markAllRead');
+
+    // Toggle dropdown
+    notificationBell.addEventListener('click', function(e) {
+        e.stopPropagation();
+        notificationDropdown.classList.toggle('show');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!notificationBell.contains(e.target) && !notificationDropdown.contains(e.target)) {
+            notificationDropdown.classList.remove('show');
+        }
+    });
+
+    // Load notifications
+    function loadNotifications() {
+        fetch('{{ path('api_notifications_recent') }}?limit=10')
+            .then(response => response.json())
+            .then(data => {
+                updateNotificationUI(data.notifications);
+                
+                // Load unread count
+                fetch('{{ path('api_notifications_count') }}')
+                    .then(response => response.json())
+                    .then(countData => {
+                        updateNotificationBadge(countData.count);
+                    });
+            })
+            .catch(error => console.error('Error loading notifications:', error));
+    }
+
+    // Update UI with notifications
+    function updateNotificationUI(notifications) {
+        if (notifications.length === 0) {
+            notificationList.innerHTML = '<div class="notification-empty">Không có thông báo mới</div>';
+            return;
+        }
+
+        notificationList.innerHTML = '';
+        notifications.forEach(notification => {
+            const item = document.createElement('li');
+            item.className = 'notification-item' + (notification.isRead ? '' : ' unread');
+            
+            const typeLabel = notification.type === 'comment_pending' ? 'Bình luận' : 'Liên hệ';
+            const typeClass = notification.type;
+            const timeAgo = getTimeAgo(new Date(notification.createdAt));
+
+            item.innerHTML = `
+                <div class="notification-item-title">
+                    <span class="notification-item-type ${typeClass}">${typeLabel}</span>
+                    ${notification.title}
+                </div>
+                <div class="notification-item-message">${notification.message}</div>
+                <div class="notification-item-time">${timeAgo}</div>
+            `;
+
+            item.addEventListener('click', function() {
+                handleNotificationClick(notification);
+            });
+
+            notificationList.appendChild(item);
+        });
+    }
+
+    // Update badge
+    function updateNotificationBadge(count) {
+        if (count > 0) {
+            notificationBadge.textContent = count > 99 ? '99+' : count;
+            notificationBadge.classList.add('show');
+        } else {
+            notificationBadge.classList.remove('show');
+        }
+    }
+
+    // Handle notification click
+    function handleNotificationClick(notification) {
+        // Mark as read
+        if (!notification.isRead) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            if (csrfToken) {
+                headers['X-CSRF-TOKEN'] = csrfToken.content;
+            }
+
+            fetch('{{ path('api_notification_mark_read', {id: 'ID'}) }}'.replace('ID', notification.id), {
+                method: 'POST',
+                headers: headers
+            })
+            .then(() => {
+                loadNotifications();
+            })
+            .catch(error => console.error('Error marking notification as read:', error));
+        }
+
+        // Navigate to relevant page
+        if (notification.relatedType === 'Comment') {
+            window.location.href = '{{ path('admin_comment_index') }}';
+        } else if (notification.relatedType === 'Contact') {
+            window.location.href = '{{ path('admin_contact_index') }}';
+        }
+    }
+
+    // Mark all as read
+    markAllReadBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const csrfToken = document.querySelector('meta[name="csrf-token"]');
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        if (csrfToken) {
+            headers['X-CSRF-TOKEN'] = csrfToken.content;
+        }
+
+        fetch('{{ path('api_notifications_mark_all_read') }}', {
+            method: 'POST',
+            headers: headers
+        })
+        .then(() => {
+            loadNotifications();
+            notificationDropdown.classList.remove('show');
+        })
+        .catch(error => console.error('Error marking all notifications as read:', error));
+    });
+
+    // Get time ago string
+    function getTimeAgo(date) {
+        const now = new Date();
+        const seconds = Math.floor((now - date) / 1000);
+        
+        if (seconds < 60) return 'vừa xong';
+        if (seconds < 3600) return Math.floor(seconds / 60) + ' phút trước';
+        if (seconds < 86400) return Math.floor(seconds / 3600) + ' giờ trước';
+        
+        return Math.floor(seconds / 86400) + ' ngày trước';
+    }
+
+    // Load notifications on page load
+    loadNotifications();
+
+    // Refresh notifications every 30 seconds
+    setInterval(loadNotifications, 30000);
+});
+</script>

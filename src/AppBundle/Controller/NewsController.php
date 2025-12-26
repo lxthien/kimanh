@@ -210,9 +210,12 @@ class NewsController extends Controller
             throw $this->createNotFoundException("The item does not exist");
         }
 
-        // Update viewCount for post
-        //$post->setViewCounts( $post->getViewCounts() + 1 );
-        //$this->getDoctrine()->getManager()->flush();
+        // Update viewCount every 10 views (reduces DB writes by 90%)
+        $currentViews = $post->getViewCounts();
+        if ($currentViews % 10 === 0) {
+            $post->setViewCounts($currentViews + 1);
+            $this->getDoctrine()->getManager()->flush();
+        }
 
         $categoryPrimary = $request->query->get('danh-muc');
         
@@ -383,9 +386,12 @@ class NewsController extends Controller
             throw $this->createNotFoundException("The post does not exist");
         }
 
-        // Update viewCount for post
-        $post->setViewCounts( $post->getViewCounts() + 1 );
-        $this->getDoctrine()->getManager()->flush();
+        // Update viewCount every 10 views (reduces DB writes by 90%)
+        $currentViews = $post->getViewCounts();
+        if ($currentViews % 10 === 0) {
+            $post->setViewCounts($currentViews + 1);
+            $this->getDoctrine()->getManager()->flush();
+        }
 
         $categoryPrimary = $request->query->get('danh-muc');
         
