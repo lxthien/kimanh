@@ -1,3 +1,5 @@
+/* Sidebar - Modern Industrial Theme
+------------------------------------------------------------------------- */
 #sidebar {
     @media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
         display: none;
@@ -31,99 +33,259 @@
     }
 
     #form-search {
+        margin-bottom: 25px;
+
         input {
-            border-width: 1px;
-            border: 1px solid $mercury;
+            border: 2px solid $borderColor;
+            border-radius: $radiusSm;
+            padding: 12px 15px;
+            width: 100%;
+            transition: $transitionFast;
+
+            &:focus {
+                border-color: $accentColor;
+                box-shadow: 0 0 0 3px rgba($accentColor, 0.1);
+                outline: none;
+            }
+        }
+
+        button {
+            background: $gradientAccent;
+            border: none;
+            padding: 12px 20px;
+            border-radius: $radiusSm;
+            color: $white;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: $transitionFast;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: $shadowMd;
+            }
         }
     }
 
     .list-group {
-        .list-group-item-action {
-            background: none;
-            font-weight: bold;
-            color: $black;
-            border: none;
-            padding-left: 0px;
-            font-size: 20px;
-            position: relative;
-            border-bottom: 3px solid $primaryColor;
-            margin-bottom: 20px;
+        margin-bottom: 30px;
+        border-radius: $radiusMd;
+        overflow: hidden;
+        box-shadow: $shadowSm;
+        border: 1px solid $borderColor;
 
-            &:before {
-                position: absolute;
-                bottom: -3px;
-                left: 0;
-                content: "";
-                width: 90px;
-                height: 3px;
-                background: $supernova;
-            }
-        }
-
-        h2 {
+        // Sidebar Header - Same style as costs form
+        > .list-group-item-action,
+        > h3.list-group-item,
+        > .list-group-item:first-child {
+            background: $primaryColor !important;
+            background-image: $gradientPrimary !important;
+            border: none !important;
+            border-bottom: 4px solid $accentColor !important;
+            color: $white !important;
+            font-weight: 700 !important;
             font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 0;
+            letter-spacing: 0.5px;
+            padding: 14px 18px;
+            margin: 0;
+            border-radius: 0;
+            text-transform: uppercase;
+            text-align: left;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            // Icon before text
+            &::before {
+                content: "📋";
+                font-size: 18px;
+            }
+
+            // Remove hover effects
+            &:hover, &:focus {
+                background: $primaryColor !important;
+                background-image: $gradientPrimary !important;
+                color: $white !important;
+            }
         }
 
         .td-list-group-item {
-            height: 85px;
-            color: $black;
-            padding: 10px;
+            min-height: 85px;
+            height: auto;
+            color: $textPrimary;
+            padding: 12px;
+            border-radius: $radiusSm;
+            margin-bottom: 8px;
+            transition: $transitionFast;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: flex-start;
 
             &:hover {
-                background: $gray94;
+                background: $surfaceLight;
                 color: $primaryColor;
+                border-color: $borderColor;
+                transform: translateX(5px);
+
+                h2 a {
+                    color: $accentColor;
+                }
             }
 
             img {
-                float: left;
-                margin-right: 10px;
-                border: 1px solid $mercury;
+                flex-shrink: 0;
+                margin-right: 12px;
+                border: 1px solid $borderColor;
+                border-radius: $radiusSm;
+                width: 80px;
+                height: 60px;
+                object-fit: cover;
             }
 
             img.icon-price {
                 margin-top: 5px;
                 margin-right: 5px;
                 border: none;
+                width: auto;
+                height: auto;
             }
 
             span {
-                line-height: 22px;
+                line-height: 1.5;
                 display: -webkit-box;
                 -webkit-line-clamp: 3;
                 -webkit-box-orient: vertical;
                 overflow: hidden;
+                font-size: 14px;
+            }
+
+            h2 a {
+                color: $primaryColor;
+                transition: $transitionFast;
+                
+                &:hover {
+                    color: $accentColor;
+                    text-decoration: none;
+                }
             }
 
             &.item-price {
                 height: auto;
-                font-size: 17px;
+                min-height: auto;
+                font-size: 16px;
+                padding: 10px 12px;
+                background: $surfaceLight;
+                border: 1px solid $borderColor;
+                display: block;
 
                 i {
-                    color: #FDC502;
-                    margin-right: 5px;
+                    color: $accentColor;
+                    margin-right: 8px;
                 }
 
                 span {
                     display: inline;
+                    font-weight: 500;
+                }
+
+                &:hover {
+                    background: rgba($accentColor, 0.05);
+                    border-color: $accentColor;
                 }
             }
         }
 
         .video-related {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            border-radius: $radiusMd;
+            overflow: hidden;
+            box-shadow: $shadowSm;
+            transition: $transitionBase;
+
+            &:hover {
+                box-shadow: $shadowMd;
+                transform: translateY(-3px);
+            }
 
             .play-youtube-video {
                 cursor: pointer;
+                position: relative;
+
+                &:after {
+                    content: "";
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 50px;
+                    height: 50px;
+                    background: rgba($accentColor, 0.9);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                img {
+                    width: 100%;
+                    height: auto;
+                    border: none;
+                    border-radius: 0;
+                }
             }
 
             a {
                 display: block;
-                color: #0053a5;
-                padding: 10px 0 0;
-                font-weight: bold;
-                line-height: 22px;
+                color: $primaryColor;
+                padding: 12px 15px;
+                font-weight: 600;
+                line-height: 1.4;
+                font-size: 15px;
+                background: $white;
+                transition: $transitionFast;
+
+                &:hover {
+                    color: $accentColor;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+
+    // Sidebar CTA Box
+    .sidebar-cta {
+        background: $gradientPrimary;
+        padding: 25px 20px;
+        border-radius: $radiusMd;
+        text-align: center;
+        margin-bottom: 25px;
+        color: $white;
+
+        h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: $white;
+        }
+
+        p {
+            font-size: 14px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .btn-cta {
+            background: $accentColor;
+            color: $white;
+            padding: 10px 25px;
+            border-radius: $radiusSm;
+            font-weight: 600;
+            display: inline-block;
+            transition: $transitionFast;
+
+            &:hover {
+                background: $accentLight;
+                text-decoration: none;
+                transform: translateY(-2px);
             }
         }
     }
@@ -135,7 +297,7 @@
             box-shadow: none;
 
             a {
-                border-radius: 0;
+                border-radius: $radiusSm;
             }
         }
     }

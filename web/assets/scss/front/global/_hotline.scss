@@ -1,72 +1,93 @@
+// ============================================
+// HOTLINE & FLOATING CTAs - Modern Design
+// ============================================
+
 .td-scroll-up {
     cursor: pointer;
     position: fixed;
     bottom: 30px;
     right: 25px;
-    width: 35px;
-    height: 35px;
-    background-color: $supernova;
+    width: 45px;
+    height: 45px;
+    background: $gradientAccent;
     z-index: 100;
+    border-radius: 50%;
+    box-shadow: $shadowLg;
+    transition: $transitionFast;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: $shadowXl;
+    }
 
     @media only screen and (max-width: 767.98px) {
         bottom: 20px;
         right: 10px;
+        width: 40px;
+        height: 40px;
     }
 
     i {
         position: relative;
-        color: $black;
-        font-size: 20px;
+        color: $white;
+        font-size: 18px;
         display: block;
         text-align: center;
-        width: 35px;
-        top: 7px;
+        top: 0;
+        width: auto;
     }
 }
 
 
 .hotline {
     position: fixed;
-    bottom: 80px;
+    bottom: 90px;
     right: 25px;
     text-align: center;
-    background-color: $white;
+    background: $white;
     color: $white;
     z-index: 100;
     font-size: 20px;
     text-transform: uppercase;
     padding: 0px;
     font-weight: bold;
-    border-radius: 30px;
+    border-radius: $radiusXl;
+    box-shadow: $shadowLg;
 
     @media only screen and (max-width: 767.98px) {
         right: 10px;
-        bottom: 70px;
+        bottom: 75px;
     }
 
     .inner > a {
-        display: inline-block;
-        font-size: 21px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 18px;
         font-weight: 700;
         color: $primaryColor;
-        background: url(../../../images/icon-phone.png) no-repeat 17px center;
-        background-size: 25px;
+        background: url(../../../images/icon-phone.png) no-repeat 15px center;
+        background-size: 22px;
         position: relative;
-        border: 1px solid $supernova;
-        border-radius: 40px;
-        padding: 6px 19px 6px 58px;
-        -webkit-background-clip: text;
-        -webkit-animation: color-change 1s infinite;
-        -moz-animation: color-change 1s infinite;
-        -o-animation: color-change 1s infinite;
-        -ms-animation: color-change 1s infinite;
-        animation: color-change 1s infinite;
+        border: 2px solid $accentColor;
+        border-radius: $radiusXl;
+        padding: 10px 20px 10px 50px;
+        transition: $transitionFast;
+
+        &:hover {
+            background-color: rgba(232, 93, 4, 0.05);
+            transform: translateY(-2px);
+            box-shadow: $shadowMd;
+        }
 
         .phonering-alo-ph-img-circle {
-            width: 25px;
-            height: 25px;
-            top: 8px;
-            left: 16px;
+            width: 22px;
+            height: 22px;
+            top: 12px;
+            left: 15px;
             position: absolute;
             background: url(../../../images/icon-phone.png) no-repeat 0px center;
             -webkit-animation: phonering-alo-circle-img-anim 1s infinite ease-in-out;
@@ -74,7 +95,7 @@
             -webkit-transform-origin: 50% 50%;
             -ms-transform-origin: 50% 50%;
             transform-origin: 50% 50%;
-            background-size: 25px;
+            background-size: 22px;
         }
     }
 }
@@ -156,27 +177,36 @@
     }
 
     li {
-        width: 44px;
-        height: 46px;
+        width: 48px;
+        height: 48px;
         overflow: hidden;
-        margin-bottom: 0;
+        margin-bottom: 8px;
         list-style: none;
+        border-radius: 50%;
+        box-shadow: $shadowMd;
+        transition: $transitionFast;
+
+        &:hover {
+            transform: translateX(-5px) scale(1.1);
+            box-shadow: $shadowLg;
+        }
     }
 
     li a {
         display: block;
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
     }
 
     li.facebook {
-        margin-bottom: 8px;
         background: url(../../../images/fb.png);
         background-repeat: no-repeat;
+        background-size: cover;
     }
 
     li.zalo {
         background: url(../../../images/zl.png);
         background-repeat: no-repeat;
+        background-size: cover;
     }
 }

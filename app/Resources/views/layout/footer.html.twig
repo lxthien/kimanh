@@ -3,29 +3,32 @@
     <div class="container">
         <div class="row footer-top">
             <div class="col-12 col-sm-6 col-md-3 col-lg-3">
-                <div class="widget-title text-uppercase">Xây Dựng Kim Anh</div>
-                <ul class="footer-company">
-                    <li>
-                        <i class="fa fa-map-marker"></i>
-                        <span>98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP.HCM</span>
-                    </li>
-                    <li>
-                        <i class="fa fa-phone"></i>
-                        <span><a href="tel:0974776305">0974.776.305</a></span>
-                    </li>
-                    <li>
-                        <i class="fas fa-envelope"></i>
-                        <span><a href="mailto:xaydungkimanh@gmail.com">xaydungkimanh@gmail.com</a></span>
-                    </li>
-                    <li>
-                        <i class="fab fa-internet-explorer"></i>
-                        <span><a href="https://www.xaydungkimanh.com/">www.xaydungkimanh.com</a></span>
-                    </li>
-                </ul>
+                <h2 class="widget-title text-uppercase">Xây Dựng Kim Anh</h2>
+                <address class="footer-address">
+                    <ul class="footer-company">
+                        <li>
+                            <i class="fa fa-map-marker"></i>
+                            <span>98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP.HCM</span>
+                        </li>
+                        <li>
+                            <i class="fa fa-phone"></i>
+                            <span><a href="tel:0974776305">0974.776.305</a></span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span><a href="mailto:xaydungkimanh@gmail.com">xaydungkimanh@gmail.com</a></span>
+                        </li>
+                        <li>
+                            <i class="fab fa-internet-explorer"></i>
+                            <span><a href="https://www.xaydungkimanh.com/">www.xaydungkimanh.com</a></span>
+                        </li>
+                    </ul>
+                </address>
             </div>
             <div class="col-12 col-sm-6 col-md-3 col-lg-3">
-                <div class="widget-title text-uppercase">Về chúng tôi</div>
-                <ul class="about-us">
+                <h2 class="widget-title text-uppercase">Về chúng tôi</h2>
+                <nav aria-label="Liên kết về chúng tôi">
+                    <ul class="about-us">
                     <li>
                         <a href="{{ path('news_show', {'slug': 'gioi-thieu' }) }}" title="Giới thiệu">Giới thiệu</a>
                     </li>
@@ -41,16 +44,17 @@
                     <li>
                         <a href="{{ path('news_show', {'slug': 'tuyen-dung-kien-truc-su-xay-dung' }) }}" title="Tuyển dụng">Tuyển dụng</a>
                     </li>
-                </ul>
+                    </ul>
+                </nav>
             </div>
             <div class="col-12 col-sm-6 col-md-3 col-lg-3">
-                <div class="widget-title text-uppercase">Dịch vụ</div>
+                <h2 class="widget-title text-uppercase">Dịch vụ</h2>
                 {{ get_setting('topKeyword')|raw }}
             </div>
             <div class="col-12 col-sm-6 col-md-3 col-lg-3">
-                <div class="widget-title text-uppercase">Fanpage</div>
+                <h2 class="widget-title text-uppercase">Fanpage</h2>
                 <div>
-                    <a href="https://www.facebook.com/xaydungkimanh/" title="Xây Nhà, Sửa Chữa Nhà Kim Anh">
+                    <a href="https://www.facebook.com/xaydungkimanh/" title="Xây Nhà, Sửa Chữa Nhà Kim Anh" rel="noopener noreferrer">
                         <img
                             class="lazyload"
                             src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="

@@ -94,7 +94,7 @@
                                 <span><i class="fa fa-balance-scale"></i></span>
                             </div>
                             <div class="media-body">
-                                <b class="media-heading text-uppercase">Giá cả hợp lý, cạnh tranh</b>
+                                <b class="media-heading text-uppercase">Giá hợp lý, cạnh tranh</b>
                                 <div class="marketing-container">
                                     <p>Bảng báo giá xây dựng nhà, sửa chữa nhà của chúng tôi hợp lý, rõ ràng từng vấn đề, cạnh tranh</p>
                                 </div>
@@ -135,7 +135,7 @@
                             <div class="media-body">
                                 <b class="media-heading text-uppercase">Sáng tạo trong thiết kế</b>
                                 <div class="marketing-container">
-                                    <p>Những kỹ sư thiết kế về kiến trúc và nội thất có kinh nghiệm sẽ đưa đến những ý tưởng sáng tạo cho ngôi nhà của bạn</p>
+                                    <p>Kỹ sư thiết kế về kiến trúc và nội thất có kinh nghiệm sẽ đưa đến những ý tưởng sáng tạo cho ngôi nhà của bạn</p>
                                 </div>
                             </div>
                         </div>
@@ -199,7 +199,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12 view-all-category text-center">
-                                            <a href="{{ path('list_category', {'level1': blockOnHomepage.category.getUrl(), 'level2': listSubTab.subCategory.getUrl() }) }}">Xem thêm</a>
+                                            <a href="{{ path('list_category', {'level1': blockOnHomepage.category.getUrl(), 'level2': listSubTab.subCategory.getUrl() }) }}">{{ listSubTab.subCategory.getName() }}</a>
                                         </div>
                                     </div>
                                 {% endfor %}
@@ -212,7 +212,7 @@
                                     {% endfor %}
                                 </div>
                                 <div class="col-md-12 view-all-category text-center">
-                                    <a href="{{ linkCat }}">Xem thêm</a>
+                                    <a href="{{ linkCat }}">{{ blockOnHomepage.category.getName() }}</a>
                                 </div>
                             </div>
                         {% endif %}

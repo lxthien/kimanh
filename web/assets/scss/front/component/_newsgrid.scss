@@ -1,51 +1,54 @@
+// ============================================
+// NEWS GRID - Modern Card Design
+// ============================================
+
 .title-list-news-items {
     .title-list-news-items-h1 {
         font-size: 32px;
         margin: 10px 0 15px;
-        color: #0053a5;
+        color: $primaryColor;
+        font-weight: 700;
 
         @media only screen and (max-width : 768px) {
             position: relative;
-            font-size: 28px;
+            font-size: 26px;
             margin: 15px 0 15px;
         }
 
         &::before {
             content: '';
             display: inline-block;
-            width: 180px;
-            height: 1px;
-            background-color: rgba(252,189,19,0);
-            background-image: -webkit-gradient(linear,left top,right top,from(rgba(252,189,19,0)),color-stop(50%,$selectiveYellow),to(rgba(252,189,19,0)));
-            background-image: linear-gradient(to right,rgba(252,189,19,0),$selectiveYellow 50%,rgba(252,189,19,0));
+            width: 150px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, $accentColor 50%, transparent);
             vertical-align: middle;
+            margin-right: 15px;
 
             @media only screen and (max-width: 767.98px) {
                 position: absolute;
                 left: 35%;
                 bottom: -5px;
-                height: 2px;
-                width: 100px;
+                height: 3px;
+                width: 80px;
             }
 
             @media only screen and (min-width: 768px) and (max-width : 1024px) {
                 position: absolute;
                 left: 43%;
                 bottom: -5px;
-                height: 2px;
-                width: 100px;
+                height: 3px;
+                width: 80px;
             }
         }
 
         &::after {
             content: '';
             display: inline-block;
-            width: 180px;
-            height: 1px;
-            background-color: rgba(252,189,19,0);
-            background-image: -webkit-gradient(linear,left top,right top,from(rgba(252,189,19,0)),color-stop(50%,$selectiveYellow),to(rgba(252,189,19,0)));
-            background-image: linear-gradient(to right,rgba(252,189,19,0),$selectiveYellow 50%,rgba(252,189,19,0));
+            width: 150px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, $accentColor 50%, transparent);
             vertical-align: middle;
+            margin-left: 15px;
 
             @media only screen and (max-width : 768px) {
                 display: none;
@@ -58,7 +61,7 @@
         }
 
         span {
-            color: $selectiveYellow;
+            color: $accentColor;
         }
 
         i {
@@ -66,15 +69,18 @@
             vertical-align: middle;
             margin-top: -5px;
             margin-right: 0;
-            color: $selectiveYellow;
+            color: $accentColor;
         }
     }
 
     p {
         text-align: center;
-        font-style: italic;
+        font-style: normal;
         width: 75%;
         margin: 0 auto 30px;
+        color: $textSecondary;
+        font-size: 16px;
+        line-height: 1.6;
 
         @media only screen and (max-width : 768px) {
             width: 100%;
@@ -87,7 +93,7 @@
         margin-bottom: 30px;
 
         @media only screen and (max-width : 768px) {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         &.d-none {
@@ -98,23 +104,46 @@
 
         .news-item-wrapper {
             background: $white;
+            border-radius: $radiusMd;
+            overflow: hidden;
+            box-shadow: $shadowMd;
+            transition: $transitionBase;
+            border: 2px solid transparent;
+            height: 100%;
+            position: relative;
 
-            @media only screen and (min-width: 979.98px) {
-                &:hover {
-                    .media-thumb {
-                        .img-thumbnail {
-                            transform: scale(1.5);
-                        }
+            &::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: $gradientAccent;
+                opacity: 0;
+                transition: $transitionFast;
+                z-index: 1;
+            }
 
-                        a {
-                            opacity: 1;
+            &:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 15px 35px rgba($primaryColor, 0.15);
+                border-color: rgba($accentColor, 0.3);
 
-                            i {
-                                -webkit-transform: translate(-50%, -50%) rotate(0);
-                                -moz-transform: translate(-50%, -50%) rotate(0);
-                                -ms-transform: translate(-50%, -50%) rotate(0);
-                                transform: translate(-50%, -50%) rotate(0);
-                            }
+                &::before {
+                    opacity: 1;
+                }
+
+                .media-thumb {
+                    .img-thumbnail {
+                        transform: scale(1.1);
+                    }
+
+                    a {
+                        opacity: 1;
+
+                        i {
+                            transform: translate(-50%, -50%) rotate(0);
                         }
                     }
                 }
@@ -122,16 +151,16 @@
 
             .media-thumb {
                 display: block;
-                height: 220px;
+                height: 200px;
                 overflow: hidden;
                 position: relative;
 
                 @media only screen and (max-width : 767.98px) {
-                    height: 250px;
+                    height: 220px;
                 }
 
                 @media (min-width: 768px) and (max-width: 991.98px) {
-                    height: 200px;
+                    height: 180px;
                 }
 
                 .img-thumbnail {
@@ -140,7 +169,8 @@
                     border: none;
                     width: 100%;
                     height: 100%;
-                    transition: 0.6s ease;
+                    object-fit: cover;
+                    transition: $transitionBase;
                 }
 
                 a {
@@ -149,13 +179,10 @@
                     height: 100%;
                     top: 0;
                     left: 0;
-                    background-color: rgba(0, 0, 0, 0.5);
+                    background-color: rgba(26, 39, 68, 0.6);
                     overflow: hidden;
                     opacity: 0;
-                    -webkit-transition: all 0.4s ease;
-                    -moz-transition: all 0.4s ease;
-                    -ms-transition: all 0.4s ease;
-                    transition: all 0.4s ease;
+                    transition: $transitionBase;
 
                     i {
                         display: block;
@@ -165,35 +192,27 @@
                         width: 50px;
                         height: 50px;
                         line-height: 46px;
-                        font-size: 1.3em;
-                        border: 2px solid #fff;
-                        color: #fff;
+                        font-size: 1.2em;
+                        border: 2px solid $white;
+                        color: $white;
                         text-align: center;
-                        -webkit-border-radius: 50%;
-                        -moz-border-radius: 50%;
-                        -ms-border-radius: 50%;
                         border-radius: 50%;
-                        -webkit-transform: translate(-50%, -50%) rotate(270deg);
-                        -moz-transform: translate(-50%, -50%) rotate(270deg);
-                        -ms-transform: translate(-50%, -50%) rotate(270deg);
                         transform: translate(-50%, -50%) rotate(270deg);
-                        -webkit-transition: all 0.4s ease;
-                        -moz-transition: all 0.4s ease;
-                        -ms-transition: all 0.4s ease;
-                        transition: all 0.4s ease;
+                        transition: $transitionBase;
                     }
                 }
             }
     
             .media-body {
-                padding: 0 0 20px;
+                padding: 15px 20px 20px;
 
                 h2 {
                     font-family: $robotoCondesed;
-                    font-size: 19px;
-                    font-weight: bold;
-                    margin: 15px 0 10px 0;
-                    min-height: 54px;
+                    font-size: 17px;
+                    font-weight: 700;
+                    margin: 0 0 10px 0;
+                    min-height: 50px;
+                    line-height: 1.5;
 
                     @media only screen and (max-width: 767.98px) {
                         min-height: auto;
@@ -204,25 +223,28 @@
                         overflow: hidden;
                         text-overflow: ellipsis;
                         display: -webkit-box;
-                        line-height: 26px;
-                        max-height: 60px;
+                        line-height: 24px;
+                        max-height: 48px;
                         -webkit-line-clamp: 2;
                         -webkit-box-orient: vertical;
-                        color: #0053a5;
-                        text-align: center;
+                        color: $primaryColor;
+                        text-align: left;
+                        transition: $transitionFast;
     
                         &:hover {
                             text-decoration: none;
+                            color: $accentColor;
                         }
                     }
                 }
                 
                 h3 {
                     font-family: $robotoCondesed;
-                    font-size: 19px;
-                    font-weight: bold;
-                    margin: 15px 0 10px 0;
-                    min-height: 54px;
+                    font-size: 17px;
+                    font-weight: 700;
+                    margin: 0 0 10px 0;
+                    min-height: 50px;
+                    line-height: 1.5;
 
                     @media only screen and (max-width: 767.98px) {
                         min-height: auto;
@@ -233,25 +255,27 @@
                         overflow: hidden;
                         text-overflow: ellipsis;
                         display: -webkit-box;
-                        line-height: 26px;
-                        max-height: 60px;
+                        line-height: 24px;
+                        max-height: 48px;
                         -webkit-line-clamp: 2;
                         -webkit-box-orient: vertical;
-                        color: #0053a5;
-                        text-align: center;
+                        color: $primaryColor;
+                        text-align: left;
+                        transition: $transitionFast;
     
                         &:hover {
                             text-decoration: none;
+                            color: $accentColor;
                         }
                     }
                 }
     
                 p {
-                    font-size: 16px;
+                    font-size: 14px;
                     margin-bottom: 0;
-                    line-height: 24px;
-                    text-align: center;
-                    color: $black;
+                    line-height: 22px;
+                    text-align: left;
+                    color: $textSecondary;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     display: -webkit-box;
@@ -263,27 +287,32 @@
     }
 }
 
-/* Slide project hot
+/* Slide project hot - Modern Industrial Theme
 ------------------------------------------------------------------------- */
 .project-hot {
     margin: 0;
+    padding: 60px 0;
+    background: $surfaceLight;
+    position: relative;
 
     @media only screen and (max-width: 767.98px) {
         margin: 0;
+        padding: 40px 0;
     }
 
     .title-list-news-items {
         h1 {
-            margin: 30px 0 10px;
+            margin: 0 0 15px;
+            color: $primaryColor;
 
             @media only screen and (max-width : 768px) {
                 font-size: 28px;
-                margin: 15px 0 15px;
+                margin: 0 0 15px;
             }
         }
 
         .block-underline {
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
     }
 
@@ -299,6 +328,7 @@
 
             .bx-viewport {
                 height: 100% !important;
+                overflow: visible !important;
 
                 .news-item {
                     @media only screen and (min-width: 768px) {
@@ -307,14 +337,58 @@
     
                     .news-item-wrapper {
                         width: 282px !important;
+                        margin: 10px;
+                        transition: $transitionBase;
     
                         @media only screen and (max-width: 767.98px) {
                             width: 100% !important;
+                            margin: 10px 0;
                         }
     
                         @media (min-width: 768px) and (max-width: 979.98px) {
                             width: 220px !important;
                         }
+
+                        &:hover {
+                            transform: translateY(-5px);
+                            box-shadow: $shadowLg;
+                        }
+                    }
+                }
+            }
+
+            // Slider controls styling
+            .bx-controls {
+                .bx-pager {
+                    bottom: -40px;
+
+                    .bx-pager-item {
+                        .bx-pager-link {
+                            background: rgba($primaryColor, 0.3);
+                            margin: 0 5px;
+                            width: 12px;
+                            height: 12px;
+                            border-radius: 50%;
+                            transition: $transitionFast;
+
+                            &:hover,
+                            &.active {
+                                background: $accentColor;
+                            }
+                        }
+                    }
+                }
+
+                .bx-prev,
+                .bx-next {
+                    background-color: $primaryColor;
+                    border-radius: $radiusSm;
+                    opacity: 0.8;
+                    transition: $transitionFast;
+
+                    &:hover {
+                        background-color: $accentColor;
+                        opacity: 1;
                     }
                 }
             }

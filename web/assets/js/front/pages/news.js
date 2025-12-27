@@ -52,10 +52,26 @@ function intHandleFormReplyComment() {
     });
 }
 
+// Table of Contents - Expand/Collapse functionality
+function initTableOfContents() {
+    var $toc = $('.ka-table-of-contents');
+    
+    if ($toc.length) {
+        // Default state: collapsed
+        $toc.addClass('collapsed');
+        
+        // Click on header to toggle
+        $toc.find('#main-toc').on('click', function() {
+            $toc.toggleClass('collapsed');
+        });
+    }
+}
+
 exports.init = function () {
 
     $('#form-comment').validate();
 
     intHandleFormComment();
     intHandleFormReplyComment();
+    initTableOfContents();
 };

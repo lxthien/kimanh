@@ -1,6 +1,11 @@
+// ============================================
+// NAVIGATION - Modern Industrial Design
+// ============================================
+
 #nav {
-    background-color: #0053a5;
+    background: $primaryColor;
     z-index: 10000;
+    box-shadow: $shadowLg;
 
     .nav-container {
         position: relative;
@@ -33,10 +38,17 @@
                 }
     
                 .navbar-toggle {
-                    border-color: $white;
+                    border-color: rgba(255, 255, 255, 0.3);
                     float: left;
                     margin-right: 0px;
-                    padding: 8px 10px;
+                    padding: 8px 12px;
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: $radiusSm;
+                    transition: $transitionFast;
+
+                    &:hover {
+                        background: rgba(255, 255, 255, 0.2);
+                    }
     
                     .icon-bar {
                         background-color: $white;
@@ -53,6 +65,7 @@
                 @media only screen and (max-width: 767.98px) {
                     width: 100%;
                     float: left !important;
+                    background: $primaryDark;
                 }
     
                 .navbar-nav {
@@ -63,6 +76,7 @@
     
                 ul li {
                     margin-bottom: 0px;
+                    position: relative;
     
                     @media only screen and (min-width: 979.98px) {
                         &.current {
@@ -73,12 +87,14 @@
                                 bottom: 0px;
                                 left: 0;
                                 height: 3px;
-                                background: $supernova;
+                                background: $accentColor;
                                 z-index: 10001;
                             }
                         }
 
                         &:hover {
+                            background: rgba(255, 255, 255, 0.05);
+                            
                             &::before {
                                 content: "";
                                 width: 100%;
@@ -86,31 +102,34 @@
                                 bottom: 0px;
                                 left: 0;
                                 height: 3px;
-                                background: $supernova;
+                                background: $accentColor;
                                 z-index: 10001;
                             }
                         }
                     }
     
                     a {
-                        padding: 12px 15px;
-                        font-weight: 500;
-                        font-size: 16px;
+                        padding: 14px 18px;
+                        font-weight: 600;
+                        font-size: 14px;
                         text-transform: uppercase;
                         font-family: $robotoCondesed;
-                        color: $selectiveYellow;
-                        text-shadow: 0.2px 0.2px 0.2px $selectiveYellow;
+                        color: $white;
+                        text-shadow: none;
+                        letter-spacing: 0.3px;
+                        transition: $transitionFast;
 
                         &:focus, &:hover {
                             background: transparent;
+                            color: $accentLight;
                         }
     
                         @media only screen and (max-width: 768px) {
-                            padding: 10px;
-                            font-size: 15px;
-                            border-bottom: 1px dotted $geyser;
-                            color: $selectiveYellow;
-                            text-shadow: 0.2px 0.2px 0.2px $selectiveYellow;
+                            padding: 12px 15px;
+                            font-size: 14px;
+                            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                            color: $white;
+                            text-shadow: none;
                         }
 
                         i {
@@ -131,19 +150,25 @@
                             &:hover {
                                 .dropdown-menu {
                                     display: block;
+                                    animation: fadeInDown 0.3s ease;
                                 }
                             }
                         }
 
                         ul.dropdown-menu {
                             border: none;
-                            padding: 0 15px;
-                            min-width: 200px;
-                            background: #0053a5;
+                            padding: 10px 0;
+                            min-width: 220px;
+                            background: $primaryDark;
+                            border-radius: 0 0 $radiusMd $radiusMd;
+                            box-shadow: $shadowXl;
+                            border-top: 3px solid $accentColor;
 
                             @media only screen and (max-width: 767.98px) {
                                 padding: 0 10px 0 30px;
                                 min-width: 100%;
+                                border-top: none;
+                                background: rgba(0, 0, 0, 0.2);
                             }
     
                             li {
@@ -152,7 +177,7 @@
                                 }
 
                                 @media only screen and (min-width: 979.98px) {
-                                    border-bottom: 1px dotted $geyser;
+                                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
                                 }
 
                                 &.last {
@@ -160,10 +185,14 @@
                                 }
     
                                 a {
-                                    padding: 10px 0;
+                                    padding: 12px 20px;
+                                    font-size: 16px;
+                                    text-transform: none;
+                                    font-weight: 500;
     
                                     &:focus, &:hover {
-                                        
+                                        color: $accentLight;
+                                        padding-left: 25px;
                                     }
                                 }
                             }
@@ -188,12 +217,18 @@
                     }
 
                     .form-control {
-                        height: 30px;
+                        height: 34px;
                         border: none;
-                        margin: 7px 0;
-                        border-radius: 12px;
-                        width: 180px;
-                        font-size: 15px;
+                        margin: 6px 0;
+                        border-radius: $radiusXl;
+                        width: 160px;
+                        font-size: 13px;
+                        padding: 0 12px;
+                        background: rgba(255, 255, 255, 0.95);
+
+                        &:focus {
+                            box-shadow: 0 0 0 3px rgba(232, 93, 4, 0.3);
+                        }
 
                         @media only screen and (max-width: 768px) {
                             width: 100%;
@@ -230,7 +265,7 @@
                             float: none;
 
                             a {
-                                padding: 10px;
+                                padding: 12px 15px;
                             }
                         }
                     }
@@ -242,7 +277,8 @@
 
 #nav {
     &.navbar-fixed-top {
-        opacity: 0.9;
+        opacity: 0.98;
+        backdrop-filter: blur(10px);
 
         .nav-container .navbar {
             min-height: auto;
@@ -259,13 +295,23 @@
 
             .navbar-collapse {
                 ul li a {
-                    padding: 12px 15px;
-
                     @media only screen and (max-width: 767.98px) {
                         padding: 10px;
                     }
                 }
             }
         }
+    }
+}
+
+// Animation for dropdown
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
