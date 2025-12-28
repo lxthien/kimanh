@@ -1,209 +1,55 @@
 {% if showSlide is defined %}
+    {% set slides = [
+        {img: 'xay-dung-kim-anh-1.jpg', alt: 'Xây Dựng Kim Anh', link: null, caption: null},
+        {img: 'xuan-2023-3.jpg', alt: 'Công Ty Xây Dựng Kim Anh', link: null, caption: null},
+        {img: 'cong-ty-xay-dung-kim-anh.jpg', alt: 'Công ty xây dựng uy tín', link: path('homepage'), caption: 'Công Ty Xây Dựng Uy Tín Số #1 Hiện Nay'},
+        {img: 'xay-nha-tron-goi-tphcm.jpg', alt: 'Xây Dựng Kim Anh', link: path('news_show', {'slug': 'xay-nha-tron-goi'}), caption: 'Chuyên Thi Công Xây Nhà Trọn Gói'},
+        {img: 'banner-thi-cong-phan-tho.jpg', alt: 'Thi công xây dựng phần thô', link: path('news_show', {'slug':'bang-bao-gia-xay-nha-phan-tho-moi-nhat'}), caption: 'Chuyên Thi Công Xây Dựng Phần Thô', eager: true},
+        {img: 'xay-dung-kim-anh-02.jpg', alt: 'Thương Hiệu Của Sự Bền Vững', link: path('homepage'), caption: 'Thương Hiệu Của Sự Bền Vững'}
+    ] %}
     <div id="myCarousel" class="carousel slide" data-interval="3000" data-ride="carousel">
-        <!-- Indicators -->
         <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1" class=""></li>
-            <li data-target="#myCarousel" data-slide-to="2" class=""></li>
-            <li data-target="#myCarousel" data-slide-to="3" class=""></li>
-            <li data-target="#myCarousel" data-slide-to="4" class=""></li>
-            <li data-target="#myCarousel" data-slide-to="5" class=""></li>
+            {% for slide in slides %}<li data-target="#myCarousel" data-slide-to="{{ loop.index0 }}"{{ loop.first ? ' class="active"' : '' }}></li>{% endfor %}
         </ol>
         <div class="carousel-inner">
-            <div class="item active">
-                {% set imagePath = asset('/assets/images/banner/xay-dung-kim-anh-1.jpg') %}
-                {% set imagePathFilter = asset('/assets/images/banner/xay-dung-kim-anh-1.jpg') | imagine_filter('banner_1500_550') %}
-                {% set imagePathFilterMobile = asset('/assets/images/banner/xay-dung-kim-anh-1.jpg') | imagine_filter('banner_768_400') %}
-                        
+            {% for slide in slides %}
+                {% set basePath = '/assets/images/banner/' ~ slide.img %}
+                {% set imagePath = asset(basePath) %}
+                {% set imagePathFilter = asset(basePath)|imagine_filter('banner_1500_550') %}
+                {% set imagePathFilterMobile = asset(basePath)|imagine_filter('banner_768_400') %}
                 {% if convert_images.fileExists(imagePath) == false %}
-                    {% set imagePath = imagePath | imagine_filter('banner_1500_550') %}
-                    {% set imagePathMobile = imagePath | imagine_filter('banner_768_400') %}
+                    {% set imgDesktop = imagePath|imagine_filter('banner_1500_550') %}
+                    {% set imgMobile = imagePath|imagine_filter('banner_768_400') %}
                 {% else %}
-                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
-                    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
+                    {% set imgDesktop = convert_images.webpConvert(imagePathFilter, '', true) %}
+                    {% set imgMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
                 {% endif %}
-                <picture>
-                    <source
-                        data-srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
-                        media="(max-width: 799px)" />
-                    <source
-                        data-srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                        media="(min-width: 800px)" />
-                    <img
-                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                        data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                        alt="Xây Dựng Kim Anh"
-                        class="lazyload" />
-                </picture>
-            </div>
-            <div class="item">
-                {% set imagePath = asset('/assets/images/banner/xuan-2023-3.jpg') %}
-                {% set imagePathFilter = asset('/assets/images/banner/xuan-2023-3.jpg') | imagine_filter('banner_1500_550') %}
-                {% set imagePathFilterMobile = asset('/assets/images/banner/xuan-2023-3.jpg') | imagine_filter('banner_768_400') %}
-                        
-                {% if convert_images.fileExists(imagePath) == false %}
-                    {% set imagePath = imagePath | imagine_filter('banner_1500_550') %}
-                    {% set imagePathMobile = imagePath | imagine_filter('banner_768_400') %}
-                {% else %}
-                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
-                    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
-                {% endif %}
-                <picture>
-                    <source
-                        data-srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
-                        media="(max-width: 799px)" />
-                    <source
-                        data-srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                        media="(min-width: 800px)" />
-                    <img
-                        src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                        data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                        alt="Công Ty Xây Dựng Kim Anh"
-                        class="lazyload" />
-                </picture>
-            </div>
-            <div class="item">
-                {% set imagePath = asset('/assets/images/banner/cong-ty-xay-dung-kim-anh.jpg') %}
-                {% set imagePathFilter = asset('/assets/images/banner/cong-ty-xay-dung-kim-anh.jpg') | imagine_filter('banner_1500_550') %}
-                {% set imagePathFilterMobile = asset('/assets/images/banner/cong-ty-xay-dung-kim-anh.jpg') | imagine_filter('banner_768_400') %}
-                        
-                {% if convert_images.fileExists(imagePath) == false %}
-                    {% set imagePath = imagePath | imagine_filter('banner_1500_550') %}
-                    {% set imagePathMobile = imagePath | imagine_filter('banner_768_400') %}
-                {% else %}
-                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
-                    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
-                {% endif %}
-                <a href="{{ path('homepage') }}">
+                {% set srcDesktop = imgDesktop ? absolute_url(imgDesktop) : absolute_url(imagePathFilter) %}
+                {% set srcMobile = imgMobile ? absolute_url(imgMobile) : absolute_url(imagePathFilterMobile) %}
+                <div class="item{{ loop.first ? ' active' : '' }}">
+                    {% if slide.link %}<a href="{{ slide.link }}">{% endif %}
                     <picture>
-                        <source
-                            data-srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
-                            media="(max-width: 799px)" />
-                        <source
-                            data-srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                            media="(min-width: 800px)" />
-                        <img
-                            src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                            data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                            alt="Công ty xây dựng uy tín"
-                            class="lazyload" />
+                        {% if slide.eager is defined and slide.eager %}
+                            <source srcset="{{ srcMobile }}" media="(max-width: 799px)">
+                            <source srcset="{{ srcDesktop }}" media="(min-width: 800px)">
+                            <img src="{{ srcDesktop }}" alt="{{ slide.alt }}">
+                        {% else %}
+                            <source data-srcset="{{ srcMobile }}" media="(max-width: 799px)">
+                            <source data-srcset="{{ srcDesktop }}" media="(min-width: 800px)">
+                            <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ srcDesktop }}" alt="{{ slide.alt }}" class="lazyload">
+                        {% endif %}
                     </picture>
-                </a>
-                <div class="container">
-                    <div class="carousel-caption text-left">
-                        <div class="widget-title-slide text-uppercase">Xây Dựng Kim Anh</div>
-                        <p class="text-uppercase">Công Ty Xây Dựng Uy Tín Số #1 Hiện Nay</p>
-                    </div>
+                    {% if slide.link %}</a>{% endif %}
+                    {% if slide.caption %}
+                        <div class="container"><div class="carousel-caption text-left">
+                            <div class="widget-title-slide text-uppercase">Xây Dựng Kim Anh</div>
+                            <p class="text-uppercase">{{ slide.caption }}</p>
+                        </div></div>
+                    {% endif %}
                 </div>
-            </div>
-            <div class="item">
-                {% set imagePath = asset('/assets/images/banner/xay-nha-tron-goi-tphcm.jpg') %}
-                {% set imagePathFilter = asset('/assets/images/banner/xay-nha-tron-goi-tphcm.jpg') | imagine_filter('banner_1500_550') %}
-                {% set imagePathFilterMobile = asset('/assets/images/banner/xay-nha-tron-goi-tphcm.jpg') | imagine_filter('banner_768_400') %}
-                        
-                {% if convert_images.fileExists(imagePath) == false %}
-                    {% set imagePath = imagePath | imagine_filter('banner_1500_550') %}
-                    {% set imagePathMobile = imagePath | imagine_filter('banner_768_400') %}
-                {% else %}
-                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
-                    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
-                {% endif %}
-                <a href="{{ path('news_show', {'slug': 'xay-nha-tron-goi'}) }}">
-                    <picture>
-                        <source
-                            data-srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
-                            media="(max-width: 799px)" />
-                        <source
-                            data-srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                            media="(min-width: 800px)" />
-                        <img
-                            src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                            data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                            alt="Xây Dựng Kim Anh"
-                            class="lazyload" />
-                    </picture>
-                </a>
-                <div class="container">
-                    <div class="carousel-caption text-left">
-                        <div class="widget-title-slide text-uppercase">Xây Dựng Kim Anh</div>
-                        <p class="text-uppercase">Chuyên Thi Công Xây Nhà Trọn Gói</p>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                {% set imagePath = asset('/assets/images/banner/banner-thi-cong-phan-tho.jpg') %}
-                {% set imagePathFilter = asset('/assets/images/banner/banner-thi-cong-phan-tho.jpg') | imagine_filter('banner_1500_550') %}
-                {% set imagePathFilterMobile = asset('/assets/images/banner/banner-thi-cong-phan-tho.jpg') | imagine_filter('banner_768_400') %}
-                        
-                {% if convert_images.fileExists(imagePath) == false %}
-                    {% set imagePath = imagePath | imagine_filter('banner_1500_550') %}
-                    {% set imagePathMobile = imagePath | imagine_filter('banner_768_400') %}
-                {% else %}
-                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
-                    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
-                {% endif %}
-                <a href="{{ path('news_show', {'slug':'bang-bao-gia-xay-nha-phan-tho-moi-nhat'}) }}">
-                    <picture>
-                        <source
-                            srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
-                            media="(max-width: 799px)" />
-                        <source
-                            srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                            media="(min-width: 800px)" />
-                        <img
-                            src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                            alt="Thi công xây dựng phần thô" />
-                    </picture>
-                </a>
-                <div class="container">
-                    <div class="carousel-caption text-left">
-                        <div class="widget-title-slide text-uppercase">Xây Dựng Kim Anh</div>
-                        <p class="text-uppercase">Chuyên Thi Công Xây Dựng Phần Thô</p>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                {% set imagePath = asset('/assets/images/banner/xay-dung-kim-anh-02.jpg') %}
-                {% set imagePathFilter = asset('/assets/images/banner/xay-dung-kim-anh-02.jpg') | imagine_filter('banner_1500_550') %}
-                {% set imagePathFilterMobile = asset('/assets/images/banner/xay-dung-kim-anh-02.jpg') | imagine_filter('banner_768_400') %}
-                        
-                {% if convert_images.fileExists(imagePath) == false %}
-                    {% set imagePath = imagePath | imagine_filter('banner_1500_550') %}
-                    {% set imagePathMobile = imagePath | imagine_filter('banner_768_400') %}
-                {% else %}
-                    {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
-                    {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
-                {% endif %}
-                <a href="{{ path('homepage') }}">
-                    <picture>
-                        <source
-                            data-srcset="{{ imagePathMobile != false ? absolute_url(imagePathMobile) : absolute_url(imagePathFilterMobile) }}"
-                            media="(max-width: 799px)" />
-                        <source
-                            data-srcset="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                            media="(min-width: 800px)" />
-                        <img
-                            src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                            data-src="{{ imagePath != false ? absolute_url(imagePath) : absolute_url(imagePath) }}"
-                            alt="Thương Hiệu Của Sự Bền Vững"
-                            class="lazyload" />
-                    </picture>
-                </a>
-                <div class="container">
-                    <div class="carousel-caption text-left">
-                        <div class="widget-title-slide text-uppercase">Xây Dựng Kim Anh</div>
-                        <p class="text-uppercase">Thương Hiệu Của Sự Bền Vững</p>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
-        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
+        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span><span class="sr-only">Previous</span></a>
+        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span><span class="sr-only">Next</span></a>
     </div>
 {% endif %}
