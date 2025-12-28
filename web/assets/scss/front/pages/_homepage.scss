@@ -339,67 +339,34 @@
                 }
     
                 .img {
+                    display: block;
                     height: 180px;
                     width: 180px;
-                    border: 3px solid $accentColor;
+                    border: 3px solid $primaryColor;
                     border-radius: 50%;
                     margin: 0 auto;
-                    padding: 6px;
+                    overflow: hidden;
                     transition: $transitionBase;
-                    background: linear-gradient($white, $white) padding-box,
-                                linear-gradient(135deg, $accentColor, $primaryColor) border-box;
                     box-shadow: 0 8px 25px rgba($accentColor, 0.15);
 
                     @media (min-width: 768px) and (max-width: 991.98px) {
                         width: 150px;
                         height: 150px;
-                        padding: 5px;
                     }
-    
-                    .mid-img {
-                        width: 164px;
-                        height: 164px;
-                        border: 3px solid $primaryColor;
-                        border-radius: 50%;
-                        z-index: 2;
-                        margin: auto;
-                        overflow: hidden;
-                        position: relative;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
                         transition: $transitionBase;
-
-                        @media (min-width: 768px) and (max-width: 991.98px) {
-                            width: 136px;
-                            height: 136px;
-                            border: 3px solid $primaryColor;
-                        }
-    
-                        .center-img {
-                            width: 100%;
-                            height: 100%;
-
-                            @media (min-width: 768px) and (max-width: 991.98px) {
-                                width: 100%;
-                                height: 100%;
-                            }
-    
-                            img {
-                                margin: auto;
-                                height: 100%;
-                                width: 100%;
-                                transition: $transitionBase;
-                                object-fit: cover;
-                            }
-                        }
                     }
 
                     &:hover {
                         transform: scale(1.05);
                         box-shadow: 0 12px 35px rgba($accentColor, 0.25);
 
-                        .mid-img {
-                            img {
-                                transform: scale(1.1);
-                            }
+                        img {
+                            transform: scale(1.1);
                         }
                     }
                 }
@@ -460,98 +427,103 @@
         padding: 40px 0;
     }
 
+    .why-choose-us-title {
+        position: relative;
+        z-index: 1;
+        padding: 0 0 40px;
+        color: $white;
+        margin: 0;
+        font-size: 36px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+
+        &::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: $accentColor;
+            margin: 20px auto 0;
+            border-radius: 2px;
+        }
+
+        @media only screen and (max-width: 768px) {
+            font-size: 26px;
+            padding: 0 0 30px;
+        }
+    }
+
     .row {
         position: relative;
         z-index: 1;
+    }
 
-        .why-choose-us-title {
-            padding: 0 0 40px;
-            color: $white;
-            margin: 0;
-            font-size: 36px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+    .col-md-4 {
+        margin-bottom: 30px;
 
-            &::after {
-                content: "";
+        @media only screen and (max-width: 768px) {
+            margin-bottom: 20px;
+        }
+    }
+
+    .media {
+        display: flex;
+        align-items: flex-start;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: $radiusMd;
+        padding: 15px;
+        height: 100%;
+        transition: $transitionBase;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-5px);
+            border-color: $accentColor;
+        }
+
+        .media-left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            min-width: 60px;
+            font-size: 28px;
+            background: $gradientAccent;
+            border-radius: 50%;
+            margin-right: 20px;
+            padding-right: 0;
+
+            i {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0;
+                padding: 0;
+                color: $white;
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .media-body {
+            b.media-heading {
+                font-size: 17px;
+                font-weight: 700;
+                margin-bottom: 10px;
                 display: block;
-                width: 80px;
-                height: 4px;
-                background: $accentColor;
-                margin: 20px auto 0;
-                border-radius: 2px;
+                color: $white;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
             }
 
-            @media only screen and (max-width: 768px) {
-                font-size: 26px;
-                padding: 0 0 30px;
-            }
-        }
-
-        .col-md-4 {
-            margin-bottom: 30px;
-
-            @media only screen and (max-width: 768px) {
-                margin-bottom: 20px;
-            }
-        }
-
-        .media {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: $radiusMd;
-            padding: 15px;
-            height: 100%;
-            transition: $transitionBase;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-
-            &:hover {
-                background: rgba(255, 255, 255, 0.15);
-                transform: translateY(-5px);
-                border-color: $accentColor;
-            }
-
-            .media-left {
-                span {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 60px;
-                    height: 60px;
-                    text-align: center;
-                    font-size: 2.5em;
-                    background: $gradientAccent;
-                    border-radius: 50%;
-                    margin-right: 20px;
-    
-                    i {
-                        margin-right: 0;
-                        color: $white;
-                        vertical-align: top;
-                    }
-                }
-            }
-    
-            .media-body {
-                b.media-heading {
-                    font-size: 17px;
-                    font-weight: 700;
-                    margin-bottom: 10px;
-                    display: block;
-                    color: $white;
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
-                }
-    
-                .marketing-container {
-                    font-size: 15px;
-                    line-height: 24px;
-                    color: rgba(255, 255, 255, 0.85);
-
-                    p {
-                        margin-bottom: 0;
-                    }
-                }
+            p {
+                font-size: 15px;
+                line-height: 24px;
+                color: rgba(255, 255, 255, 0.85);
+                margin-bottom: 0;
             }
         }
     }
@@ -714,7 +686,7 @@
 }
 
 // Alternating section backgrounds
-.wrapper-container-item {
+.services-block {
     &:nth-child(2n) {
         background-color: $grayBg;
     }

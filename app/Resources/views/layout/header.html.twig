@@ -1,53 +1,38 @@
-<!-- Begin header -->
+<!-- Header -->
 <header>
-    <div class="wrapper-container header d-none hidden-xs hidden-sm">
+    <div class="header d-none hidden-xs hidden-sm">
         <div class="container">
             <div class="row">
-                <div class="col-12 col-sm-8 col-md-6 marquee">
+                <div class="col-md-6 marquee">
                     {{ get_setting('marqueeHomepage')|raw }}
                 </div>
-                <div class="col-12 col-sm-4 col-md-6 text-right header-social hidden-xs">
-                    <div class="skew-divider"></div>
+                <div class="col-md-6 text-right header-social hidden-xs">
                     <div class="header-social-wrapper">
-                        <span class="text-left">
-                            <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/phone-icon.png'), '')) }}" alt="Liên hệ Xây Dựng Kim Anh" width="14" height="14" />
+                        <span>
+                            <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/phone-icon.png'), '')) }}" alt="Hotline" width="14" height="14">
                             <a href="tel:0974776305">0974.776.305</a>
                         </span>
-                        <span class="text-left">
-                            <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/email.png'), '')) }}" alt="Liên hệ Xây Dựng Kim Anh" width="14" height="14" />
+                        <span>
+                            <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/email.png'), '')) }}" alt="Email" width="14" height="14">
                             <a href="mailto:xaydungkimanh@gmail.com">xaydungkimanh@gmail.com</a>
                         </span>
-                        <a target="_blank" href="{{ get_setting('linkToFacebook') }}" title="Xây Dựng Kim Anh trên Facebook" rel="noopener noreferrer">
-                            <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/facebook.png'), '')) }}" alt="Xây Dựng Kim Anh trên Facebook" width="20" height="20" />
-                        </a>
-                        <a target="_blank" href="{{ get_setting('linkToInstagram') }}" title="Xây Dựng Kim Anh trên Instagram" rel="noopener noreferrer">
-                            <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/instagram.png'), '')) }}" alt="Xây Dựng Kim Anh trên Instagram" width="20" height="20" />
-                        </a>
-                        <a target="_blank" href="{{ get_setting('linkToTwitter') }}" title="Xây Dựng Kim Anh trên Twitter" rel="noopener noreferrer">
-                            <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/twitter.png'), '')) }}" alt="Xây Dựng Kim Anh trên Twitter" width="20" height="20" />
-                        </a>
-                        <a target="_blank" href="{{ get_setting('linkToYoutube') }}" title="Xây Dựng Kim Anh trên Youtube" rel="noopener noreferrer">
-                            <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/youtube.png'), '')) }}" alt="Xây Dựng Kim Anh trên Youtube" width="20" height="20" />
-                        </a>
-                        <a target="_blank" href="{{ get_setting('linkToLinkedin') }}" title="Xây Dựng Kim Anh trên Linkedin" rel="noopener noreferrer">
-                            <img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/linkedin.png'), '')) }}" alt="Xây Dựng Kim Anh trên Linkedin" width="20" height="20" />
-                        </a>
+                        <a target="_blank" href="{{ get_setting('linkToFacebook') }}" rel="noopener"><img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/facebook.png'), '')) }}" alt="Facebook" width="20" height="20"></a>
+                        <a target="_blank" href="{{ get_setting('linkToInstagram') }}" rel="noopener"><img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/instagram.png'), '')) }}" alt="Instagram" width="20" height="20"></a>
+                        <a target="_blank" href="{{ get_setting('linkToTwitter') }}" rel="noopener"><img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/twitter.png'), '')) }}" alt="Twitter" width="20" height="20"></a>
+                        <a target="_blank" href="{{ get_setting('linkToYoutube') }}" rel="noopener"><img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/youtube.png'), '')) }}" alt="Youtube" width="20" height="20"></a>
+                        <a target="_blank" href="{{ get_setting('linkToLinkedin') }}" rel="noopener"><img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/linkedin.png'), '')) }}" alt="Linkedin" width="20" height="20"></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="wrapper-container banner d-none hidden-xs hidden-sm">
+    <div class="banner d-none hidden-xs hidden-sm">
         <div class="container">
             <div class="row">
                 <div class="col-md-4" id="logo_top">
                     <div id="logo">
                         <a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
-                            <img
-                                src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}"
-                                alt="{{ get_setting('siteName') }}"
-                                width="274"
-                                height="99">
+                            <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}" width="274" height="99">
                         </a>
                     </div>
                 </div>
@@ -66,7 +51,7 @@
                         <div class="wp90 pull-right">
                             <div class="info-nd">
                                 <p class="tel text-uppercase">
-                                    <a href="tel:0974776305"><i class="fas fa-solid fa-mobile"></i> 0974776305</a>
+                                    <a href="tel:0974776305"><i class="fas fa-mobile"></i> 0974776305</a>
                                 </p>
                             </div>
                         </div>
@@ -76,11 +61,6 @@
         </div>
     </div>
     <a class="hidden-sm hidden-md hidden-lg" href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
-        <img
-            src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}"
-            alt="{{ get_setting('siteName') }}"
-            width="274"
-            height="99">
+        <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}" alt="{{ get_setting('siteName') }}" width="274" height="99">
     </a>
 </header>
-<!-- End header -->
