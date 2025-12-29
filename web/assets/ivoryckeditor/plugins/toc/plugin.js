@@ -57,7 +57,7 @@
                         }
 
                         //output toc
-                        var tocNode = '<div class="ka-table-of-contents"><p name="tableOfContents" id="main-toc"><b><u>' + editor.lang.toc.ToC + '</u></b></p>' + tocItems + '<hr id="hr-toc" name="tableOfContents"/></div>';
+                        var tocNode = '<div class="ka-table-of-contents collapsed"><p name="tableOfContents" id="main-toc"><b><u>' + editor.lang.toc.ToC + '</u></b></p>' + tocItems + '<hr id="hr-toc" name="tableOfContents"/></div>';
                         editor.insertHtml(tocNode);
 
                         // Remove element with attribute name
