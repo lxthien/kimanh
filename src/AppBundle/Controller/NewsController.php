@@ -545,21 +545,45 @@ class NewsController extends Controller
         return html_entity_decode($html);
     }
 
-    private function lazyloadContent($post) {
-        $content = htmlspecialchars($post->getContents());
+    private function lazyloadContent($post)
+    {
+        $content = $post->getContents();
+        
+        // Return early if no content
+        if (empty($content)) {
+            return '';
+        }
+
+        // Protect lone "<" characters that are not part of HTML tags
+        // Match "<" followed by a digit, space, or other non-tag characters
+        $placeholder = '___LESS_THAN_PLACEHOLDER___';
+        $content = preg_replace('/<(?=[0-9\s\-\+\=\.\,])/', $placeholder, $content);
+
         $dom = new \DOMDocument();
 
         // set error level
         $internalErrors = libxml_use_internal_errors(true);
 
-        $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'));
+        // Wrap content to preserve structure and handle UTF-8 properly
+        $wrappedContent = '<div id="lazyload-wrapper">' . $content . '</div>';
+        $dom->loadHTML(
+            '<?xml encoding="UTF-8">' . $wrappedContent,
+            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+        );
+
+        // Remove the XML declaration that was added
+        foreach ($dom->childNodes as $item) {
+            if ($item->nodeType == XML_PI_NODE) {
+                $dom->removeChild($item);
+            }
+        }
 
         // Restore error level
         libxml_use_internal_errors($internalErrors);
 
         $imgs = $dom->getElementsByTagName('img');
 
-        foreach ( $imgs as $img) {
+        foreach ($imgs as $img) {
             $src = $img->getAttribute('src');
             $alt = $img->getAttribute('alt');
 
@@ -569,16 +593,32 @@ class NewsController extends Controller
 
             $img->setAttribute('src', $src);
             $img->setAttribute('loading', 'lazy');
-            $img->setAttribute('width', !empty($width) ? $width > 800 ? 800 : $width : 500);
-            $img->setAttribute('height', !empty($height) ? $width > 800 ? round(($height*800)/$width) : $height : 500);
             $img->setAttribute('alt', !empty($alt) ? $alt : $post->getTitle());
+            $img->setAttribute('width', !empty($width) ? ($width > 900 ? 900 : $width) : 500);
+            $img->setAttribute('height', !empty($height) ? ($width > 900 ? round(($height * 900) / $width) : $height) : 500);
         }
+
+        $newContent = $dom->saveHTML();
         
-        $newContent = html_entity_decode($dom->saveHTML());
-        $newContent = str_replace("50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $newContent);
-        $newContent = str_replace("C40 - Khu DC Hiệp Thành - Đường Nguyễn Thị Búp, KP 4, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $newContent);
-        $newContent = str_replace("C40 - Khu DC Hiệp Thành - Đường Nguyễn Thị Búp, KP 4, Phường Hiệp Thành, Quận 12, TP.HCM", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $newContent);
-        return preg_replace('/^<!DOCTYPE.+?>/', '', str_replace( array('<html>', '</html>', '<body>', '</body>'), array('', '', '', ''), $newContent));
+        // Remove the wrapper div we added
+        $newContent = preg_replace('/<div id="lazyload-wrapper">/', '', $newContent);
+        $newContent = preg_replace('/<\/div>$/', '', $newContent);
+        
+        // Clean up any remaining DOCTYPE, html, head, body tags
+        $newContent = preg_replace('/^<!DOCTYPE[^>]*>/i', '', $newContent);
+        $newContent = preg_replace('/<\/?html[^>]*>/i', '', $newContent);
+        $newContent = preg_replace('/<\/?head[^>]*>/i', '', $newContent);
+        $newContent = preg_replace('/<\/?body[^>]*>/i', '', $newContent);
+        
+        // Replace specific address strings
+        $newContent = str_replace("50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $newContent);
+        $newContent = str_replace("C40 - Khu DC Hiệp Thành - Đường Nguyễn Thị Búp, KP 4, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $newContent);
+        $newContent = str_replace("C40 - Khu DC Hiệp Thành - Đường Nguyễn Thị Búp, KP 4, Phường Hiệp Thành, Quận 12, TP.HCM", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $newContent);
+
+        // Restore the "<" characters
+        $newContent = str_replace($placeholder, '<', $newContent);
+        
+        return trim($newContent);
     }
 
     /**
