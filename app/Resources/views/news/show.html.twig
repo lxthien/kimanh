@@ -2,8 +2,7 @@
 
 {% block stylesheets %}
     <link href="{{ absolute_url(asset('build/css/news.css')) }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'">
-    <link href="{{ absolute_url(asset('build/css/new.css')) }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{{ absolute_url(asset('build/css/news.css')) }}"><link rel="stylesheet" href="{{ absolute_url(asset('build/css/new.css')) }}"></noscript>
+    <noscript><link rel="stylesheet" href="{{ absolute_url(asset('build/css/news.css')) }}"></noscript>
 {% endblock %}
 
 {% set year = "now"|date('Y') %}

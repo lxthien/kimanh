@@ -10,6 +10,7 @@ Encore
     })
     .enableSassLoader()
     .enableVersioning(Encore.isProduction())
+    .cleanupOutputBeforeBuild(Encore.isProduction())
     .createSharedEntry('js/common', ['jquery'])
     .addEntry('js/app', './web/assets/js/front/app.js')
     .addEntry('js/admin', './web/assets/js/admin/admin.js')
@@ -21,8 +22,6 @@ Encore
     .addStyleEntry('css/news', ['./web/assets/scss/front/news.scss'])
     .addStyleEntry('css/list', ['./web/assets/scss/front/list.scss'])
     .addStyleEntry('css/contact', ['./web/assets/scss/front/contact.scss'])
-    .addStyleEntry('css/amp', ['./web/assets/scss/front/amp.scss'])
-    .addStyleEntry('css/new', ['./web/assets/scss/front/new.scss'])
     .addStyleEntry('css/admin', ['./web/assets/scss/admin/admin.scss'])
 ;
 
