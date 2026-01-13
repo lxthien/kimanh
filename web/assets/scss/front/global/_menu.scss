@@ -109,7 +109,7 @@
                     }
     
                     a {
-                        padding: 14px 18px;
+                        padding: 14px 15px;
                         font-weight: 600;
                         font-size: 14px;
                         text-transform: uppercase;
@@ -216,22 +216,55 @@
                         display: none;
                     }
 
+                    .ka-search-wrapper {
+                        position: relative;
+                        width: 160px;
+                        margin: 6px 0;
+
+                        @media only screen and (max-width: 768px) {
+                            width: 100%;
+                        }
+                    }
+
                     .form-control {
                         height: 34px;
                         border: none;
-                        margin: 6px 0;
                         border-radius: $radiusXl;
-                        width: 160px;
+                        width: 100%;
                         font-size: 13px;
-                        padding: 0 12px;
+                        padding: 0 40px 0 12px;
                         background: rgba(255, 255, 255, 0.95);
 
                         &:focus {
                             box-shadow: 0 0 0 3px rgba(232, 93, 4, 0.3);
                         }
+                    }
 
-                        @media only screen and (max-width: 768px) {
-                            width: 100%;
+                    .ka-search-btn {
+                        position: absolute;
+                        right: 2px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        width: 30px;
+                        height: 30px;
+                        border: none;
+                        background: $accentColor;
+                        color: $white;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        cursor: pointer;
+                        transition: $transitionFast;
+
+                        &:hover {
+                            background: darken($accentColor, 10%);
+                            transform: translateY(-50%) scale(1.05);
+                        }
+
+                        i {
+                            font-size: 12px;
+                            margin: 0;
                         }
                     }
                 }

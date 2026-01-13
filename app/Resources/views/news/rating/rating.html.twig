@@ -1,6 +1,6 @@
 <div class="rating-container">
     {{ ratingValue|rating }}
-    <a href="javascript:void(0)" id="rating">
+    <button type="button" id="rating">
         <div>
             {% if rating > 0 %}
                 <span>{{ rating }}</span> ({{ ratingPercent }}%) / <span>{{ ratingCount }}</span> votes
@@ -8,7 +8,7 @@
                 <span>đánh giá</span>
             {% endif %}
         </div>
-    </a>
+    </button>
 </div>
 
 <div style="display:none">

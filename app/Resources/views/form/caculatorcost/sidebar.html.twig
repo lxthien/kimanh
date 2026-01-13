@@ -1,15 +1,55 @@
-<div class="list-group costs">
-    <h3 class="list-group-item list-group-item-action active text-uppercase">Dự toán chi phí</h3>
-    {{ form_start(form) }}
-    <div class="row">
-        <div class="col-md-12"><div class="form-group">{{ form_label(form.type) }}{{ form_errors(form.type) }}{{ form_widget(form.type) }}</div></div>
-        <div class="col-md-12"><div class="form-group">{{ form_label(form.method) }}{{ form_errors(form.method) }}{{ form_widget(form.method) }}</div></div>
-        <div class="col-md-6"><div class="form-group">{{ form_label(form.wide) }}{{ form_errors(form.wide) }}{{ form_widget(form.wide) }}</div></div>
-        <div class="col-md-6"><div class="form-group">{{ form_label(form.long) }}{{ form_errors(form.long) }}{{ form_widget(form.long) }}</div></div>
-        <div class="col-md-6"><div class="form-group">{{ form_label(form.floor) }}{{ form_errors(form.floor) }}{{ form_widget(form.floor) }}</div></div>
-        <div class="col-md-6"><div class="form-group">{{ form_label(form.mong) }}{{ form_errors(form.mong) }}{{ form_widget(form.mong) }}</div></div>
-        <div class="col-md-12"><div class="form-group">{{ form_label(form.mai) }}{{ form_errors(form.mai) }}{{ form_widget(form.mai) }}</div></div>
-        <div class="col-md-12 text-center">{{ form_widget(form.caculator) }}{{ form_widget(form.reset) }}</div>
+<div class="ka-sidebar-widget ka-calc-sidebar">
+    <div class="ka-widget-header">
+        <div class="ka-header-icon">
+            <i class="fas fa-calculator"></i>
+        </div>
+        <span>Dự Toán Chi Phí</span>
+        <div class="ka-header-stripe"></div>
     </div>
-    {{ form_end(form) }}
+    <div class="ka-widget-body">
+        {{ form_start(form, {'attr': {'class': 'ka-sidebar-form'}}) }}
+        <div class="ka-form-row">
+            <div class="ka-form-group">
+                {{ form_label(form.type) }}
+                {{ form_widget(form.type) }}
+            </div>
+        </div>
+        <div class="ka-form-row">
+            <div class="ka-form-group">
+                {{ form_label(form.method) }}
+                {{ form_widget(form.method) }}
+            </div>
+        </div>
+        <div class="ka-form-row ka-flex-row">
+            <div class="ka-form-group ka-col-6">
+                {{ form_label(form.wide) }}
+                {{ form_widget(form.wide) }}
+            </div>
+            <div class="ka-form-group ka-col-6">
+                {{ form_label(form.long) }}
+                {{ form_widget(form.long) }}
+            </div>
+        </div>
+        <div class="ka-form-row ka-flex-row">
+            <div class="ka-form-group ka-col-6">
+                {{ form_label(form.floor) }}
+                {{ form_widget(form.floor) }}
+            </div>
+            <div class="ka-form-group ka-col-6">
+                {{ form_label(form.mong) }}
+                {{ form_widget(form.mong) }}
+            </div>
+        </div>
+        <div class="ka-form-row">
+            <div class="ka-form-group">
+                {{ form_label(form.mai) }}
+                {{ form_widget(form.mai) }}
+            </div>
+        </div>
+        <div class="ka-form-actions">
+            {{ form_widget(form.caculator, {'attr': {'class': 'ka-btn-calc'}}) }}
+            {{ form_widget(form.reset, {'attr': {'class': 'ka-btn-reset'}}) }}
+        </div>
+        {{ form_end(form) }}
+    </div>
 </div>

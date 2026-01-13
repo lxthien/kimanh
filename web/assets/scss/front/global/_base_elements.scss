@@ -18,8 +18,8 @@ html {
 }
 
 body {
-    font-family: $arial;
-    font-size: 16px;
+    font-family: $roboto;
+    font-size: 17px;
     color: $black;
     padding: 0;
     margin: 0;
@@ -61,7 +61,7 @@ header, nav, section, article, figure, aside, footer {
 h1, h2, h3, h4, h5, h6 {
     margin: 0 0 15px;
     line-height: 1.4;
-    font-family: $arial;
+    font-family: $robotoCondesed;
 }
 
 img {

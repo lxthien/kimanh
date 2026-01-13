@@ -84,9 +84,9 @@
 
         // Lists
         ul, ol {
-            padding-left: 20px;
+            padding-left: 10px;
             margin-bottom: 25px;
-            margin-left: 10px;
+            margin-left: 5px;
 
             li {
                 margin-bottom: 12px;
@@ -102,7 +102,7 @@
         ul {
             li {
                 list-style-type: none;
-                padding-left: 25px;
+                padding-left: 20px;
                 
                 &:before {
                     content: "•";
@@ -122,7 +122,7 @@
             li {
                 list-style-type: none;
                 counter-increment: item;
-                padding-left: 35px;
+                padding-left: 28px;
                 
                 &:before {
                     content: counter(item);
@@ -421,7 +421,7 @@
 
             // Content wrapper - collapsible
             > div[id$="-toc"] {
-                padding: 4px 18px 4px 24px;
+                padding: 4px 12px 4px 12px;
                 border-bottom: 1px solid rgba($borderColor, 0.3);
                 background: $white;
                 transition: all 0.3s ease;

@@ -12,253 +12,269 @@
 {% block keyword %}{{ post.getPageKeyword() }}{% endblock %}
 
 {% block body %}
+    <div class="container-fluid ka-hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav aria-label="breadcrumb" class="ka-breadcrumb-nav">
+                        {{ wo_render_breadcrumbs() }}
+                    </nav>
+                    <h1 class="ka-hero-title">Dự toán chi phí xây dựng</h1>
+                    <div class="ka-hero-divider"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container wrapper-container page-detail costs">
         <div class="row">
-            <div class="col-12 col-md-12 col-lg-9 page-detail-container">
-                {{ include('news/components/breadcrumbs.html.twig') }}
-
-                <div class="news-container news">
-                    <h1 class="entry-title block-title">Dự toán chi phí xây dựng</h1>
-                    {{ post.getContents()|raw }}
+            <div class="col-12 col-md-12 col-lg-12 page-detail-container">
+                
+                <div class="ka-intro-box">
+                    <div class="ka-intro-content">
+                        <i class="fas fa-quote-left ka-quote-icon"></i>
+                        {{ post.getContents()|raw }}
+                    </div>
                 </div>
 
-                <hr>
-                
-                {% for message in app.flashes('error') %}
-                    <div class="alert alert-danger" role="alert">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-                
-                {{ form_start(form) }}
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            {{ form_label(form.type) }}
-                            {{ form_errors(form.type) }}
-                            {{ form_widget(form.type) }}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            {{ form_label(form.method) }}
-                            {{ form_errors(form.method) }}
-                            {{ form_widget(form.method) }}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            {{ form_label(form.wide) }}
-                            {{ form_errors(form.wide) }}
-                            {{ form_widget(form.wide) }}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            {{ form_label(form.long) }}
-                            {{ form_errors(form.long) }}
-                            {{ form_widget(form.long) }}
+                <div class="row ka-features-row">
+                    <div class="col-md-4">
+                        <div class="ka-feature-item">
+                            <div class="ka-feature-icon"><i class="fas fa-check-circle"></i></div>
+                            <div class="ka-feature-text">
+                                <h4>Chính xác 95%</h4>
+                                <p>Dựa trên đơn giá thực tế 2026</p>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
-                            {{ form_label(form.floor) }}
-                            {{ form_errors(form.floor) }}
-                            {{ form_widget(form.floor) }}
+                        <div class="ka-feature-item">
+                            <div class="ka-feature-icon"><i class="fas fa-clock"></i></div>
+                            <div class="ka-feature-text">
+                                <h4>Tính toán nhanh</h4>
+                                <p>Có kết quả ngay trong 30 giây</p>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
-                            {{ form_label(form.mong) }}
-                            {{ form_errors(form.mong) }}
-                            {{ form_widget(form.mong) }}
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            {{ form_label(form.mai) }}
-                            {{ form_errors(form.mai) }}
-                            {{ form_widget(form.mai) }}
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            {{ form_widget(form.caculator) }}
-                            {{ form_widget(form.reset) }}
+                        <div class="ka-feature-item">
+                            <div class="ka-feature-icon"><i class="fas fa-headset"></i></div>
+                            <div class="ka-feature-text">
+                                <h4>Hỗ trợ 24/7</h4>
+                                <p>Kỹ sư tư vấn trực tiếp miễn phí</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                {{ form_end(form) }}
 
-                <div class="row costs-result">
-                    <div class="col-md-12">
-                        {% if costs is not null %}
-                        <h2 class="costs-title">Kết quả tính diện tích và chi phí thi công xây dựng nhà</h2>
-                        <table>
+                <div class="ka-calc-card">
+                    <div class="ka-calc-header">
+                        <i class="fas fa-calculator"></i>
+                        <span>Công cụ tính chi phí xây dựng</span>
+                    </div>
+                    <div class="ka-calc-body">
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                        
+                        {{ form_start(form, {'attr': {'class': 'ka-main-form'}}) }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_label(form.type) }}
+                                    {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_label(form.method) }}
+                                    {{ form_widget(form.method, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_label(form.wide) }}
+                                    {{ form_widget(form.wide, {'attr': {'class': 'form-control', 'placeholder': 'VD: 4'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_label(form.long) }}
+                                    {{ form_widget(form.long, {'attr': {'class': 'form-control', 'placeholder': 'VD: 15'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form_label(form.floor) }}
+                                    {{ form_widget(form.floor, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form_label(form.mong) }}
+                                    {{ form_widget(form.mong, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form_label(form.mai) }}
+                                    {{ form_widget(form.mai, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-md-12 text-center ka-form-btns">
+                                {{ form_widget(form.caculator, {'attr': {'class': 'btn btn-primary btn-lg ka-btn-submit'}}) }}
+                                {{ form_widget(form.reset, {'attr': {'class': 'btn btn-default btn-lg ka-btn-reset'}}) }}
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+
+                {% if costs is not null %}
+                <div class="ka-result-card">
+                    <div class="ka-result-header">
+                        <i class="fas fa-poll-h"></i>
+                        <span>Kết quả dự toán chi phí</span>
+                    </div>
+                    <div class="ka-result-body">
+                        <div class="ka-result-summary">
+                            <div class="ka-summary-item">
+                                <span class="ka-label">Đơn giá thi công:</span>
+                                <span class="ka-value">{{ costs.cost|number_format(0, '.', ',') }} VNĐ/m²</span>
+                            </div>
+                            <div class="ka-summary-item ka-total">
+                                <span class="ka-label">Tổng chi phí dự kiến:</span>
+                                <span class="ka-value">{{ costs.costTotal|number_format(0, '.', ',') }} VNĐ</span>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table ka-table-result">
+                                <thead>
+                                    <tr>
+                                        <th>Hạng mục</th>
+                                        <th class="text-center">Diện tích (m²)</th>
+                                        <th class="text-right">Thành tiền (VNĐ)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ costs.titleMong }}</td>
+                                        <td class="text-center">{{ costs.areaMong }}</td>
+                                        <td class="text-right font-weight-bold">{{ (costs.areaMong * costs.cost)|number_format(0, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ costs.titleMai }}</td>
+                                        <td class="text-center">{{ costs.areaMai }}</td>
+                                        <td class="text-right font-weight-bold">{{ (costs.areaMai * costs.cost)|number_format(0, '.', ',') }}</td>
+                                    </tr>
+                                    {% if costs.floor > 0 %}
+                                        {% for i in range(1, costs.floor) %}
+                                        <tr>
+                                            <td>Tầng {{ i == 1 ? 'trệt' : (i - 1) }}</td>
+                                            <td class="text-center">{{ costs.area }}</td>
+                                            <td class="text-right font-weight-bold">{{ (costs.area * costs.cost)|number_format(0, '.', ',') }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                                <tfoot>
+                                    <tr class="ka-footer-row">
+                                        <td><strong>Tổng cộng</strong></td>
+                                        <td class="text-center"><strong>{{ costs.areaTotal }} m²</strong></td>
+                                        <td class="text-right"><strong>{{ costs.costTotal|number_format(0, '.', ',') }}</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="ka-note">
+                            <i class="fas fa-info-circle"></i>
+                            <span><strong>Lưu ý:</strong> {{ costs.note|raw }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="ka-info-section">
+                    <h3 class="ka-section-title">
+                        <i class="fas fa-table"></i>
+                        Bảng hệ số xây dựng quy đổi
+                    </h3>
+                    <div class="table-responsive">
+                        <table class="table ka-table-info">
                             <thead>
                                 <tr>
-                                    <th colspan="3" class="text-uppercase">{{ costs.title }}</th>
+                                    <th>Hạng mục</th>
+                                    <th class="text-center">Hệ số (%)</th>
+                                    <th>Diễn giải chi tiết</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td colspan="3" class="text-uppercase" style="font-weight: bold;">Đơn giá: {{ costs.cost|number_format(0, '.', ',') }} VNĐ</td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: left;  font-weight: bold;">Loại</td>
-                                    <td style="text-align: center;  font-weight: bold;">Diện tích (m<sup>2</sup>)</td>
-                                    <td style="text-align: center;  font-weight: bold;">Thành tiền</td>
-                                </tr>
-                                <tr>
-                                    <td>{{ costs.titleMong }}</td>
-                                    <td><span style="text-align: center; display: block;">{{ costs.areaMong }} (m<sup>2</sup>)<span></td>
-                                    <td><span style="text-align: center; display: block; font-weight: bold;">{{ (costs.areaMong * costs.cost)|number_format(0, '.', ',') }} VNĐ<span></td>
-                                </tr>
-                                <tr>
-                                    <td>{{ costs.titleMai }}</td>
-                                    <td><span style="text-align: center; display: block;">{{ costs.areaMai }} (m<sup>2</sup>)<span></td>
-                                    <td><span style="text-align: center; display: block; font-weight: bold;">{{ (costs.areaMai * costs.cost)|number_format(0, '.', ',') }} VNĐ<span></td>
-                                </tr>
-                                {% if costs.floor > 0 %}
-                                {% for i in range(1, costs.floor) %}
-                                <tr>
-                                    <td>Tầng {{ i == 1 ? 'trệt' : (i - 1) }}</td>
-                                    <td><span style="text-align: center; display: block;">{{ costs.area }} (m<sup>2</sup>)<span></td>
-                                    <td><span style="text-align: center; display: block; font-weight: bold;">{{ (costs.area * costs.cost)|number_format(0, '.', ',') }} VNĐ<span></td>
-                                </tr>
-                                {% endfor %}
-                                {% endif %}
-                                <tr>
-                                    <td>Tổng diện tích và chi phí thi công xây dựng nhà</td>
-                                    <td><span style="text-align: center; display: block;">{{ costs.areaTotal }} m<sup>2</sup><span></td>
-                                    <td><span style="text-align: center; display: block; font-weight: bold;">{{ costs.costTotal|number_format(0, '.', ',') }} <sup>đ</sup><span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <p><i><strong>Lưu ý: {{ costs.note|raw }}</strong></i></p>
-                        {% endif %}
-                        <hr>
-                        <h3><strong>Bảng hệ số xây dựng quy đổi cho từng hạng mục</strong></h3>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <th style="text-align:left">Hạng mục</th>
-                                    <th>Hệ số tính (%)</th>
-                                    <th>Diễn giải</th>
-                                </tr>
-                                <tr>
-                                    <td><strong>Phần Móng</strong></td>
-                                    <td style="text-align:center"></td>
-                                    <td></td>
-                                </tr>
+                                <tr class="ka-group-row"><td colspan="3">PHẦN MÓNG</td></tr>
                                 <tr>
                                     <td>Móng đơn</td>
-                                    <td style="text-align:center">30%</td>
+                                    <td class="text-center">30%</td>
                                     <td>Áp dụng cho nhà cấp 4, công trình nhỏ trên nền đất cứng.</td>
                                 </tr>
                                 <tr>
                                     <td>Móng băng</td>
-                                    <td style="text-align:center">50% - 70%</td>
+                                    <td class="text-center">50% - 70%</td>
                                     <td>Phổ biến nhất cho nhà phố 2-4 tầng.</td>
                                 </tr>
                                 <tr>
                                     <td>Móng cọc</td>
-                                    <td style="text-align:center">40% - 60%</td>
+                                    <td class="text-center">40% - 60%</td>
                                     <td>Áp dụng cho nền đất yếu, nhà cao tầng.</td>
                                 </tr>
                                 <tr>
                                     <td>Móng bè</td>
-                                    <td style="text-align:center">80% - 100%</td>
+                                    <td class="text-center">80% - 100%</td>
                                     <td>Áp dụng cho nền đất rất yếu hoặc công trình có tầng hầm.</td>
                                 </tr>
-                                <tr>
-                                    <td><strong>Phần Tầng hầm</strong></td>
-                                    <td style="text-align:center"></td>
-                                    <td></td>
-                                </tr>
+                                <tr class="ka-group-row"><td colspan="3">PHẦN TẦNG HẦM</td></tr>
                                 <tr>
                                     <td>Độ sâu < 1.5m</td>
-                                    <td style="text-align:center">150%</td>
+                                    <td class="text-center">150%</td>
                                     <td>Chi phí đào đất, gia cố vách, chống thấm cao.</td>
                                 </tr>
                                 <tr>
                                     <td>Độ sâu < 2.0m</td>
-                                    <td style="text-align:center">170%</td>
+                                    <td class="text-center">170%</td>
                                     <td>Chi phí tăng theo độ sâu.</td>
                                 </tr>
+                                <tr class="ka-group-row"><td colspan="3">PHẦN THÂN & MÁI</td></tr>
                                 <tr>
-                                    <td><strong>Phần Sàn các tầng</strong></td>
-                                    <td style="text-align:center">100%</td>
+                                    <td>Sàn các tầng</td>
+                                    <td class="text-center">100%</td>
                                     <td>Diện tích sàn các tầng, bao gồm cả ban công.</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Phần Sân</strong></td>
-                                    <td style="text-align:center"></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Sân thượng có mái che</td>
-                                    <td style="text-align:center">70%</td>
-                                    <td>Tính diện tích sàn có mái che.</td>
-                                </tr>
-                                <tr>
-                                    <td>Sân thượng không mái che</td>
-                                    <td style="text-align:center">50%</td>
-                                    <td>Bao gồm công tác chống thấm, lát gạch.</td>
-                                </tr>
-                                <tr>
-                                    <td>Sân trước/sau</td>
-                                    <td style="text-align:center">50%</td>
-                                    <td>Tính trên diện tích lát gạch.</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Phần Mái</strong></td>
-                                    <td style="text-align:center"></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
                                     <td>Mái Tôn</td>
-                                    <td style="text-align:center">30%</td>
+                                    <td class="text-center">30%</td>
                                     <td>Bao gồm hệ kèo sắt và lợp tôn.</td>
                                 </tr>
                                 <tr>
                                     <td>Mái Bê tông cốt thép</td>
-                                    <td style="text-align:center">50%</td>
+                                    <td class="text-center">50%</td>
                                     <td>Chỉ tính phần mái bằng, chưa bao gồm chống thấm, lát gạch.</td>
                                 </tr>
                                 <tr>
                                     <td>Mái ngói kèo sắt</td>
-                                    <td style="text-align:center">70%</td>
+                                    <td class="text-center">70%</td>
                                     <td>Hệ số tính theo diện tích mặt nghiêng.</td>
                                 </tr>
                                 <tr>
                                     <td>Mái ngói BTCT</td>
-                                    <td style="text-align:center">100%</td>
+                                    <td class="text-center">100%</td>
                                     <td>Tính theo diện tích mặt nghiêng của mái.</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Hạng mục khác</strong></td>
-                                    <td style="text-align:center"></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Ô thông tầng < 8m2</td>
-                                    <td style="text-align:center">100%</td>
-                                    <td>Được tính như diện tích sàn bình thường.</td>
-                                </tr>
-                                <tr>
-                                    <td>Ô thông tầng > 8m2</td>
-                                    <td style="text-align:center">50%</td>
-                                    <td>Chỉ tính 50% diện tích cho các ô giếng trời lớn.</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-
-            {# Side bar #}
-            {{ include('layout/sidebar.html.twig') }}
         </div>
     </div>
 {% endblock %}

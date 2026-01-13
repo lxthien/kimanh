@@ -162,7 +162,7 @@ function initFancybox() {
         return false;
     });
 
-    $('a#rating').click(function(e) {
+    $('#rating').click(function(e) {
         e.preventDefault();
 
         $formRating.show();

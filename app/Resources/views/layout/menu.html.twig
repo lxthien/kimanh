@@ -20,6 +20,14 @@
                             </ul>
                         </li>
                         <li class="dropdown">
+                            <a href="https://www.xaydungkimanh.com/mau-nha-dep" class="dropdown-toggle" data-toggle="dropdown">Mẫu nhà đẹp</a>
+                            <ul class="dropdown-menu menu_level_1">
+                                <li><a href="https://www.xaydungkimanh.com/mau-nha-dep/mau-nha-pho">Mẫu nhà phố</a></li>
+                                <li><a href="https://www.xaydungkimanh.com/mau-nha-dep/mau-biet-thu">Mẫu biệt thự</a></li>
+                                <li><a href="https://www.xaydungkimanh.com/mau-nha-dep/mau-nha-cap-4">Mẫu nhà cấp 4</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
                             <a href="https://www.xaydungkimanh.com/xay-dung" class="dropdown-toggle" data-toggle="dropdown">Xây dựng</a>
                             <ul class="dropdown-menu menu_level_1">
                                 <li><a href="https://www.xaydungkimanh.com/xay-dung/xay-nha-tron-goi">Xây nhà trọn gói</a></li>
@@ -74,7 +82,12 @@
                     </ul>
                     <form class="navbar-form navbar-right" action="{{ path('news_search') }}" method="get">
                         <div class="form-group">
-                            <input name="q" type="text" class="form-control" placeholder="{{ 'search'|trans }}">
+                            <div class="ka-search-wrapper">
+                                <input name="q" type="text" class="form-control" placeholder="{{ 'search'|trans }}">
+                                <button type="submit" class="ka-search-btn" aria-label="{{ 'search'|trans }}">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>
