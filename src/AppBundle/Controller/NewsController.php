@@ -909,21 +909,39 @@ class NewsController extends Controller
             return $this->redirectToRoute('news_search', array('q' => $q));
         }
 
+        // Improved search: search across multiple fields
+        $searchTerm = $request->query->get('q');
+        $searchPattern = '%'.$searchTerm.'%';
+
         $query = $this->getDoctrine()
             ->getRepository(News::class)
             ->createQueryBuilder('p')
-            ->where('p.title LIKE :q')
+            ->where('p.title LIKE :q 
+                    OR p.description LIKE :q 
+                    OR p.pageTitle LIKE :q 
+                    OR p.pageDescription LIKE :q 
+                    OR p.pageKeyword LIKE :q')
             ->andWhere('p.enable = :enable')
             ->andWhere('p.postType = :postType')
-            ->setParameter('q', '%'.$request->query->get('q').'%')
+            ->setParameter('q', $searchPattern)
             ->setParameter('enable', 1)
             ->setParameter('postType', 'post')
             ->orderBy('p.createdAt', 'DESC')
             ->getQuery();
         
+        $results = $query->getResult();
+        
+        // Highlight search keywords in results
+        $highlightedResults = [];
+        foreach ($results as $result) {
+            $result->highlightedTitle = $this->highlightKeyword($result->getTitle(), $searchTerm);
+            $result->highlightedDescription = $this->highlightKeyword($result->getDescription(), $searchTerm);
+            $highlightedResults[] = $result;
+        }
+        
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
-            $query->getResult(),
+            $highlightedResults,
             $page,
             $this->get('settings_manager')->get('numberRecordOnPage') ?: 10
         );
@@ -931,13 +949,31 @@ class NewsController extends Controller
         $breadcrumbs = $this->get("white_october_breadcrumbs");
         $breadcrumbs->addItem("home", $this->generateUrl("homepage"));
         $breadcrumbs->addItem('search');
-        $breadcrumbs->addItem(ucfirst($request->query->get('q')));
+        $breadcrumbs->addItem(ucfirst($searchTerm));
 
         return $this->render('news/search.html.twig', [
-            'baseUrl' => $this->generateUrl('news_search', array('q' => $request->query->get('q')), UrlGeneratorInterface::ABSOLUTE_URL),
-            'q' => ucfirst($request->query->get('q')),
+            'baseUrl' => $this->generateUrl('news_search', array('q' => $searchTerm), UrlGeneratorInterface::ABSOLUTE_URL),
+            'q' => ucfirst($searchTerm),
             'pagination' => $pagination
         ]);
+    }
+
+    /**
+     * Highlight search keyword in text with <mark> tags
+     * 
+     * @param string $text The text to highlight
+     * @param string $keyword The keyword to highlight
+     * @return string The highlighted text
+     */
+    private function highlightKeyword($text, $keyword)
+    {
+        if (empty($text) || empty($keyword)) {
+            return $text;
+        }
+        
+        // Case-insensitive replacement with word boundaries
+        $pattern = '/(' . preg_quote($keyword, '/') . ')/i';
+        return preg_replace($pattern, '<mark>$1</mark>', $text);
     }
 
     /**

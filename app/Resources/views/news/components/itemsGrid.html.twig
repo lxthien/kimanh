@@ -36,9 +36,21 @@
         </div>
         <div class="media-body">
             <h3 class="mt-0 mb-1">
-                <a title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}" {{ target is defined ? ' target=' ~ target : '' }} {{ rel is defined ? ' rel=' ~ rel : '' }}>{{ row.getTitle() }}</a>
+                <a title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}" {{ target is defined ? ' target=' ~ target : '' }} {{ rel is defined ? ' rel=' ~ rel : '' }}>
+                    {% if row.highlightedTitle is defined %}
+                        {{ row.highlightedTitle|raw }}
+                    {% else %}
+                        {{ row.getTitle() }}
+                    {% endif %}
+                </a>
             </h3>
-            <p>{{ row.getDescription()|slice(0, 105) }}</p>
+            <p>
+                {% if row.highlightedDescription is defined %}
+                    {{ row.highlightedDescription|slice(0, 105)|raw }}
+                {% else %}
+                    {{ row.getDescription()|slice(0, 105) }}
+                {% endif %}
+            </p>
         </div>
     </div>
 </div>

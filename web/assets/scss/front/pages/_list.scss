@@ -171,14 +171,10 @@
 
         // Links
         a {
-            color: $primaryColor;
+            color: $accentColor;
             transition: $transitionFast;
-            text-decoration: underline;
-            text-decoration-color: rgba($accentColor, 0.3);
-            text-underline-offset: 3px;
 
             &:hover {
-                color: $accentColor;
                 text-decoration-color: $accentColor;
             }
         }
@@ -240,7 +236,7 @@
             border-left: 4px solid $accentColor;
             font-style: italic;
             background: linear-gradient(135deg, $surfaceLight 0%, rgba($primaryColor, 0.02) 100%);
-            padding: 25px 30px;
+            padding: 25px 30px 25px 45px;
             margin: 30px 0;
             border-radius: 0 $radiusMd $radiusMd 0;
             box-shadow: $shadowSm;
@@ -276,7 +272,6 @@
             }
 
             a[href] {
-                font-style: normal;
                 font-weight: 600;
             }
         }
@@ -329,7 +324,6 @@
 
         // Strong/Bold
         strong, b {
-            color: $primaryColor;
             font-weight: 700;
         }
 

@@ -224,61 +224,6 @@
             }
         }
 
-        // Legacy Table of Contents styling (fallback)
-        div[name="tableOfContents"] {
-            margin-bottom: 35px;
-            padding: 25px 30px 20px;
-            background: linear-gradient(135deg, $white 0%, rgba($primaryColor, 0.02) 100%);
-            border: 1px solid $borderColor;
-            border-left: 4px solid $accentColor;
-            border-radius: 0 $radiusMd $radiusMd 0;
-            box-shadow: $shadowMd;
-            position: relative;
-
-            &:before {
-                content: "📋 Phụ lục bài viết";
-                display: block;
-                font-weight: 700;
-                color: $primaryColor;
-                margin-bottom: 15px;
-                font-size: 18px;
-                padding-bottom: 12px;
-                border-bottom: 2px solid $borderColor;
-            }
-
-            a {
-                display: block;
-                padding: 8px 0 8px 20px;
-                border-bottom: 1px dashed rgba($borderColor, 0.5);
-                text-decoration: none;
-                color: $textPrimary;
-                transition: $transitionFast;
-                position: relative;
-
-                &:before {
-                    content: "›";
-                    position: absolute;
-                    left: 0;
-                    color: $accentColor;
-                    font-weight: 700;
-                    font-size: 16px;
-                }
-                
-                &:last-child {
-                    border-bottom: none;
-                }
-
-                &:hover {
-                    color: $accentColor;
-                    padding-left: 25px;
-
-                    &:before {
-                        left: 5px;
-                    }
-                }
-            }
-        }
-
         div[style="margin-left:30px"], div[style="margin-left:60px"] {
             display: list-item;
             list-style-type: disc;
@@ -409,14 +354,10 @@
 
         // Links
         a {
-            color: $primaryColor;
+            color: $accentColor;
             transition: $transitionFast;
-            text-decoration: underline;
-            text-decoration-color: rgba($accentColor, 0.3);
-            text-underline-offset: 3px;
 
             &:hover {
-                color: $accentColor;
                 text-decoration-color: $accentColor;
             }
         }
@@ -476,7 +417,7 @@
             border-left: 4px solid $accentColor;
             font-style: italic;
             background: linear-gradient(135deg, $surfaceLight 0%, rgba($primaryColor, 0.02) 100%);
-            padding: 25px 30px;
+            padding: 25px 30px 25px 45px;
             margin: 30px 0;
             border-radius: 0 $radiusMd $radiusMd 0;
             box-shadow: $shadowSm;
@@ -513,7 +454,6 @@
 
             // CTA links with arrow emoji
             a[href] {
-                font-style: normal;
                 font-weight: 600;
             }
         }
@@ -562,7 +502,6 @@
 
         // Strong/Bold text with accent
         strong, b {
-            color: $primaryColor;
             font-weight: 700;
         }
 

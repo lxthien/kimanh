@@ -3,6 +3,14 @@
 {% block stylesheets %}
     <link href="{{ absolute_url(asset('build/css/list.css')) }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'" >
     <noscript><link rel="stylesheet" href="{{ absolute_url(asset('build/css/list.css')) }}" ></noscript>
+    <style>
+        mark {
+            background-color: #fff44f;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+    </style>
 {% endblock %}
 
 {% block title %}{{ 'post.archives.title'|trans({'%title%': q, '%currentPage%': pagination.currentPageNumber, '%totalPage%': pagination.pageCount}) }}{% endblock %}

@@ -32,7 +32,7 @@
                 <div class="col-md-4" id="logo_top">
                     <div id="logo">
                         <a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
-                            <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}" width="274" height="99" alt="{{ get_setting('siteName') }}">
+                            <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}" width="274" height="99" alt="{{ get_setting('siteName') }}" fetchpriority="high">
                         </a>
                     </div>
                 </div>
@@ -61,6 +61,6 @@
         </div>
     </div>
     <a class="hidden-sm hidden-md hidden-lg" href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
-        <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}" alt="{{ get_setting('siteName') }}" width="274" height="99">
+        <img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}" alt="{{ get_setting('siteName') }}" width="274" height="99" fetchpriority="high">
     </a>
 </header>
