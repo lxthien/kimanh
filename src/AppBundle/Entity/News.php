@@ -200,6 +200,22 @@ class News
     private $author;
 
     /**
+     * @var News
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\News", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
+     */
+    private $parent;
+
+    /**
+     * @var News[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\News", mappedBy="parent")
+     * @ORM\OrderBy({"title": "ASC"})
+     */
+    private $children;
+
+    /**
      * @var Tag[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Tag", inversedBy="news", cascade={"persist"})
@@ -232,6 +248,7 @@ class News
         $this->category = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     /**
@@ -612,6 +629,37 @@ class News
     public function setAuthor(User $author)
     {
         $this->author = $author;
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function setParent(News $parent = null)
+    {
+        $this->parent = $parent;
+    }
+
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    public function addChild(News $child)
+    {
+        if (!$this->children->contains($child)) {
+            $this->children->add($child);
+            $child->setParent($this);
+        }
+    }
+
+    public function removeChild(News $child)
+    {
+        if ($this->children->contains($child)) {
+            $this->children->removeElement($child);
+            $child->setParent(null);
+        }
     }
 
     public function getComments()

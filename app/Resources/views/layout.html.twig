@@ -144,7 +144,7 @@
                         },
                         "potentialAction": {
                             "@type": "SearchAction",
-                            "target": "https://www.xaydungkimanh.com/search?q={search_term_string}",
+                            "target": "{{ absolute_url(path('homepage')) }}search?q={search_term_string}",
                             "query-input": "required name=search_term_string"
                         }
                     },
@@ -169,7 +169,7 @@
                         "gender": "https://schema.org/Male",
                         "height": "1m75",
                         "email": "nguyenduytuan.xaydungkimanh@gmail.com",
-                        "image": "https://www.xaydungkimanh.com/assets/images/nguyenduytuan.jpg",
+                        "image": "{{ absolute_url(asset('assets/images/nguyenduytuan.jpg')) }}",
                         "sameAs": [
                             "https://www.facebook.com/profile.php?id=100025112408398",
                             "https://www.linkedin.com/in/nguyenduytuanxaydungkimanh/",

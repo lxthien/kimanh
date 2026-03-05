@@ -240,6 +240,10 @@
                 <source>label.title</source>
                 <target>Tiêu đề</target>
             </trans-unit>
+            <trans-unit id="label.parent_page">
+                <source>label.parent_page</source>
+                <target>Trang cha</target>
+            </trans-unit>
             <trans-unit id="label.name">
                 <source>label.name</source>
                 <target>Tên</target>

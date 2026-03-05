@@ -10,5 +10,5 @@ Disallow: /*?filter_by=*
 Disallow: /*?PageSpeed=*
 Disallow: /*?danh-muc=*
 Disallow: /*.pdf$
-Sitemap: https://www.xaydungkimanh.com/sitemap.xml
-Sitemap: https://www.xaydungkimanh.com/images_sitemap.xml
+Sitemap: https://kientruckimanh.com/sitemap.xml
+Sitemap: https://kientruckimanh.com/images_sitemap.xml

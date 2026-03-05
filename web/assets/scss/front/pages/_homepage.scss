@@ -256,6 +256,124 @@
     }
 }
 
+// Blocks About Home Section
+.blocks-about-home {
+    padding: 60px 0;
+    background: $white;
+    position: relative;
+
+    @media only screen and (max-width: 768px) {
+        padding: 40px 0;
+    }
+
+    .about-home-content-left {
+        .block-contents {
+            h1 {
+                font-size: 28px;
+                font-family: $robotoCondesed;
+                font-weight: 700;
+                color: $primaryColor;
+                margin-top: 0;
+                margin-bottom: 20px;
+                text-transform: uppercase;
+
+                @media only screen and (max-width: 768px) {
+                    font-size: 24px;
+                }
+            }
+
+            h4 {
+                font-size: 18px;
+                font-weight: 600;
+                color: $accentColor;
+                margin-bottom: 20px;
+                line-height: 1.5;
+            }
+
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0 0 20px 0;
+
+                li {
+                    position: relative;
+                    padding-left: 20px;
+                    margin-bottom: 15px;
+                    font-size: 15px;
+                    line-height: 1.6;
+                    color: $textSecondary;
+
+                    &::before {
+                        content: "\f105"; // FontAwesome angle-right
+                        font-family: "Font Awesome 5 Free";
+                        font-weight: 900;
+                        position: absolute;
+                        left: 0;
+                        top: 2px;
+                        color: $accentColor;
+                    }
+
+                    strong {
+                        color: $primaryColor;
+                    }
+                }
+            }
+        }
+
+        .but-about-home {
+            margin-top: 25px;
+
+            a {
+                display: inline-block;
+                padding: 10px 25px;
+                background: $accentColor;
+                color: $white;
+                font-family: $robotoCondesed;
+                font-weight: 700;
+                text-transform: uppercase;
+                border-radius: $radiusXl;
+                transition: $transitionBase;
+                text-decoration: none;
+
+                em {
+                    font-style: normal;
+                }
+
+                &:hover {
+                    background: $accentDark;
+                    transform: translateY(-2px);
+                    box-shadow: $shadowMd;
+                }
+            }
+        }
+    }
+
+    .about-home-content-right {
+        @media only screen and (max-width: 767.98px) {
+            margin-top: 30px;
+        }
+
+        .btn-effect {
+            display: block;
+            border-radius: $radiusLg;
+            overflow: hidden;
+            box-shadow: $shadowLg;
+
+            img {
+                width: 100%;
+                height: auto;
+                transition: $transitionBase;
+                display: block;
+
+                &:hover {
+                    transform: scale(1.05);
+                }
+            }
+        }
+    }
+}
+
+
 // Prices/Services Cards
 .prices-table {
     position: relative;

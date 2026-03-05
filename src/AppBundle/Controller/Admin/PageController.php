@@ -30,7 +30,7 @@ class PageController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $pages = $em->getRepository(News::class)->findAllPages();
+        $pages = $em->getRepository(News::class)->findPagesAsTree();
 
         return $this->render('admin/page/index.html.twig', ['pages' => $pages]);
     }

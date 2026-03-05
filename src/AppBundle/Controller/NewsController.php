@@ -185,8 +185,7 @@ class NewsController extends Controller
     }
 
     /**
-     * @Route("{slug}.html",
-     *      defaults={"_format"="html"},
+     * @Route("{slug}",
      *      name="news_show",
      *      requirements={
      *          "slug": "[^/\.]++"
@@ -303,7 +302,7 @@ class NewsController extends Controller
         $rating = $queryRating->setMaxResults(1)->getOneOrNullResult();
 
         // Init breadcrum for the post
-        $breadcrumbs = $this->buildBreadcrums(null, $post, null, $categoryPrimary);
+        $breadcrumbs = $this->buildBreadcrums(null, $post->isPage() ? null : $post, $post->isPage() ? $post : null, $categoryPrimary);
 
         // Filter content to support Lazy Loading
         $contentsLazy = $this->lazyloadContent($post);
@@ -317,6 +316,11 @@ class NewsController extends Controller
                 'post'          => $post,
                 'contentsLazy'  => $contentsLazy,
                 'form'          => $form->createView(),
+                'formRating'    => $formRating->createView(),
+                'rating'        => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
+                'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),
+                'ratingValue'   => round($rating['ratingValue']),
+                'ratingCount'   => round($rating['ratingCount']),
                 'comments'      => $comments,
                 'imageSize'     => $imageSize
             ]);
@@ -361,188 +365,6 @@ class NewsController extends Controller
         $string = trim(preg_replace('/ {2,}/', ' ', $string));
         
         return $string;
-    }
-
-    /**
-     * @Route("amp/{slug}.html",
-     *      defaults={"_format"="html"},
-     *      name="amp_show",
-     *      requirements={
-     *          "slug": "[^/\.]++"
-     *      })
-     */
-    public function ampShowAction($slug, Request $request)
-    {
-        $post = $this->getDoctrine()
-                ->getRepository(News::class)
-                ->findOneBy(
-                    array('url' => $slug, 'enable' => 1)
-                );
-
-        if (!$post) {
-            throw $this->createNotFoundException("The post does not exist");
-        }
-
-        // Update viewCount for post
-        $post->setViewCounts( $post->getViewCounts() + 1 );
-        $this->getDoctrine()->getManager()->flush();
-
-        $categoryPrimary = $request->query->get('danh-muc');
-        
-        if (!$categoryPrimary) {
-            if ($post->getCategoryPrimary() > 0) {
-                $categoryPrimary = $post->getCategoryPrimary();
-            } else {
-                if (!$post->getCategory()->isEmpty()) {
-                    $categoryPrimary = $post->getCategory()[0]->getId();
-                }
-            }
-        } else {
-            $catPrimary = $this->getDoctrine()
-                ->getRepository(NewsCategory::class)
-                ->findOneByUrl($categoryPrimary);
-            
-            $categoryPrimary = $catPrimary->getId();
-        }
-
-        if ($categoryPrimary > 0) {
-            $category = $this->getDoctrine()
-                ->getRepository(NewsCategory::class)
-                ->find($categoryPrimary);
-
-            $ordering = $category->getSortBy() == null ? '{"createdAt":"DESC"}' : $category->getSortBy();
-            $orderingData = (array)(json_decode($ordering));
-            $orderingKey = array_keys($orderingData);
-            
-            // Get news related
-            $relatedNews = $this->getDoctrine()
-                ->getRepository(News::class)
-                ->createQueryBuilder('r')
-                ->innerJoin('r.category', 't')
-                ->where('t.id = :newscategory_id')
-                ->andWhere('r.id <> :id')
-                ->andWhere('r.postType = :postType')
-                ->andWhere('r.enable = :enable')
-                ->setParameter('newscategory_id', $categoryPrimary)
-                ->setParameter('id', $post->getId())
-                ->setParameter('postType', $post->getPostType())
-                ->setParameter('enable', 1)
-                ->setMaxResults( 8 )
-                ->orderBy('r.'.$orderingKey[0], $orderingData[$orderingKey[0]])
-                ->getQuery()
-                ->getResult();
-        }
-
-        // Get the list comment for post
-        $comments = $this->getDoctrine()
-            ->getRepository(Comment::class)
-            ->createQueryBuilder('c')
-            ->where('c.news_id = :news_id')
-            ->andWhere('c.approved = :approved')
-            ->setParameter('news_id', $post->getId())
-            ->setParameter('approved', 1)
-            ->getQuery()->getResult();
-
-        // Get rating of the post
-        $repositoryRating = $this->getDoctrine()->getManager();
-
-        $queryRating = $repositoryRating->createQuery(
-            'SELECT AVG(r.rating) as ratingValue, COUNT(r) as ratingCount
-            FROM AppBundle:Rating r
-            WHERE r.news_id = :news_id'
-        )->setParameter('news_id', $post->getId());
-
-        $rating = $queryRating->setMaxResults(1)->getOneOrNullResult();
-
-        // Init breadcrum for the post
-        $breadcrumbs = $this->buildBreadcrums(null, $post, null, $categoryPrimary);
-
-        // Filter content to support Lazy Loading
-        $contentsAmp = $this->amploadContent($post);
-
-        if ($post->isPage()) {
-            return $this->render('news/page.html.twig', [
-                'post'          => $post,
-                'form'          => $form->createView(),
-                'formRating'    => $formRating->createView(),
-                'rating'        => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
-                'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),
-                'ratingValue'   => round($rating['ratingValue']),
-                'ratingCount'   => round($rating['ratingCount']),
-                'comments'      => $comments
-            ]);
-        } else {
-            return $this->render('amp/amp-theme/index.html.twig', [
-                'post'          => $post,
-                'contentsAmp'   => $contentsAmp,
-                'relatedNews'   => !empty($relatedNews) ? $relatedNews : NULL,
-                'category'     => !empty($category) ? $category : NULL,
-                'rating'        => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
-                'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),
-                'ratingValue'   => round($rating['ratingValue']),
-                'ratingCount'   => round($rating['ratingCount']),
-                'comments'      => $comments
-            ]);
-        }
-    }
-
-    private function amploadContent($post) {
-        $html = $post->getContents();
-
-        # Code replace img tag to amp-img
-        preg_match_all("#<img(.*?)\\/?>#", $html, $img_matches);
-        foreach ($img_matches[1] as $key => $img_tag) {
-            preg_match_all('/(alt|src|width|height)=["\'](.*?)["\']/i', $img_tag, $attribute_matches);
-            $attributes = array_combine($attribute_matches[1], $attribute_matches[2]);
-
-            if (!array_key_exists('width', $attributes) || !array_key_exists('height', $attributes)) {
-                if (array_key_exists('src', $attributes)) {
-                    list($width, $height) = @getimagesize(substr($attributes['src'], 1));
-                    $attributes['width'] = !empty($width) ? $width : 500;
-                    $attributes['height'] = !empty($height) ? $height : 500;
-                }
-            }
-
-            $amp_tag = '<amp-img ';
-            foreach ($attributes as $attribute => $val) {
-                if ($attribute == 'src') {
-                    $src = !is_bool($this->convertImages->webpConvert2($val, '')) ? '/' . $this->convertImages->webpConvert2($val, '') : $val;
-                    $amp_tag .= $attribute .'="'. $src .'" ';
-                } else {
-                    $amp_tag .= $attribute .'="'. $val .'" ';
-                }
-            }
-
-            $amp_tag .= 'layout="responsive"';
-            $amp_tag .= '>';
-            $amp_tag .= '</amp-img>';
-
-            $html = str_replace($img_matches[0][$key], $amp_tag, $html);
-        }
-
-        # Code replace iframe tag to amp-youtube
-        preg_match_all("#<iframe(.*?)\\/?>#", $html, $iframe_match);
-        foreach ($iframe_match[1] as $key => $iframe_tag) {
-            preg_match_all('/(alt|src|width|height)=["\'](.*?)["\']/i', $iframe_tag, $attribute_matches);
-            $attributes = array_combine($attribute_matches[1], $attribute_matches[2]);
-
-            if (array_key_exists('src', $attributes)) {
-                $iframeSrc = $attributes['src'];
-                preg_match('/embed\/([\w+\-+]+)[\"\?]/', $iframeSrc, $iframeMatch);
-            }
-
-            $iframe_tag = '<amp-youtube ';
-            $iframe_tag .= 'width="480"';
-            $iframe_tag .= 'height="270"';
-            $iframe_tag .= 'layout="responsive"';
-            $iframe_tag .= 'data-videoid="'.$iframeMatch[1].'"';
-            $iframe_tag .= '>';
-            $iframe_tag .= '</amp-youtube>';
-
-            $html = str_replace($iframe_match[0][$key], $iframe_tag, $html);
-        }
-
-        return html_entity_decode($html);
     }
 
     private function lazyloadContent($post)
@@ -1102,6 +924,35 @@ class NewsController extends Controller
         
         // Add home item into first breadcrum.
         $breadcrumbs->addItem("home", $this->generateUrl("homepage"));
+        
+        // Breadcrum for page (with parent hierarchy)
+        if (!empty($page) && $page->isPage()) {
+            // Build the parent chain for the page
+            $pageChain = [];
+            $currentPage = $page;
+            
+            // Collect all parents in reverse order
+            while ($currentPage) {
+                $pageChain[] = $currentPage;
+                $currentPage = $currentPage->getParent();
+            }
+            
+            // Reverse to get the correct order (parent -> child)
+            $pageChain = array_reverse($pageChain);
+            
+            // Add each page in the chain to breadcrumbs
+            foreach ($pageChain as $index => $p) {
+                if ($index < count($pageChain) - 1) {
+                    // Add as link for parent pages
+                    $breadcrumbs->addItem($p->getTitle(), $this->generateUrl('news_show', array('slug' => $p->getUrl())));
+                } else {
+                    // Add current page without link
+                    $breadcrumbs->addItem($p->getTitle(), $this->generateUrl('news_show', array('slug' => $p->getUrl())));
+                }
+            }
+            
+            return $breadcrumbs;
+        }
         
         // Breadcrum for category page
         if (!empty($category)) {

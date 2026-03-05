@@ -26,7 +26,17 @@ class NewsRepository extends \Doctrine\ORM\EntityRepository
     {
         return $this->getEntityManager()
             ->createQuery(
-                'SELECT n FROM AppBundle:News n WHERE n.postType = :postType ORDER BY n.createdAt DESC'
+                'SELECT n FROM AppBundle:News n WHERE n.postType = :postType ORDER BY n.parent ASC, n.title ASC'
+            )
+            ->setParameter('postType', "page")
+            ->getResult();
+    }
+
+    public function findPagesAsTree()
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT n FROM AppBundle:News n WHERE n.postType = :postType AND n.parent IS NULL ORDER BY n.title ASC'
             )
             ->setParameter('postType', "page")
             ->getResult();
