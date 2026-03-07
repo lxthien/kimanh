@@ -3,7 +3,7 @@
 // ============================================
 
 // Top Bar (Contact Info)
-.header {
+.ka-topbar {
     padding: 0;
     background: $gradientDark;
     color: $white;
@@ -23,7 +23,7 @@
     }
 
     .col-md-6 {
-        &.marquee {
+        &.ka-news-ticker {
             height: 44px;
             display: flex;
             align-items: center;
@@ -72,7 +72,7 @@
         }
     }
 
-    .header-social {
+    .ka-social-connect {
         position: relative;
         display: flex;
         align-items: center;
@@ -83,7 +83,7 @@
             display: none;
         }
 
-        .header-social-wrapper {
+        .ka-social-wrapper {
             position: relative;
             padding-left: 15px;
             display: flex;
@@ -102,7 +102,7 @@
 
                 &:hover {
                     background: transparent;
-                    
+
                     a {
                         color: $accentLight;
                     }
@@ -152,7 +152,7 @@
 }
 
 // Main Banner/Logo Area
-.banner {
+.ka-branding-area {
     height: auto;
     min-height: 100px;
     font-family: $robotoCondesed;
@@ -160,18 +160,18 @@
     box-shadow: $shadowMd;
     position: relative;
 
-    #logo_top {
+    #ka-logo-container {
         padding: 0;
         display: flex;
         align-items: center;
 
-        #logo {
+        #ka-brand-logo {
             float: left;
             padding: 12px 0;
 
             a {
                 display: block;
-                
+
                 img {
                     padding: 0;
                     max-height: 80px;
@@ -186,17 +186,17 @@
         }
     }
 
-    .info-top {
+    .ka-contact-info-top {
         margin-top: 25px;
         display: flex;
         align-items: center;
         justify-content: center;
 
-        &.hotline-top {
+        &.ka-hotline-top {
             margin-top: 30px;
 
             .wp90 {
-                .info-nd {
+                .ka-info-nd {
                     background: $gradientAccent;
                     border: none;
                     padding: 8px 10px;
@@ -241,7 +241,7 @@
             width: 90%;
             float: left;
 
-            .info-nd {
+            .ka-info-nd {
                 p {
                     margin-bottom: 0;
                     color: $textPrimary;
@@ -251,14 +251,14 @@
                     font-weight: 600;
                     text-shadow: none;
 
-                    &#header-address {
+                    &#ka-header-address {
                         text-shadow: none;
                         color: $textSecondary;
                         font-weight: 500;
                     }
                 }
 
-                .tel {
+                .ka-tel {
                     font-weight: 700;
                     font-family: $robotoCondesed;
                     font-size: 22px;
@@ -266,7 +266,7 @@
                     color: $primaryColor;
                     text-shadow: none;
 
-                    &#header-company {
+                    &#ka-header-company {
                         text-shadow: none;
                     }
 

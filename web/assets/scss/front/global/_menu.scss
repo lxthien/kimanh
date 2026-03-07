@@ -2,15 +2,15 @@
 // NAVIGATION - Modern Industrial Design
 // ============================================
 
-#nav {
+#ka-main-nav {
     background: $primaryColor;
     z-index: 10000;
     box-shadow: $shadowLg;
 
-    .nav-container {
+    .ka-nav-wrapper {
         position: relative;
 
-        .navbar {
+        .ka-navbar {
             background: transparent;
             margin-bottom: 0px;
             border-radius: 0px;
@@ -18,7 +18,7 @@
             padding-top: 0px;
             justify-content: left;
             min-height: auto;
-    
+
             .navbar-header {
                 .navbar-brand {
                     padding: 5px 0;
@@ -27,16 +27,16 @@
                     @media only screen and (max-width : 768px) {
                         padding-top: 5px;
                     }
-    
+
                     img {
                         width: 100px;
-    
+
                         @media only screen and (max-width : 768px) {
                             width: 90px;
                         }
                     }
                 }
-    
+
                 .navbar-toggle {
                     border-color: rgba(255, 255, 255, 0.3);
                     float: left;
@@ -49,35 +49,35 @@
                     &:hover {
                         background: rgba(255, 255, 255, 0.2);
                     }
-    
+
                     .icon-bar {
                         background-color: $white;
                     }
                 }
             }
-    
+
             .navbar-collapse {
                 border-width: 0px;
                 box-shadow: none;
                 padding: 0;
                 position: relative;
-    
+
                 @media only screen and (max-width: 767.98px) {
                     width: 100%;
                     float: left !important;
                     background: $primaryDark;
                 }
-    
+
                 .navbar-nav {
                     @media only screen and (max-width: 767.98px) {
                         margin: 0;
                     }
                 }
-    
+
                 ul li {
                     margin-bottom: 0px;
                     position: relative;
-    
+
                     @media only screen and (min-width: 979.98px) {
                         &.current {
                             &::before {
@@ -94,7 +94,7 @@
 
                         &:hover {
                             background: rgba(255, 255, 255, 0.05);
-                            
+
                             &::before {
                                 content: "";
                                 width: 100%;
@@ -107,7 +107,7 @@
                             }
                         }
                     }
-    
+
                     a {
                         padding: 14px 15px;
                         font-weight: 600;
@@ -119,11 +119,12 @@
                         letter-spacing: 0.3px;
                         transition: $transitionFast;
 
-                        &:focus, &:hover {
+                        &:focus,
+                        &:hover {
                             background: transparent;
                             color: $accentLight;
                         }
-    
+
                         @media only screen and (max-width: 768px) {
                             padding: 12px 15px;
                             font-size: 14px;
@@ -139,7 +140,9 @@
 
                     &.open {
                         a {
-                            &:focus, &:hover {
+
+                            &:focus,
+                            &:hover {
                                 background: transparent;
                             }
                         }
@@ -170,7 +173,7 @@
                                 border-top: none;
                                 background: rgba(0, 0, 0, 0.2);
                             }
-    
+
                             li {
                                 &::before {
                                     content: none;
@@ -183,14 +186,15 @@
                                 &.last {
                                     border-bottom: none;
                                 }
-    
+
                                 a {
                                     padding: 12px 20px;
                                     font-size: 16px;
                                     text-transform: none;
                                     font-weight: 500;
-    
-                                    &:focus, &:hover {
+
+                                    &:focus,
+                                    &:hover {
                                         color: $accentLight;
                                         padding-left: 25px;
                                     }
@@ -200,7 +204,7 @@
                     }
                 }
 
-                .navbar-form {
+                .ka-search-form {
                     margin: 0;
                     padding: 0;
 
@@ -226,7 +230,7 @@
                         }
                     }
 
-                    .form-control {
+                    .ka-search-input {
                         height: 34px;
                         border: none;
                         border-radius: $radiusXl;
@@ -292,8 +296,8 @@
                     }
 
                     .navbar-nav {
-                        float: none!important;
-    
+                        float: none !important;
+
                         &>li {
                             float: none;
 
@@ -308,16 +312,16 @@
     }
 }
 
-#nav {
+#ka-main-nav {
     &.navbar-fixed-top {
         opacity: 0.98;
         backdrop-filter: blur(10px);
 
-        .nav-container .navbar {
+        .ka-nav-wrapper .ka-navbar {
             min-height: auto;
         }
 
-        .nav-container .navbar {
+        .ka-nav-wrapper .ka-navbar {
             .navbar-header .navbar-brand {
                 padding: 5px 0;
 
@@ -343,6 +347,7 @@
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);

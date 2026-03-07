@@ -26,6 +26,63 @@ class Builder implements ContainerAwareInterface
         ->setLinkAttribute('aria-label', 'Xây Dựng Kim Anh');
 
         $menu->addChild('Giới thiệu', [
+            'route' => 'dynamic_post_page',
+            'routeParameters' => ['slug' => 'gioi-thieu']
+        ])
+        ->setAttribute('class', 'dropdown')
+        ->setLinkAttribute('class', 'dropdown-toggle')
+        ->setLinkAttribute('data-toggle', 'dropdown')
+        ->setChildrenAttribute('class', 'dropdown-menu');
+
+        $menu['Giới thiệu']->addChild('Về chúng tôi', [
+            'route' => 'dynamic_post_page',
+            'routeParameters' => ['slug' => 'gioi-thieu']
+        ]);
+
+        $menu['Giới thiệu']->addChild('Hồ sơ năng lực', [
+            'route' => 'dynamic_post_page',
+            'routeParameters' => ['slug' => 'ho-so-nang-luc']
+        ]);
+
+        $menu->addChild('Dịch vụ', [
+            'uri' => '#'
+        ])
+        ->setAttribute('class', 'dropdown')
+        ->setLinkAttribute('class', 'dropdown-toggle')
+        ->setLinkAttribute('data-toggle', 'dropdown')
+        ->setChildrenAttribute('class', 'dropdown-menu');
+
+        $menu['Dịch vụ']->addChild('Xây nhà trọn gói', [
+            'route' => 'dynamic_post_page',
+            'routeParameters' => ['slug' => 'bao-gia-xay-nha-tron-goi']
+        ]);
+
+        $menu->addChild('Blog', [
+            'route' => 'dynamic_post_page',
+            'routeParameters' => ['slug' => 'blog']
+        ])
+        ->setAttribute('class', 'dropdown')
+        ->setLinkAttribute('class', 'dropdown-toggle')
+        ->setLinkAttribute('data-toggle', 'dropdown')
+        ->setChildrenAttribute('class', 'dropdown-menu');
+
+        $menu['Blog']->addChild('Kiến thức xây nhà', [
+            'route' => 'list_category',
+            'routeParameters' => ['level1' => 'blog', 'level2' => 'kien-thuc-xay-nha']
+        ]);
+
+        $menu['Blog']->addChild('Kiến thức sửa nhà', [
+            'route' => 'list_category',
+            'routeParameters' => ['level1' => 'blog', 'level2' => 'kien-thuc-sua-nha']
+        ]);
+
+        $menu['Blog']->addChild('Pháp lý xây dựng', [
+            'route' => 'list_category',
+            'routeParameters' => ['level1' => 'blog', 'level2' => 'phap-ly-xay-dung']
+        ]);
+
+        /*
+        $menu->addChild('Giới thiệu', [
             'route' => 'news_show',
             'routeParameters' => ['slug' => 'gioi-thieu']
         ])
@@ -92,6 +149,7 @@ class Builder implements ContainerAwareInterface
             'route' => 'news_category',
             'routeParameters' => ['level1' => 'y-kien-khach-hang']
         ]);
+        */
 
         $menu->addChild('Liên hệ', [
             'route' => 'contact'

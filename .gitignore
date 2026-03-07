@@ -27,5 +27,7 @@
 /web/google33e2b6000dc649d2.html
 /web/list-non-index.txt
 /web/ads.txt
+/web/freessl/
 *.sql
 *.webp
+*.md

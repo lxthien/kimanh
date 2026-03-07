@@ -1,14 +1,11 @@
 User-agent: *
 
 Disallow: /admin
-Disallow: /wp-content
-Disallow: /wp-json
 Disallow: /cdn-cgi
-Disallow: /amp
 Disallow: /search?=*
 Disallow: /*?filter_by=*
 Disallow: /*?PageSpeed=*
 Disallow: /*?danh-muc=*
-Disallow: /*.pdf$
+
+# XML Sitemaps
 Sitemap: https://kientruckimanh.com/sitemap.xml
-Sitemap: https://kientruckimanh.com/images_sitemap.xml

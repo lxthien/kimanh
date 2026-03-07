@@ -4,6 +4,9 @@
 # If you don't like to add annotations in your applications, you can also define
 # the routes in YAML, XML or PHP files.
 # See https://symfony.com/doc/current/book/routing.html
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
 app:
     resource: '@AppBundle/Controller/'
     type:     annotation
@@ -18,9 +21,6 @@ app:
 # the template can be rendered without executing any logic in your own controller.
 # See https://symfony.com/doc/current/cookbook/templating/render_without_controller.html
 
-fos_user:
-    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
-
 homepage:
     path: /
     defaults:
@@ -31,6 +31,39 @@ handle_comment_form:
     defaults:
         _controller: AppBundle:News:handleCommentForm
 
+# Dynamic routing for posts and pages (single level)
+# Pattern: /slug-post/ or /slug-page/
+dynamic_post_page:
+    path: /{slug}/
+    defaults:
+        _controller: AppBundle:News:dynamicRoute
+    requirements:
+        slug: '[-\w]+'
+
+# Dynamic routing for category with post/pagination (two levels)
+# Pattern: /category-level-1/slug-post/ or /category-level-1/2/ (pagination)
+dynamic_category_post:
+    path: /{level1}/{level2}/
+    defaults:
+        _controller: AppBundle:News:dynamicRoute
+        page: 1
+    requirements:
+        level1: '[-\w]+'
+        level2: '[-\w]+'
+
+# Dynamic routing for category with post pagination (three levels)
+# Pattern: /category-level-1/category-level-2/slug-post/ or page number
+dynamic_category_level2_post:
+    path: /{level1}/{level2}/{level3}/
+    defaults:
+        _controller: AppBundle:News:dynamicRoute
+        page: 1
+    requirements:
+        level1: '[-\w]+'
+        level2: '[-\w]+'
+        level3: '[-\w]+'
+
+# Legacy category routes (for backward compatibility)
 news_category:
     path: /{level1}/{page}
     defaults:
@@ -49,6 +82,14 @@ list_category:
         level1: '[-\w]+'
         level2: '[-\w]+'
         page: '\d+'
+
+# Legacy news_show route - now aliased to dynamic_post_page for backward compatibility
+news_show:
+    path: /{slug}/
+    defaults:
+        _controller: AppBundle:News:dynamicRoute
+    requirements:
+        slug: '[^\n]++'
 
 _liip_imagine:
     resource: "@LiipImagineBundle/Resources/config/routing.xml"

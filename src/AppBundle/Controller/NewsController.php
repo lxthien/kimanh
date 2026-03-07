@@ -49,6 +49,197 @@ class NewsController extends Controller
     }
 
     /**
+     * Dynamic route handler - intelligently routes to correct action based on URL slugs
+     * 
+     * Handles patterns:
+     * - /post-slug/ (post/page)
+     * - /category-slug/ (category list)
+     * - /category-slug/post-slug/ (post in category)
+     * - /parent-category/child-category/ (sub-category list)
+     * - /parent-category/child-category/post-slug/ (post in sub-category)
+     * 
+     * @param string $slug First URL segment
+     * @param string $level1 First segment (alias for slug in some routes)
+     * @param string $level2 Second segment
+     * @param string $level3 Third segment
+     * @param Request $request
+     * @return Response
+     */
+    public function dynamicRouteAction($slug = null, $level1 = null, $level2 = null, $level3 = null, Request $request)
+    {
+        // Normalize parameters
+        if (empty($slug) && !empty($level1)) {
+            $slug = $level1;
+        }
+
+        // Single segment pattern: /slug/
+        if (!empty($slug) && empty($level2) && empty($level3)) {
+            return $this->handleSingleSegment($slug, $request);
+        }
+
+        // Two segment pattern: /segment1/segment2/
+        if (!empty($slug) && !empty($level2) && empty($level3)) {
+            return $this->handleTwoSegments($slug, $level2, $request);
+        }
+
+        // Three segment pattern: /segment1/segment2/segment3/
+        if (!empty($slug) && !empty($level2) && !empty($level3)) {
+            return $this->handleThreeSegments($slug, $level2, $level3, $request);
+        }
+
+        throw $this->createNotFoundException("Invalid URL format");
+    }
+
+    /**
+     * Handle single segment URLs: /slug/
+     * Could be: post, page, or category
+     * 
+     * Priority:
+     * 1. Check if it's a post/page
+     * 2. Check if it's a category (then call listAction)
+     * 3. Not found error
+     */
+    private function handleSingleSegment($slug, Request $request)
+    {
+        // First, try to find it as a post/page
+        $post = $this->getDoctrine()
+            ->getRepository(News::class)
+            ->findOneBy(['url' => $slug, 'enable' => 1]);
+
+        if ($post) {
+            // It's a post/page - forward to showAction
+            return $this->showAction($slug, $request);
+        }
+
+        // Try to find it as a category
+        $category = $this->getDoctrine()
+            ->getRepository(NewsCategory::class)
+            ->findOneBy(['url' => $slug, 'enable' => 1]);
+
+        if ($category) {
+            // Check if this is a child category
+            if ($category->getParentcat() !== 'root') {
+                // It's a child category - redirect to proper hierarchical URL
+                return $this->redirectToRoute('dynamic_category_post', array(
+                    'level1' => $category->getParentcat()->getUrl(),
+                    'level2' => $category->getUrl()
+                ), 301);
+            }
+
+            // It's a top-level category - forward to listAction
+            return $this->listAction($slug, null, 1, $request);
+        }
+
+        // Not found
+        throw $this->createNotFoundException("The item does not exist");
+    }
+
+    /**
+     * Handle two segment URLs: /segment1/segment2/
+     * Could be:
+     * 1. /category/post/ - post in a category
+     * 2. /parent-category/child-category/ - sub-category list
+     */
+    private function handleTwoSegments($level1, $level2, Request $request)
+    {
+        // First, try to find level1 as a category (parent)
+        $parentCategory = $this->getDoctrine()
+            ->getRepository(NewsCategory::class)
+            ->findOneBy(['url' => $level1, 'enable' => 1]);
+
+        if (!$parentCategory) {
+            throw $this->createNotFoundException("Category not found: $level1");
+        }
+
+        // Now check if level2 is a child category
+        $childCategory = $this->getDoctrine()
+            ->getRepository(NewsCategory::class)
+            ->findOneBy(['url' => $level2, 'parentcat' => $parentCategory->getId(), 'enable' => 1]);
+
+        if ($childCategory) {
+            // It's a child category - forward to listAction
+            return $this->listAction($level1, $level2, 1, $request);
+        }
+
+        // Check if level2 is a post in this category
+        $post = $this->getDoctrine()
+            ->getRepository(News::class)
+            ->findOneBy(['url' => $level2, 'enable' => 1]);
+
+        if ($post) {
+            // Verify that the post belongs to this category
+            $categories = $post->getCategory();
+            foreach ($categories as $category) {
+                if ($category->getId() === $parentCategory->getId() || 
+                    ($category->getParentcat() && $category->getParentcat()->getId() === $parentCategory->getId())) {
+                    // It's a post in this category - show the post
+                    return $this->showAction($level2, $request);
+                }
+            }
+            // Post exists but not in this category context, show it anyway
+            return $this->showAction($level2, $request);
+        }
+
+        // level2 is neither a child category nor a post - might be pagination or doesn't exist
+        throw $this->createNotFoundException("Post or category not found: $level2");
+    }
+
+    /**
+     * Handle three segment URLs: /segment1/segment2/segment3/
+     * Pattern: /parent-category/child-category/post/ - post in a sub-category
+     */
+    private function handleThreeSegments($level1, $level2, $level3, Request $request)
+    {
+        // Find parent category
+        $parentCategory = $this->getDoctrine()
+            ->getRepository(NewsCategory::class)
+            ->findOneBy(['url' => $level1, 'enable' => 1]);
+
+        if (!$parentCategory) {
+            throw $this->createNotFoundException("Parent category not found: $level1");
+        }
+
+        // Find child category
+        $childCategory = $this->getDoctrine()
+            ->getRepository(NewsCategory::class)
+            ->findOneBy(['url' => $level2, 'parentcat' => $parentCategory->getId(), 'enable' => 1]);
+
+        if (!$childCategory) {
+            throw $this->createNotFoundException("Child category not found: $level2");
+        }
+
+        // Find post by slug
+        $post = $this->getDoctrine()
+            ->getRepository(News::class)
+            ->findOneBy(['url' => $level3, 'enable' => 1]);
+
+        if ($post) {
+            // Verify post belongs to child category or its parent
+            $categories = $post->getCategory();
+            foreach ($categories as $category) {
+                if ($category->getId() === $childCategory->getId()) {
+                    return $this->showAction($level3, $request);
+                }
+            }
+            // Post exists but not in this category path, show it anyway
+            return $this->showAction($level3, $request);
+        }
+
+        // Check if level3 is another category (for nesting support)
+        $nextChildCategory = $this->getDoctrine()
+            ->getRepository(NewsCategory::class)
+            ->findOneBy(['url' => $level3, 'parentcat' => $childCategory->getId(), 'enable' => 1]);
+
+        if ($nextChildCategory) {
+            // This would require 4 segments, which we don't support yet
+            // For now, treat as not found
+            throw $this->createNotFoundException("Post not found: $level3");
+        }
+
+        throw $this->createNotFoundException("Post or category not found: $level3");
+    }
+
+    /**
      * Render the list posts by the category
      * 
      * @return News
@@ -63,7 +254,8 @@ class NewsController extends Controller
             throw $this->createNotFoundException("The item does not exist");
         }
 
-        if ($category->getParentcat() != 'root') {
+        // If this is a child category accessed directly (shouldn't happen with dynamic routing, but check anyway)
+        if ($category->getParentcat() !== 'root') {
             return $this->redirectToRoute('list_category', array('level1' => $category->getParentcat()->getUrl(), 'level2' => $category->getUrl()), 301);
         }
 
@@ -76,7 +268,8 @@ class NewsController extends Controller
                 throw $this->createNotFoundException("The item does not exist");
             }
 
-            if ($subCategory->getParentcat()->getId() != $category->getId()) {
+            // Verify that $level2 is actually a child of $level1
+            if ($subCategory->getParentcat() === null || $subCategory->getParentcat()->getId() != $category->getId()) {
                 return $this->redirectToRoute('homepage', [], 301);
             }
         }
@@ -185,11 +378,10 @@ class NewsController extends Controller
     }
 
     /**
-     * @Route("{slug}",
-     *      name="news_show",
-     *      requirements={
-     *          "slug": "[^/\.]++"
-     *      })
+     * Display a post/page
+     * 
+     * Note: Route is defined in app/config/routing.yml as both 'news_show' (legacy)
+     * and 'dynamic_post_page' (preferred). All routing goes through dynamicRoute().
      */
     public function showAction($slug, Request $request)
     {
@@ -987,12 +1179,12 @@ class NewsController extends Controller
 
             if (!empty($category)) {
                 if ($category->getParentcat() === 'root') {
-                    $breadcrumbs->addItem($category->getName(), $this->generateUrl("news_category", array('level1' => $category->getUrl() )));
+                    $breadcrumbs->addItem($category->getName(), $this->generateUrl("dynamic_post_page", array('slug' => $category->getUrl() )));
                     $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('news_show', array('slug' => $post->getUrl())) );
                 } else {
                     $parentCategory = $category->getParentcat();
-                    $breadcrumbs->addItem($parentCategory->getName(), $this->generateUrl("news_category", array('level1' => $parentCategory->getUrl() )));
-                    $breadcrumbs->addItem($category->getName(), $this->generateUrl("list_category", array('level1' => $parentCategory->getUrl(), 'level2' => $category->getUrl() )));
+                    $breadcrumbs->addItem($parentCategory->getName(), $this->generateUrl("dynamic_post_page", array('slug' => $parentCategory->getUrl() )));
+                    $breadcrumbs->addItem($category->getName(), $this->generateUrl("dynamic_category_post", array('level1' => $parentCategory->getUrl(), 'level2' => $category->getUrl() )));
                     $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('news_show', array('slug' => $post->getUrl())) );
                 }
             } else {
