@@ -136,6 +136,13 @@ class News
     /**
      * @var string
      *
+     * @ORM\Column(name="breadcrumbTitle", type="string", length=255, nullable=true)
+     */
+    private $breadcrumbTitle = null;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="relatedNews", type="string", length=255, nullable=true)
      */
     private $relatedNews = null;
@@ -535,6 +542,18 @@ class News
     public function getPageKeyword()
     {
         return $this->pageKeyword;
+    }
+
+    public function setBreadcrumbTitle($breadcrumbTitle)
+    {
+        $this->breadcrumbTitle = $breadcrumbTitle;
+
+        return $this;
+    }
+
+    public function getBreadcrumbTitle()
+    {
+        return $this->breadcrumbTitle;
     }
 
     public function setRelatedNews($relatedNews)

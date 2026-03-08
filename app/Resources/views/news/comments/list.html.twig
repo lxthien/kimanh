@@ -1,6 +1,6 @@
 {% if comments|length > 0 %}
 {% set userPath = asset('/assets/images/user.png')|imagine_filter('user') %}
-{% set userImg = absolute_url(convert_images.webpConvert(userPath, '', true)) %}
+{% set userImg = '/' ~ convert_images.webpConvert(userPath, '', true) %}
 <div id="list-comments">
     <h4><span>{{ 'comments.count'|trans({'%count%': comments|length}) }}</span></h4>
     <ul class="media-list">

@@ -7,6 +7,13 @@
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 
+settings:
+    resource: "@DmishhSettingsBundle/Resources/config/routing.yml"
+    prefix: /admin/settings
+
+_liip_imagine:
+    resource: "@LiipImagineBundle/Resources/config/routing.xml"
+
 app:
     resource: '@AppBundle/Controller/'
     type:     annotation
@@ -90,10 +97,3 @@ news_show:
         _controller: AppBundle:News:dynamicRoute
     requirements:
         slug: '[^\n]++'
-
-_liip_imagine:
-    resource: "@LiipImagineBundle/Resources/config/routing.xml"
-
-settings:
-    resource: "@DmishhSettingsBundle/Resources/config/routing.yml"
-    prefix: /admin/settings

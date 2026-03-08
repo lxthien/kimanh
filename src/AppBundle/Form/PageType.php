@@ -72,6 +72,10 @@ class PageType extends AbstractType
                 'required' => false,
                 'label' => 'label.pageKeyword',
             ])
+            ->add('breadcrumbTitle', TextType::class, [
+                'required' => false,
+                'label' => 'Breadcrumb Title (Short label for breadcrumbs)',
+            ])
             ->add('template', ChoiceType::class, [
                 'required' => false,
                 'label' => 'Template',

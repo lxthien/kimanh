@@ -605,7 +605,7 @@ class NewsController extends Controller
 
             $src = !is_bool($this->convertImages->webpConvert2($src, '')) ? $this->convertImages->webpConvert2($src, '') : $src;
 
-            $img->setAttribute('src', $src);
+            $img->setAttribute('src', '/' . $src);
             $img->setAttribute('loading', 'lazy');
             $img->setAttribute('alt', !empty($alt) ? $alt : $post->getTitle());
             $img->setAttribute('width', !empty($width) ? ($width > 900 ? 900 : $width) : 500);
@@ -624,11 +624,6 @@ class NewsController extends Controller
         $newContent = preg_replace('/<\/?head[^>]*>/i', '', $newContent);
         $newContent = preg_replace('/<\/?body[^>]*>/i', '', $newContent);
         
-        // Replace specific address strings
-        $newContent = str_replace("50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $newContent);
-        $newContent = str_replace("C40 - Khu DC Hiệp Thành - Đường Nguyễn Thị Búp, KP 4, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $newContent);
-        $newContent = str_replace("C40 - Khu DC Hiệp Thành - Đường Nguyễn Thị Búp, KP 4, Phường Hiệp Thành, Quận 12, TP.HCM", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $newContent);
-
         // Restore the "<" characters
         $newContent = str_replace($placeholder, '<', $newContent);
         
@@ -1134,9 +1129,14 @@ class NewsController extends Controller
             
             // Add each page in the chain to breadcrumbs
             foreach ($pageChain as $index => $p) {
+                // Use breadcrumb_title if available (shorter label), otherwise use title
+                $breadcrumbLabel = method_exists($p, 'getBreadcrumbTitle') && !empty($p->getBreadcrumbTitle()) 
+                    ? $p->getBreadcrumbTitle() 
+                    : $p->getTitle();
+                
                 if ($index < count($pageChain) - 1) {
                     // Add as link for parent pages
-                    $breadcrumbs->addItem($p->getTitle(), $this->generateUrl('news_show', array('slug' => $p->getUrl())));
+                    $breadcrumbs->addItem($breadcrumbLabel, $this->generateUrl('news_show', array('slug' => $p->getUrl())));
                 } else {
                     // Add current page without link
                     $breadcrumbs->addItem($p->getTitle(), $this->generateUrl('news_show', array('slug' => $p->getUrl())));

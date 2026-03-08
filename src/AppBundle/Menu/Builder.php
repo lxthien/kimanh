@@ -52,7 +52,7 @@ class Builder implements ContainerAwareInterface
         ->setLinkAttribute('data-toggle', 'dropdown')
         ->setChildrenAttribute('class', 'dropdown-menu');
 
-        $menu['Dịch vụ']->addChild('Xây nhà trọn gói', [
+        $menu['Dịch vụ']->addChild('Dịch vụ xây nhà trọn gói', [
             'route' => 'dynamic_post_page',
             'routeParameters' => ['slug' => 'bao-gia-xay-nha-tron-goi']
         ]);
