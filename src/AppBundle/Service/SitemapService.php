@@ -74,6 +74,20 @@ class SitemapService
             ];
         }
 
+        $urls[] = [
+            'url' => $this->router->generate('caculator_cost_construction', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'lastmod' => (new \DateTime())->format('Y-m-d'),
+            'changefreq' => 'monthly',
+            'priority' => '0.5'
+        ];
+
+        $urls[] = [
+            'url' => $this->router->generate('contact', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'lastmod' => (new \DateTime())->format('Y-m-d'),
+            'changefreq' => 'monthly',
+            'priority' => '0.5'
+        ];
+
         return $urls;
     }
 

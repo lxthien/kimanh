@@ -42,7 +42,7 @@
                     <div class="ka-header-stripe"></div>
                 </div>
                 <div class="ka-widget-body">
-                    <a href="https://kientruckimanh.com/xay-nha-tron-goi" class="ka-service-item ka-service-featured">
+                    <a href="https://kientruckimanh.com/xay-nha-tron-goi/" class="ka-service-item ka-service-featured">
                         <div class="ka-service-icon-wrap">
                             <i class="fas fa-home"></i>
                             <span class="ka-icon-badge">★</span>
@@ -97,16 +97,16 @@
             </div>
 
             {# === KHÁCH HÀNG ĐÁNH GIÁ === #}
-            <div class="ka-sidebar-widget ka-reviews-block">
+            {# <div class="ka-sidebar-widget ka-reviews-block">
                 {{ include('news/prices.html.twig') }}
-            </div>
+            </div> #}
 
             {# === TIN CÙNG CHUYÊN MỤC === #}
-            {% if category.getShowPostRelated() %}
+            {# {% if category.getShowPostRelated() %}
                 <div class="ka-sidebar-widget ka-posts-block">
                     {{ render(controller('AppBundle:News:listNewsByCategorySidebar', {'categoryId': category.getId(), 'title': 'Tin cùng chuyên mục', 'postNumber': 25})) }}
                 </div>
-            {% endif %}
+            {% endif %} #}
 
             {# === CÁC MẪU NHÀ ĐẸP === #}
             {# <div class="ka-sidebar-widget ka-posts-block">

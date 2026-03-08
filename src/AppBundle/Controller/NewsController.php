@@ -549,10 +549,7 @@ class NewsController extends Controller
         $string = str_replace("\r", '', $string);
         $string = str_replace("\n", ' ', $string);
         $string = str_replace("\t", ' ', $string);
-        $string = str_replace("50I Trần Thị Bảy, KP 3, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $string);
-        $string = str_replace("C40 - Khu DC Hiệp Thành - Đường Nguyễn Thị Búp, KP 4, Phường Hiệp Thành, Quận 12, TP Hồ Chí Minh", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $string);
-        $string = str_replace("C40 - Khu DC Hiệp Thành - Đường Nguyễn Thị Búp, KP 4, Phường Hiệp Thành, Quận 12, TP.HCM", '98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP Hồ Chí Minh', $string);
-        $string = str_replace("088.609.4455", '0966.289.559', $string);
+
         // ----- remove multiple spaces -----
         $string = trim(preg_replace('/ {2,}/', ' ', $string));
         

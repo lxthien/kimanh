@@ -63,8 +63,92 @@
     {% if post.getSchemaMarkup() %}
         {{ post.getSchemaMarkup()|raw }}
     {% else %}
-    <script type="application/ld+json">{"@context":"https://schema.org/","@type":"WebPage","@id":"{{ postUrl }}#webpage","url":"{{ postUrl }}","name":"{{ pageTitle }}","datePublished":"{{ post.getCreatedAt()|date('Y-m-d h:m:s') }}+07:00","dateModified":"{{ post.getUpdatedAt()|date('Y-m-d h:m:s') }}+07:00","isPartOf":{"@id":"{{ homeUrl }}#website"},"primaryImageOfPage":{"@id":"{{ absolute_url(imagePathFilter) }}"},"description":"{{ pageDesc }}","breadcrumb":"{{ postUrl }}#breadcrumb","inLanguage":"vi-VN"}</script>
-    <script type="application/ld+json">{"@context":"https://schema.org/","@type":"BlogPosting","@id":"{{ postUrl }}#BlogPosting","mainEntityOfPage":{"@id":"{{ postUrl }}#webpage"},"isFamilyFriendly":true,"isAccessibleForFree":true,"headline":"{{ post.getTitle() }}","name":"{{ pageTitle }}","description":"{{ pageDesc }}","datePublished":"{{ post.getCreatedAt()|date('Y-m-d h:m:s') }}+07:00","dateModified":"{{ post.getUpdatedAt()|date('Y-m-d h:m:s') }}+07:00","articleSection":"{{ category.getName() }}","articleBody":"{{ articleBody }}","accessMode":["textual"],"author":{"@type":"Person","@id":"{{ authorUrl }}#Person","name":"Nguyễn Duy Tuấn","url":"{{ authorUrl }}","image":{"@type":"ImageObject","@id":"{{ absolute_url(convert_images.webpConvert(userPath, '', true)) }}","url":"{{ absolute_url(convert_images.webpConvert(userPath, '', true)) }}","height":"65","width":"65"}},"publisher":{"@type":"Organization","@id":"{{ homeUrl }}#organization"},"image":{"@type":"ImageObject","@id":"{{ absolute_url(imagePathFilter) }}#image","url":"{{ absolute_url(imagePathFilter) }}","height":"800","width":"420"},"url":"{{ postUrl }}","wordCount":"{{ wordCount }}","acquireLicensePage":"{{ absolute_url(path('news_show', {'slug': 'chinh-sach-bao-mat-thong-tin'})) }}","copyrightHolder":{"@id":"{{ homeUrl }}#organization"},"accountablePerson":{"@id":"{{ authorUrl }}#Person"},"creator":{"@id":"{{ authorUrl }}#Person"},"sourceOrganization":{"@id":"{{ homeUrl }}#organization"},"inLanguage":"vi-VN","commentCount":"{{ comments|length }}","isPartOf":{"@id":"{{ postUrl }}#webpage"}{% if keywords %},"keywords":[{% for keyword in keywords %}"{{ keyword|trim }}"{% if not loop.last %},{% endif %}{% endfor %}]{% endif %}}</script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "WebPage",
+      "@id": "{{ postUrl }}#webpage",
+      "url": "{{ postUrl }}",
+      "name": "{{ pageTitle }}",
+      "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') }}+07:00",
+      "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') }}+07:00",
+      "isPartOf": {
+        "@id": "{{ homeUrl }}#website"
+      },
+      "primaryImageOfPage": {
+        "@id": "{{ absolute_url(imagePathFilter) }}"
+      },
+      "description": "{{ pageDesc }}",
+      "breadcrumb": "{{ postUrl }}#breadcrumb",
+      "inLanguage": "vi-VN"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "BlogPosting",
+      "@id": "{{ postUrl }}#BlogPosting",
+      "mainEntityOfPage": {
+        "@id": "{{ postUrl }}#webpage"
+      },
+      "isFamilyFriendly": true,
+      "isAccessibleForFree": true,
+      "headline": "{{ post.getTitle() }}",
+      "name": "{{ pageTitle }}",
+      "description": "{{ pageDesc }}",
+      "datePublished": "{{ post.getCreatedAt()|date('Y-m-d h:m:s') }}+07:00",
+      "dateModified": "{{ post.getUpdatedAt()|date('Y-m-d h:m:s') }}+07:00",
+      "articleSection": "{{ category.getName() }}",
+      "accessMode": ["textual"],
+      "author": {
+        "@type": "Person",
+        "@id": "{{ authorUrl }}#Person",
+        "name": "Nguyễn Duy Tuấn",
+        "url": "{{ authorUrl }}",
+        "image": {
+          "@type": "ImageObject",
+          "@id": "{{ absolute_url(convert_images.webpConvert(userPath, '', true)) }}",
+          "url": "{{ absolute_url(convert_images.webpConvert(userPath, '', true)) }}",
+          "height": "65",
+          "width": "65"
+        }
+      },
+      "publisher": {
+        "@type": "Organization",
+        "@id": "{{ homeUrl }}#organization"
+      },
+      "image": {
+        "@type": "ImageObject",
+        "@id": "{{ absolute_url(imagePathFilter) }}#image",
+        "url": "{{ absolute_url(imagePathFilter) }}",
+        "height": "800",
+        "width": "420"
+      },
+      "url": "{{ postUrl }}",
+      "wordCount": "{{ wordCount }}",
+      "acquireLicensePage": "{{ absolute_url(path('news_show', {'slug': 'chinh-sach-bao-mat-thong-tin'})) }}",
+      "copyrightHolder": {
+        "@id": "{{ homeUrl }}#organization"
+      },
+      "accountablePerson": {
+        "@id": "{{ authorUrl }}#Person"
+      },
+      "creator": {
+        "@id": "{{ authorUrl }}#Person"
+      },
+      "sourceOrganization": {
+        "@id": "{{ homeUrl }}#organization"
+      },
+      "inLanguage": "vi-VN",
+      "commentCount": "{{ comments|length }}",
+      "isPartOf": {
+        "@id": "{{ postUrl }}#webpage"
+      }
+      {% if keywords %}
+      ,"keywords": [{% for keyword in keywords %}"{{ keyword|trim }}"{% if not loop.last %},{% endif %}{% endfor %}]
+      {% endif %}
+    }
+    </script>
     {% endif %}
 {% endblock %}
 

@@ -2,7 +2,7 @@
 // FOOTER - Modern Industrial Design
 // ============================================
 
-footer {
+footer.ka-site-footer {
     padding-top: 60px;
     position: relative;
     background: $primaryDark;
@@ -25,7 +25,7 @@ footer {
         pointer-events: none;
     }
 
-    h2.widget-title {
+    h2.ka-footer-heading {
         color: $white;
         font-size: 18px;
         font-weight: 700;
@@ -51,11 +51,11 @@ footer {
         }
     }
 
-    .footer-top {
+    .ka-footer-top {
         position: relative;
         z-index: 1;
 
-        .about-us {
+        .ka-about-links {
             li {
                 margin-bottom: 10px;
 
@@ -83,7 +83,7 @@ footer {
             }
         }
 
-        .footer-company {
+        .ka-company-details {
             padding-left: 0px;
 
             li {
@@ -115,7 +115,7 @@ footer {
 
         .event-footer {
             margin-top: 30px;
-    
+
             .event-footer-item {
                 a {
                     color: rgba(255, 255, 255, 0.7);
@@ -144,14 +144,14 @@ footer {
         }
     }
 
-    .footer-middle {
+    .ka-footer-middle {
         padding-top: 30px;
         margin-top: 40px;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
         position: relative;
         z-index: 1;
 
-        img {
+        img.ka-footer-logo {
             margin: 0 auto;
             display: block;
             width: 20%;
@@ -164,7 +164,7 @@ footer {
             }
         }
 
-        .footer-text-wrap {
+        .ka-footer-desc {
             p {
                 margin-bottom: 5px;
                 color: rgba(255, 255, 255, 0.7);
@@ -176,7 +176,7 @@ footer {
         .td-social-icon-wrap {
             display: inline-block;
             margin: 5px 5px 5px 0;
-            
+
             a {
                 color: $white;
                 transition: $transitionFast;
@@ -203,37 +203,41 @@ footer {
         }
     }
 
-    .keyword {
-        padding-left: 0;
-        
-        li {
-            list-style-type: none;
-            display: inline-block;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            margin: 0 0 8px 0;
-            padding: 4px 12px;
-            border-radius: $radiusSm;
-            transition: $transitionFast;
+    .ka-footer-keywords {
 
-            &:hover {
-                border-color: $accentColor;
-                background: rgba(232, 93, 4, 0.1);
-            }
+        ul,
+        .keyword {
+            padding-left: 0;
 
-            a {
-                color: rgba(255, 255, 255, 0.8);
-                font-size: 14px;
+            li {
+                list-style-type: none;
+                display: inline-block;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                margin: 0 0 8px 0;
+                padding: 4px 12px;
+                border-radius: $radiusSm;
                 transition: $transitionFast;
 
                 &:hover {
-                    color: $accentLight;
-                    text-decoration: none;
+                    border-color: $accentColor;
+                    background: rgba(232, 93, 4, 0.1);
+                }
+
+                a {
+                    color: rgba(255, 255, 255, 0.8);
+                    font-size: 14px;
+                    transition: $transitionFast;
+
+                    &:hover {
+                        color: $accentLight;
+                        text-decoration: none;
+                    }
                 }
             }
         }
     }
 
-    .copyright {
+    .ka-copyright-bar {
         height: auto;
         line-height: 30px;
         color: rgba(255, 255, 255, 0.6);
@@ -243,7 +247,8 @@ footer {
         position: relative;
         z-index: 1;
 
-        p, a {
+        p,
+        a {
             color: rgba(255, 255, 255, 0.7);
             font-size: 14px;
             margin-bottom: 0;

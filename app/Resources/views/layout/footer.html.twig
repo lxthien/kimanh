@@ -1,10 +1,10 @@
-<footer>
+<footer class="ka-site-footer">
     <div class="container">
-        <div class="row footer-top">
+        <div class="row ka-footer-top">
             <div class="col-sm-6 col-md-3">
-                <h2 class="widget-title text-uppercase">Xây Dựng Kim Anh</h2>
-                <address class="footer-address">
-                    <ul class="footer-company">
+                <h2 class="ka-footer-heading text-uppercase">Xây Dựng Kim Anh</h2>
+                <address class="ka-footer-contact">
+                    <ul class="ka-company-details">
                         <li><i class="fa fa-map-marker"></i><span>98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP.HCM</span></li>
                         <li><i class="fa fa-phone"></i><span><a href="tel:0974776305">0974.776.305</a></span></li>
                         <li><i class="fas fa-envelope"></i><span><a href="mailto:xaydungkimanh@gmail.com">xaydungkimanh@gmail.com</a></span></li>
@@ -13,9 +13,14 @@
                 </address>
             </div>
             <div class="col-sm-6 col-md-3">
-                <h2 class="widget-title text-uppercase">Về chúng tôi</h2>
+                <h2 class="ka-footer-heading text-uppercase">Về chúng tôi</h2>
                 <nav aria-label="Footer links">
-                    {# <ul class="about-us">
+                    <ul class="ka-about-links">
+                        <li><a href="{{ path('news_show', {'slug': 'gioi-thieu' }) }}">Giới thiệu</a></li>
+                        <li><a href="{{ path('news_show', {'slug': 'ho-so-nang-luc' }) }}">Hồ sơ năng lực</a></li>
+                        <li><a href="{{ path('news_show', {'slug': 'chinh-sach-bao-mat-thong-tin' }) }}">Chính sách bảo mật thông tin</a></li>
+                    </ul>
+                    {# <ul class="ka-about-links">
                         <li><a href="{{ path('news_show', {'slug': 'gioi-thieu' }) }}">Giới thiệu</a></li>
                         <li><a href="{{ path('news_show', {'slug': 'ho-so-nang-luc' }) }}">Hồ sơ năng lực</a></li>
                         <li><a href="{{ path('news_show', {'slug': 'chinh-sach-bao-hanh' }) }}">Chính sách bảo hành</a></li>
@@ -26,27 +31,29 @@
                 </nav>
             </div>
             <div class="col-sm-6 col-md-3">
-                <h2 class="widget-title text-uppercase">Dịch vụ</h2>
-                {{ get_setting('topKeyword')|raw }}
+                <h2 class="ka-footer-heading text-uppercase">Dịch vụ</h2>
+                <div class="ka-footer-keywords">
+                    {{ get_setting('topKeyword')|raw }}
+                </div>
             </div>
             <div class="col-sm-6 col-md-3">
-                <h2 class="widget-title text-uppercase">Fanpage</h2>
+                <h2 class="ka-footer-heading text-uppercase">Fanpage</h2>
                 <a href="https://www.facebook.com/xaydungkimanh/" rel="noopener">
                     <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/fanpage.jpg'), '')) }}" width="277" height="130" alt="Fanpage Xây Dựng Kim Anh">
                 </a>
             </div>
         </div>
-        <div class="row footer-middle">
+        <div class="row ka-footer-middle">
             <div class="col-md-12">
                 <a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
-                    <img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}" alt="{{ get_setting('siteName') }}" width="293" height="106">
+                    <img class="lazyload ka-footer-logo" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}" alt="{{ get_setting('siteName') }}" width="293" height="106">
                 </a>
-                <div class="footer-text-wrap text-center">
+                <div class="ka-footer-desc text-center">
                     <p>Chúng tôi tự hào là đơn vị uy tín hàng đầu trong lĩnh vực thiết kế và thi công xây dựng nhà ở dân dụng tại TP.HCM và các tỉnh lân cận. Cam kết chất lượng, tiến độ và minh bạch vật tư.</p>
                 </div>
             </div>
         </div>
-        <div class="row copyright">
+        <div class="row ka-copyright-bar">
             <div class="col-sm-12 text-center">
                 <p>Copyright © {{ "now"|date('Y') }} <a href="{{ absolute_url(path('homepage')) }}">Xây Dựng Kim Anh</a>, all rights reserved. <a href="//www.dmca.com/Protection/Status.aspx?ID=84046f70-7f9a-4ad3-b0bb-167751a2b498" class="dmca-badge" rel="noreferrer"><img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/dmca.png'), '')) }}" alt="DMCA" width="109" height="22"></a><script defer fetchpriority="low" src="{{ asset('assets/libs/dmca/DMCABadgeHelper.min.js') }}"></script></p>
             </div>

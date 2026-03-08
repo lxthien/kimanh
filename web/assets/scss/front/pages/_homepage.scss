@@ -44,7 +44,7 @@
             }
         }
     }
-    
+
     .carousel-inner {
         .item {
             img {
@@ -143,7 +143,8 @@
                     height: 95px;
                     top: 30%;
                     background-size: 70%;
-                    right: 20%;;
+                    right: 20%;
+                    ;
                 }
 
                 &::before {
@@ -155,7 +156,7 @@
 }
 
 // Hero CTA Section
-.slogin {
+.ka-hero-cta-section {
     background: $gradientPrimary;
     padding: 10px 0;
     position: relative;
@@ -176,7 +177,7 @@
         padding: 15px 0;
     }
 
-    .slogin-title {
+    .ka-hero-cta-container {
         position: relative;
         z-index: 1;
 
@@ -189,7 +190,7 @@
             }
         }
 
-        .slogin-wrapper {
+        .ka-hero-cta-text {
             margin-bottom: 0;
             font-size: 18px;
             font-family: $robotoCondesed;
@@ -256,8 +257,8 @@
     }
 }
 
-// Blocks About Home Section
-.blocks-about-home {
+// About Section
+.ka-about-section {
     padding: 60px 0;
     background: $white;
     position: relative;
@@ -266,8 +267,8 @@
         padding: 40px 0;
     }
 
-    .about-home-content-left {
-        .block-contents {
+    .ka-about-content-left {
+        .ka-block-text {
             h1 {
                 font-size: 28px;
                 font-family: $robotoCondesed;
@@ -320,7 +321,7 @@
             }
         }
 
-        .but-about-home {
+        .ka-about-cta {
             margin-top: 25px;
 
             a {
@@ -348,12 +349,12 @@
         }
     }
 
-    .about-home-content-right {
+    .ka-about-content-right {
         @media only screen and (max-width: 767.98px) {
             margin-top: 30px;
         }
 
-        .btn-effect {
+        .ka-about-img-effect {
             display: block;
             border-radius: $radiusLg;
             overflow: hidden;
@@ -374,8 +375,8 @@
 }
 
 
-// Prices/Services Cards
-.prices-table {
+// Pricing Section
+.ka-pricing-section {
     position: relative;
     padding: 50px 0;
     background: $white;
@@ -391,7 +392,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: 
+        background:
             radial-gradient(circle at 10% 20%, rgba($accentColor, 0.03) 0%, transparent 50%),
             radial-gradient(circle at 90% 80%, rgba($primaryColor, 0.03) 0%, transparent 50%);
         z-index: 0;
@@ -408,22 +409,50 @@
         z-index: 0;
     }
 
-    .marketing {
+    .ka-section-heading {
+        position: relative;
+        z-index: 1;
+        padding-bottom: 40px;
+        color: $textPrimary;
+        margin: 0;
+        font-size: 36px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+
+        &::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: $accentColor;
+            margin: 20px auto 0;
+            border-radius: 2px;
+        }
+
+        @media only screen and (max-width: 768px) {
+            font-size: 26px;
+            padding-bottom: 30px;
+        }
+    }
+
+    .ka-pricing-grid {
         padding-top: 0;
         position: relative;
         z-index: 1;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-    
+
+
         .col-md-3 {
             margin: 15px 0;
-            
+
             @media only screen and (max-width : 768px) {
                 margin: 10px 0;
             }
-    
-            .intro {
+
+            .ka-pricing-card {
                 text-align: center;
                 background: $white;
                 border-radius: $radiusLg;
@@ -456,8 +485,8 @@
                         opacity: 1;
                     }
                 }
-    
-                .img {
+
+                .ka-pricing-img {
                     display: block;
                     height: 180px;
                     width: 180px;
@@ -489,8 +518,8 @@
                         }
                     }
                 }
-    
-                .text {
+
+                .ka-pricing-title {
                     font-family: $robotoCondesed;
                     padding: 20px 0 5px;
                     font-size: 17px;
@@ -507,7 +536,7 @@
                     @media (min-width: 768px) and (max-width: 991.98px) {
                         font-size: 15px;
                     }
-    
+
                     a {
                         color: $primaryColor;
                         transition: $transitionFast;
@@ -525,7 +554,7 @@
 }
 
 // Why Choose Us Section
-.why-choose-us {
+.ka-why-us-section {
     background: $primaryColor;
     background-image: linear-gradient(135deg, $primaryColor 0%, $primaryLight 100%);
     position: relative;
@@ -546,7 +575,7 @@
         padding: 40px 0;
     }
 
-    .why-choose-us-title {
+    .ka-section-heading {
         position: relative;
         z-index: 1;
         padding: 0 0 40px;
@@ -586,7 +615,7 @@
         }
     }
 
-    .media {
+    .ka-feature-card {
         display: flex;
         align-items: flex-start;
         background: rgba(255, 255, 255, 0.1);
@@ -602,7 +631,7 @@
             border-color: $accentColor;
         }
 
-        .media-left {
+        .ka-feature-icon-box {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -627,8 +656,8 @@
             }
         }
 
-        .media-body {
-            b.media-heading {
+        .ka-feature-content {
+            .ka-feature-title {
                 font-size: 17px;
                 font-weight: 700;
                 margin-bottom: 10px;
@@ -648,11 +677,15 @@
     }
 }
 
-// Customer Reviews Section
-.y-kien-khach-hang {
+// Testimonials Section
+.ka-testimonials-section {
     position: relative;
     padding: 60px 0;
     background: $grayBg;
+
+    @media only screen and (max-width: 768px) {
+        padding: 40px 0;
+    }
 
     &::after {
         content: "";
@@ -665,13 +698,14 @@
         z-index: 0;
     }
 
-    h2 {
+    .ka-testimonials-heading {
         color: $textPrimary;
         display: block;
         font-weight: 700;
         margin-bottom: 30px;
         position: relative;
         z-index: 1;
+        font-size: 36px;
 
         &::after {
             content: "";
@@ -689,31 +723,72 @@
         }
     }
 
-    .media-wrapper {
-        text-align: center;
+    .ka-video-grid {
         margin: 20px 0;
         position: relative;
         z-index: 1;
 
-        .media {
-            display: inline-block;
-            padding: 0 10px;
+        .mb-15 {
+            margin-bottom: 15px;
+        }
 
-            .youtube-video-place {
-                width: 282px;
-                height: 220px;
-                border-radius: $radiusMd;
-                overflow: hidden;
-                box-shadow: $shadowLg;
+        .ka-video-item {
+            display: block;
+            position: relative;
+            border-radius: $radiusMd;
+            overflow: hidden;
+            box-shadow: $shadowLg;
+            transition: $transitionBase;
 
-                img {
-                    @media only screen and (max-width : 768px) {
-                        width: 100%;
-                    }
+            &:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+                .ka-play-icon {
+                    background: $accentColor;
+                    transform: translate(-50%, -50%) scale(1.1);
                 }
 
-                iframe {
-                    height: 97%;
+                img {
+                    transform: scale(1.05);
+                }
+            }
+
+            .ka-video-thumb {
+                position: relative;
+                padding-bottom: 75%; // 4:3 aspect ratio
+                background: #000;
+
+                img {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: $transitionBase;
+                }
+            }
+
+            .ka-play-icon {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 50px;
+                height: 50px;
+                background: rgba($primaryColor, 0.8);
+                color: $white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                transition: $transitionFast;
+                z-index: 2;
+
+                i {
+                    margin-left: 3px;
                 }
             }
         }
@@ -721,8 +796,8 @@
 }
 
 // Section Titles - BOLDER
-.title-list-news-items {
-    .p-title-news-items {
+.ka-block-header {
+    .ka-header-title {
         font-size: 30px;
         font-family: $robotoCondesed;
         margin: 45px 0 12px;
@@ -752,7 +827,8 @@
             font-style: normal;
             transition: $transitionFast;
 
-            &:hover, &:active {
+            &:hover,
+            &:active {
                 text-decoration: none;
                 color: $accentColor;
             }
@@ -769,7 +845,7 @@
             }
         }
 
-        .p-title-news-items-lvht {
+        .ka-header-subtitle {
             display: inline-block;
             width: auto;
             font-style: normal;
@@ -785,7 +861,7 @@
         }
     }
 
-    .block-underline {
+    .ka-header-line {
         width: 100px;
         height: 4px;
         background: $gradientAccent;
@@ -794,7 +870,7 @@
         border-radius: 2px;
     }
 
-    .p-title-news-items-description {
+    .ka-header-desc {
         font-style: normal;
         margin-bottom: 20px !important;
         font-weight: 500;
@@ -941,6 +1017,7 @@
         }
 
         &.active {
+
             a,
             a:hover,
             a:focus {
