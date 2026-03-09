@@ -31,7 +31,7 @@ function initProtectedContent() {
 function initGoToTop() {
     var $goToTop = $('.go-to-top');
 
-    $goToTop.click(function() {
+    $goToTop.click(function () {
         $("html, body").animate({ scrollTop: 0 }, "slow");
         return false;
     });
@@ -88,11 +88,11 @@ function initNewsSlider() {
 }
 
 function initFixedMenu() {
-    $(window).scroll(function() {
+    $(window).scroll(function () {
         var $nav = $("#nav");
         var $scrollUp = $('.td-scroll-up');
         var scroll = $(window).scrollTop();
-    
+
         if (scroll > 160) {
             $nav.addClass("navbar-fixed-top");
             $scrollUp.removeClass("hidden");
@@ -104,15 +104,15 @@ function initFixedMenu() {
 }
 
 function initFixedSidebar() {
-    $(window).scroll(function() {
+    $(window).scroll(function () {
         var $sidebar = $("#sidebar .sidebar"),
-            $pageDetail = $('.page-detail-container'),
+            $pageDetail = $('.ka-content-column'),
             scrollTop = $(this).scrollTop(),
-            pageDetailHeight =  $pageDetail.outerHeight(),
+            pageDetailHeight = $pageDetail.outerHeight(),
             sidebarHeight = $sidebar.height(),
             positionFixedMax = pageDetailHeight - sidebarHeight,
             positionFixed = scrollTop < 65 ? 65 : positionFixedMax > scrollTop ? 65 : positionFixedMax - scrollTop + 200;
-        
+
         if (scrollTop > 160) {
             $sidebar.css({
                 'top': positionFixed,
@@ -134,7 +134,7 @@ function initCostConstruction() {
         $formFloor.attr('disabled', 'disabled');
     }
 
-    $formType.change(function(e) {
+    $formType.change(function (e) {
         if ($(this).val() == 3) {
             $formFloor.val(1);
             $formFloor.attr('disabled', 'disabled');
@@ -150,33 +150,33 @@ function initFancybox() {
     var $star = $('#form-rating-review .rating-well .star');
     var $formRating = $('#form-rating-review');
 
-    $rating.click(function() {
+    $rating.click(function () {
         $formRating.show();
         $ratingMessage.html('');
-        
+
         $.fancybox.open({
             src: '#form-rating-container',
-            touch : false
+            touch: false
         });
 
         return false;
     });
 
-    $('#rating').click(function(e) {
+    $('#rating').click(function (e) {
         e.preventDefault();
 
         $formRating.show();
         $ratingMessage.html('');
-        
+
         $.fancybox.open({
             src: '#form-rating-container',
-            touch : false
+            touch: false
         });
 
         return false;
     });
 
-    $star.on('click', function(e) {
+    $star.on('click', function (e) {
         var rating = $(this).data('value');
         var newsId = $formRating.data('newsId');
 
@@ -184,9 +184,9 @@ function initFancybox() {
             type: "POST",
             url: $formRating.attr('action'),
             data: 'rating=' + rating + '&newsId=' + newsId,
-            success: function(data) {
+            success: function (data) {
                 var response = JSON.parse(data);
-                
+
                 if (response.status === 'success') {
                     $formRating.hide();
                     $ratingMessage.html(response.message);
@@ -197,7 +197,7 @@ function initFancybox() {
 }
 
 function initTypewriterEffect() {
-    setTimeout(function(){
+    setTimeout(function () {
         var i = 0,
             a = 0,
             isBackspacing = false,

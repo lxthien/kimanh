@@ -67,17 +67,17 @@ class Builder implements ContainerAwareInterface
         ->setChildrenAttribute('class', 'dropdown-menu');
 
         $menu['Blog']->addChild('Kiến thức xây nhà', [
-            'route' => 'list_category',
+            'route' => 'dynamic_category_post',
             'routeParameters' => ['level1' => 'blog', 'level2' => 'kien-thuc-xay-nha']
         ]);
 
         $menu['Blog']->addChild('Kiến thức sửa nhà', [
-            'route' => 'list_category',
+            'route' => 'dynamic_category_post',
             'routeParameters' => ['level1' => 'blog', 'level2' => 'kien-thuc-sua-nha']
         ]);
 
         $menu['Blog']->addChild('Pháp lý xây dựng', [
-            'route' => 'list_category',
+            'route' => 'dynamic_category_post',
             'routeParameters' => ['level1' => 'blog', 'level2' => 'phap-ly-xay-dung']
         ]);
 

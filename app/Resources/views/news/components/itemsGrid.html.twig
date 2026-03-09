@@ -10,9 +10,9 @@
     {% set imagePathMobile = convert_images.webpConvert(imagePathFilterMobile, '', true) %}
 {% endif %}
 
-<div class="col-xs-12 col-sm-4 col-md-3 news-item">
-    <div class="news-item-wrapper">
-        <div class="media-thumb">
+<article class="col-xs-12 col-sm-4 col-md-3 ka-grid-item">
+    <div class="ka-card-wrapper">
+        <div class="ka-card-thumb">
             <picture>
                 <!--[if IE 9]><video style="display: none"><![endif]-->
                 <source
@@ -34,7 +34,7 @@
                 <i class="fa fa-link"></i>
             </a>
         </div>
-        <div class="media-body">
+        <div class="ka-card-body">
             <h3 class="mt-0 mb-1">
                 <a title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl() }) }}" title="{{ row.getTitle() }}" {{ target is defined ? ' target=' ~ target : '' }} {{ rel is defined ? ' rel=' ~ rel : '' }}>
                     {% if row.highlightedTitle is defined %}
@@ -53,4 +53,4 @@
             </p>
         </div>
     </div>
-</div>
+</article>

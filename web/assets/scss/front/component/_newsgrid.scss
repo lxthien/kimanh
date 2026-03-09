@@ -88,8 +88,8 @@
     }
 }
 
-.list-news-items {
-    .news-item {
+.ka-article-grid {
+    .ka-grid-item {
         margin-bottom: 30px;
 
         @media only screen and (max-width : 768px) {
@@ -102,7 +102,7 @@
             }
         }
 
-        .news-item-wrapper {
+        .ka-card-wrapper {
             background: $white;
             border-radius: $radiusMd;
             overflow: hidden;
@@ -134,7 +134,7 @@
                     opacity: 1;
                 }
 
-                .media-thumb {
+                .ka-card-thumb {
                     .img-thumbnail {
                         transform: scale(1.1);
                     }
@@ -149,7 +149,7 @@
                 }
             }
 
-            .media-thumb {
+            .ka-card-thumb {
                 display: block;
                 height: 200px;
                 overflow: hidden;
@@ -202,8 +202,8 @@
                     }
                 }
             }
-    
-            .media-body {
+
+            .ka-card-body {
                 padding: 15px 20px 20px;
 
                 h2 {
@@ -218,26 +218,27 @@
                         min-height: auto;
                         margin-bottom: 10px;
                     }
-    
+
                     a {
                         overflow: hidden;
                         text-overflow: ellipsis;
                         display: -webkit-box;
                         line-height: 24px;
                         max-height: 48px;
+                        line-clamp: 2;
                         -webkit-line-clamp: 2;
                         -webkit-box-orient: vertical;
                         color: $primaryColor;
                         text-align: left;
                         transition: $transitionFast;
-    
+
                         &:hover {
                             text-decoration: none;
                             color: $accentColor;
                         }
                     }
                 }
-                
+
                 h3 {
                     font-family: $robotoCondesed;
                     font-size: 18px;
@@ -250,26 +251,27 @@
                         min-height: auto;
                         margin-bottom: 10px;
                     }
-    
+
                     a {
                         overflow: hidden;
                         text-overflow: ellipsis;
                         display: -webkit-box;
                         line-height: 24px;
                         max-height: 48px;
+                        line-clamp: 2;
                         -webkit-line-clamp: 2;
                         -webkit-box-orient: vertical;
                         color: $primaryColor;
                         text-align: left;
                         transition: $transitionFast;
-    
+
                         &:hover {
                             text-decoration: none;
                             color: $accentColor;
                         }
                     }
                 }
-    
+
                 p {
                     font-size: 14px;
                     margin-bottom: 0;
@@ -279,6 +281,7 @@
                     overflow: hidden;
                     text-overflow: ellipsis;
                     display: -webkit-box;
+                    line-clamp: 3;
                     -webkit-line-clamp: 3;
                     -webkit-box-orient: vertical;
                 }
@@ -316,7 +319,7 @@
         }
     }
 
-    .list-news-items {
+    .ka-article-grid {
         .bx-wrapper {
             border: none;
             margin-bottom: 0;
@@ -330,21 +333,21 @@
                 height: 100% !important;
                 overflow: visible !important;
 
-                .news-item {
+                .ka-grid-item {
                     @media only screen and (min-width: 768px) {
                         width: initial !important;
                     }
-    
-                    .news-item-wrapper {
+
+                    .ka-card-wrapper {
                         width: 282px !important;
                         margin: 10px;
                         transition: $transitionBase;
-    
+
                         @media only screen and (max-width: 767.98px) {
                             width: 100% !important;
                             margin: 10px 0;
                         }
-    
+
                         @media (min-width: 768px) and (max-width: 979.98px) {
                             width: 220px !important;
                         }

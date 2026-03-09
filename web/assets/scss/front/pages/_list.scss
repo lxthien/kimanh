@@ -1,9 +1,8 @@
-
 /* Category List Page - Modern Industrial Theme
 ------------------------------------------------------------------------- */
-.category-list-items {
+.ka-category-list {
     padding-top: 50px;
-    
+
     .list-news-category {
         margin-bottom: 30px;
 
@@ -32,7 +31,7 @@
         }
     }
 
-    .list-news-items-landing {
+    .ka-article-grid-landing {
         margin-top: 30px;
 
         h2 {
@@ -83,7 +82,8 @@
         }
 
         // Lists
-        ul, ol {
+        ul,
+        ol {
             padding-left: 10px;
             margin-bottom: 25px;
             margin-left: 5px;
@@ -92,7 +92,7 @@
                 margin-bottom: 12px;
                 padding-left: 5px;
                 position: relative;
-                
+
                 &::marker {
                     color: $accentColor;
                 }
@@ -103,7 +103,7 @@
             li {
                 list-style-type: none;
                 padding-left: 20px;
-                
+
                 &:before {
                     content: "•";
                     color: $accentColor;
@@ -118,12 +118,12 @@
 
         ol {
             counter-reset: item;
-            
+
             li {
                 list-style-type: none;
                 counter-increment: item;
                 padding-left: 28px;
-                
+
                 &:before {
                     content: counter(item);
                     background: $accentColor;
@@ -187,7 +187,7 @@
             border-bottom: none;
             position: relative;
             font-weight: 700;
-            
+
             &:before {
                 content: "";
                 position: absolute;
@@ -294,7 +294,7 @@
                 text-align: left;
                 font-size: 15px;
             }
-            
+
             td {
                 padding: 14px 15px;
                 border-bottom: 1px solid $borderColor;
@@ -303,7 +303,7 @@
 
             tr {
                 transition: $transitionFast;
-                
+
                 &:nth-child(even) {
                     background: $surfaceLight;
                 }
@@ -318,12 +318,15 @@
             }
         }
 
-        table, th, td {
+        table,
+        th,
+        td {
             border: none;
         }
 
         // Strong/Bold
-        strong, b {
+        strong,
+        b {
             font-weight: 700;
         }
 
@@ -337,7 +340,8 @@
         }
 
         // Inline list items (from CKEditor)
-        div[style="margin-left:30px"], div[style="margin-left:60px"] {
+        div[style="margin-left:30px"],
+        div[style="margin-left:60px"] {
             display: list-item;
             list-style-type: disc;
             margin-bottom: 8px;
@@ -376,7 +380,7 @@
                     display: flex;
                     align-items: center;
                     gap: 8px;
-                    
+
                     &::before {
                         content: "📑";
                         font-size: 16px;
@@ -414,7 +418,7 @@
             }
 
             // Content wrapper - collapsible
-            > div[id$="-toc"] {
+            >div[id$="-toc"] {
                 padding: 4px 12px 4px 12px;
                 border-bottom: 1px solid rgba($borderColor, 0.3);
                 background: $white;
@@ -457,7 +461,7 @@
                     &:hover {
                         color: $accentColor;
                         padding-left: 8px;
-                        
+
                         &::before {
                             transform: translateX(3px);
                         }
@@ -477,18 +481,18 @@
             // Collapsed state
             &.collapsed {
                 border-radius: $radiusMd;
-                
+
                 #main-toc {
                     border-bottom-color: transparent;
                     border-radius: 0 0 $radiusSm $radiusSm;
-                    
+
                     &::after {
                         transform: rotate(-45deg);
                         margin-bottom: -3px;
                     }
                 }
 
-                > div[id$="-toc"] {
+                >div[id$="-toc"] {
                     max-height: 0;
                     padding: 0 24px;
                     opacity: 0;
@@ -500,7 +504,7 @@
         }
     }
 
-    .list-news-items-landing {
+    .ka-article-grid-landing {
         margin-top: 50px;
         padding-top: 40px;
         border-top: 2px solid $borderColor;
@@ -539,4 +543,3 @@
         color: $textSecondary;
     }
 }
-
