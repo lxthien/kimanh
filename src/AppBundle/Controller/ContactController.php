@@ -20,7 +20,7 @@ use AppBundle\Entity\News;
 class ContactController extends Controller
 {
     /**
-     * @Route("lien-he", name="contact")
+     * @Route("lien-he/", name="contact")
      */
     public function indexAction(Request $request, \Swift_Mailer $mailer)
     {

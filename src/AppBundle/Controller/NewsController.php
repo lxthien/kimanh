@@ -256,7 +256,7 @@ class NewsController extends Controller
 
         // If this is a child category accessed directly (shouldn't happen with dynamic routing, but check anyway)
         if ($category->getParentcat() !== 'root') {
-            return $this->redirectToRoute('list_category', array('level1' => $category->getParentcat()->getUrl(), 'level2' => $category->getUrl()), 301);
+            return $this->redirectToRoute('dynamic_category_post', array('level1' => $category->getParentcat()->getUrl(), 'level2' => $category->getUrl()), 301);
         }
 
         if (!empty($level2)) {
@@ -278,9 +278,9 @@ class NewsController extends Controller
 
         if (!empty($danhMuc)) {
             if (!empty($level2)) {
-                return $this->redirectToRoute('list_category', array('level1' => $level1, 'level2' => $level2), 301);
+                return $this->redirectToRoute('dynamic_category_post', array('level1' => $level1, 'level2' => $level2), 301);
             } else {
-                return $this->redirectToRoute('news_category', array('level1' => $level1), 301);
+                return $this->redirectToRoute('dynamic_post_page', array('slug' => $level1), 301);
             }
         }
 
@@ -370,7 +370,7 @@ class NewsController extends Controller
         );
 
         return $this->render('news/list.html.twig', [
-            'baseUrl' => !empty($level2) ? $this->generateUrl('list_category', array('level1' => $level1, 'level2' => $level2), UrlGeneratorInterface::ABSOLUTE_URL) : $this->generateUrl('news_category', array('level1' => $level1), UrlGeneratorInterface::ABSOLUTE_URL),
+            'baseUrl' => !empty($level2) ? $this->generateUrl('dynamic_category_post', array('level1' => $level1, 'level2' => $level2), UrlGeneratorInterface::ABSOLUTE_URL) : $this->generateUrl('dynamic_post_page', array('slug' => $level1), UrlGeneratorInterface::ABSOLUTE_URL),
             'category' => !empty($level2) ? $subCategory : $category,
             'listCategories' => count($listCategories) > 0 ? $listCategories : NULL,
             'pagination' => $pagination
@@ -454,9 +454,9 @@ class NewsController extends Controller
                 ->getResult();
             
             if ($category->getParentcat() === 'root') {
-                $categoryUrl = $this->generateUrl("news_category", array('level1' => $category->getUrl()), UrlGeneratorInterface::ABSOLUTE_URL);
+                $categoryUrl = $this->generateUrl("dynamic_post_page", array('slug' => $category->getUrl()), UrlGeneratorInterface::ABSOLUTE_URL);
             } else {
-                $categoryUrl = $this->generateUrl("list_category", array('level1' => $category->getParentcat()->getUrl(), 'level2' => $category->getUrl()), UrlGeneratorInterface::ABSOLUTE_URL);
+                $categoryUrl = $this->generateUrl("dynamic_category_post", array('level1' => $category->getParentcat()->getUrl(), 'level2' => $category->getUrl()), UrlGeneratorInterface::ABSOLUTE_URL);
             }
         }
 
@@ -1146,10 +1146,10 @@ class NewsController extends Controller
         // Breadcrum for category page
         if (!empty($category)) {
             if ($category->getParentcat() === 'root') {
-                $breadcrumbs->addItem($category->getName(), $this->generateUrl("news_category", array('level1' => $category->getUrl() )));
+                $breadcrumbs->addItem($category->getName(), $this->generateUrl("dynamic_post_page", array('slug' => $category->getUrl() )));
             } else {
-                $breadcrumbs->addItem($category->getParentcat()->getName(), $this->generateUrl("news_category", array('level1' => $category->getParentcat()->getUrl() )));
-                $breadcrumbs->addItem($category->getName(), $this->generateUrl("list_category", array('level1' => $category->getParentcat()->getUrl(), 'level2' => $category->getUrl() )));
+                $breadcrumbs->addItem($category->getParentcat()->getName(), $this->generateUrl("dynamic_post_page", array('slug' => $category->getParentcat()->getUrl() )));
+                $breadcrumbs->addItem($category->getName(), $this->generateUrl("dynamic_category_post", array('level1' => $category->getParentcat()->getUrl(), 'level2' => $category->getUrl() )));
             }
         }
 
@@ -1177,15 +1177,15 @@ class NewsController extends Controller
             if (!empty($category)) {
                 if ($category->getParentcat() === 'root') {
                     $breadcrumbs->addItem($category->getName(), $this->generateUrl("dynamic_post_page", array('slug' => $category->getUrl() )));
-                    $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('news_show', array('slug' => $post->getUrl())) );
+                    $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('dynamic_post_page', array('slug' => $post->getUrl())) );
                 } else {
                     $parentCategory = $category->getParentcat();
                     $breadcrumbs->addItem($parentCategory->getName(), $this->generateUrl("dynamic_post_page", array('slug' => $parentCategory->getUrl() )));
                     $breadcrumbs->addItem($category->getName(), $this->generateUrl("dynamic_category_post", array('level1' => $parentCategory->getUrl(), 'level2' => $category->getUrl() )));
-                    $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('news_show', array('slug' => $post->getUrl())) );
+                    $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('dynamic_post_page', array('slug' => $post->getUrl())) );
                 }
             } else {
-                $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('news_show', array('slug' => $post->getUrl())) );
+                $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('dynamic_post_page', array('slug' => $post->getUrl())) );
             }
         }
 
@@ -1193,7 +1193,7 @@ class NewsController extends Controller
     }
 
     /**
-     * @Route("/chi-phi-xay-dung", name="caculator_cost_construction")
+     * @Route("/chi-phi-xay-dung/", name="caculator_cost_construction")
      * 
      */
     public function caculatorCostConstructionAction($type = null, Request $request) {

@@ -1,8 +1,8 @@
 /* Contact Page - Modern Industrial Theme
 ------------------------------------------------------------------------- */
-.contacts {
-    .contacts-page {
-        .company {
+.ka-contact-container {
+    .ka-contact-main {
+        .ka-contact-info-block {
             margin-bottom: 40px;
             padding: 30px;
             background: $surfaceLight;
@@ -50,7 +50,8 @@
                     display: block;
                 }
 
-                .form-control, input {
+                .form-control,
+                input {
                     border: 1px solid $borderColor;
                     height: 42px;
                     padding: 8px 14px;
@@ -100,7 +101,7 @@
 
     #sidebar {
         form {
-            > .row {
+            >.row {
                 padding: 20px;
             }
 
@@ -121,7 +122,8 @@
                     color: $white;
                     box-shadow: 0 4px 12px rgba($accentColor, 0.3);
 
-                    &:hover, &:focus {
+                    &:hover,
+                    &:focus {
                         transform: translateY(-2px);
                         box-shadow: 0 6px 16px rgba($accentColor, 0.4);
                     }
@@ -133,7 +135,8 @@
                     color: $textSecondary;
                     border: 2px solid $borderColor;
 
-                    &:hover, &:focus {
+                    &:hover,
+                    &:focus {
                         background: $borderColor;
                         color: $textPrimary;
                     }

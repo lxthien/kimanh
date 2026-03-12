@@ -170,9 +170,9 @@
 
 		{% for blockOnHomepage in blocksOnHomepage %}
 			{% if blockOnHomepage.category.getParentcat() == 'root' %}
-				{% set linkCat = path('news_category', {'level1': blockOnHomepage.category.getUrl() }) %}
+				{% set linkCat = path('dynamic_post_page', {'slug': blockOnHomepage.category.getUrl() }) %}
 			{% else %}
-				{% set linkCat = path('list_category', {'level1': blockOnHomepage.category.getParentcat().getUrl(), 'level2': blockOnHomepage.category.getUrl() }) %}
+				{% set linkCat = path('dynamic_category_post', {'level1': blockOnHomepage.category.getParentcat().getUrl(), 'level2': blockOnHomepage.category.getUrl() }) %}
 			{% endif %}
 			<section class="ka-category-block">
 				<div class="container">

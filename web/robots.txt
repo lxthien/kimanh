@@ -1,4 +1,5 @@
 User-agent: *
+Allow: /
 
 Disallow: /admin
 Disallow: /cdn-cgi
@@ -6,6 +7,23 @@ Disallow: /search?=*
 Disallow: /*?filter_by=*
 Disallow: /*?PageSpeed=*
 Disallow: /*?danh-muc=*
+
+Content-Signal: search=yes; ai-train=no;
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: ChatGPT
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
 
 # XML Sitemaps
 Sitemap: https://kientruckimanh.com/sitemap.xml
