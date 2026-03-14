@@ -102,9 +102,15 @@ class NewsController extends Controller
     private function handleSingleSegment($slug, Request $request)
     {
         // First, try to find it as a post/page
-        $post = $this->getDoctrine()
-            ->getRepository(News::class)
-            ->findOneBy(['url' => $slug, 'enable' => 1]);
+        if ($request->query->get('preview') === false || $request->query->get('preview_id') === null) {
+            $post = $this->getDoctrine()
+                ->getRepository(News::class)
+                ->findOneBy(['url' => $slug, 'enable' => 1]);
+        } else {
+            $post = $this->getDoctrine()
+                ->getRepository(News::class)
+                ->find($request->query->get('preview_id'));
+        }
 
         if ($post) {
             // It's a post/page - forward to showAction

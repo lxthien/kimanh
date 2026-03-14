@@ -53,6 +53,12 @@ class SitemapService
             ->findBy(['enable' => true], ['createdAt' => 'DESC']);
 
         foreach ($categories as $category) {
+            // Skip categories with noindex or nofollow in robots field
+            $robots = $category->getRobots();
+            if ($robots && (stripos($robots, 'noindex') !== false || stripos($robots, 'nofollow') !== false)) {
+                continue;
+            }
+
             $urls[] = [
                 'url' => $this->generateCategoryUrl($category),
                 'lastmod' => $category->getUpdatedAt() ? $category->getUpdatedAt()->format('Y-m-d') : $category->getCreatedAt()->format('Y-m-d'),

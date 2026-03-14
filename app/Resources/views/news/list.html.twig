@@ -43,7 +43,7 @@
 {% endblock %}
 
 {% block robots %}
-	<meta name="robots" content="{{ category.getRobots() ?: 'follow, noindex' }}">
+	<meta name="robots" content="{{ category.getRobots() ?: 'index, follow' }}">
 {% endblock %}
 
 {% block canonical %}

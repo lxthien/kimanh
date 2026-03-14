@@ -4,156 +4,6 @@
 
 /* Homepage
 ------------------------------------------------------------------------- */
-#myCarousel {
-    @media only screen and (max-width : 768px) {
-        width: 100%;
-    }
-
-    .carousel-indicators {
-        margin-bottom: 0;
-        bottom: 20px;
-
-        @media only screen and (max-width : 768px) {
-            margin-bottom: 0;
-            bottom: 10px;
-        }
-
-        li {
-            width: 12px;
-            height: 12px;
-            background-color: rgba(255, 255, 255, 0.5);
-            margin: 0 4px;
-            border: 2px solid $white;
-            transition: $transitionFast;
-
-            @media only screen and (max-width : 768px) {
-                width: 10px;
-                height: 10px;
-            }
-
-            &.active {
-                width: 12px;
-                height: 12px;
-                background-color: $accentColor;
-                border-color: $accentColor;
-
-                @media only screen and (max-width : 768px) {
-                    width: 10px;
-                    height: 10px;
-                }
-            }
-        }
-    }
-
-    .carousel-inner {
-        .item {
-            img {
-                width: 100%;
-                height: 550px;
-                object-fit: cover;
-
-                @media only screen and (max-width : 768px) {
-                    width: 100%;
-                    height: auto;
-                }
-            }
-
-            .carousel-caption {
-                padding-bottom: 10px;
-                bottom: 40%;
-                background: rgba(26, 39, 68, 0.7);
-                padding: 30px 40px;
-                border-radius: $radiusMd;
-                backdrop-filter: blur(5px);
-
-                @media only screen and (max-width: 767.98px) {
-                    left: 5%;
-                    right: 5%;
-                    padding: 15px 20px;
-                    bottom: 16%;
-                }
-
-                @media (min-width: 768px) and (max-width: 991.98px) {
-                    bottom: 28%;
-                }
-
-                .widget-title-slide {
-                    margin: 0 0 10px 0;
-                    font-family: $robotoCondesed;
-                    font-size: 36px;
-                    font-weight: 700;
-                    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-
-                    @media only screen and (max-width : 767.98px) {
-                        font-size: 20px;
-                    }
-
-                    @media (min-width: 768px) and (max-width: 991.98px) {
-                        font-size: 28px;
-                    }
-                }
-
-                p {
-                    font-size: 24px;
-                    font-weight: 500;
-
-                    @media only screen and (max-width : 767.98px) {
-                        font-size: 14px;
-                    }
-
-                    @media (min-width: 768px) and (max-width: 991.98px) {
-                        font-size: 20px;
-                    }
-                }
-            }
-        }
-    }
-
-    .carousel-control {
-        &.left {
-            .glyphicon {
-                width: 50px;
-                height: 130px;
-                top: 40%;
-                background: url("../../../images/arrow-left.png") no-repeat;
-
-                @media only screen and (max-width : 768px) {
-                    width: 45px;
-                    height: 95px;
-                    top: 30%;
-                    background-size: 70%;
-                    left: 40%;
-                }
-
-                &::before {
-                    content: "";
-                }
-            }
-        }
-
-        &.right {
-            .glyphicon {
-                width: 50px;
-                height: 130px;
-                top: 40%;
-                background: url("../../../images/arrow-right.png") no-repeat;
-
-                @media only screen and (max-width : 768px) {
-                    width: 45px;
-                    height: 95px;
-                    top: 30%;
-                    background-size: 70%;
-                    right: 20%;
-                    ;
-                }
-
-                &::before {
-                    content: "";
-                }
-            }
-        }
-    }
-}
 
 // Hero CTA Section
 .ka-hero-cta-section {
@@ -672,6 +522,75 @@
                 line-height: 24px;
                 color: rgba(255, 255, 255, 0.85);
                 margin-bottom: 0;
+            }
+        }
+    }
+
+    // Stats Row
+    .ka-stats-row {
+        margin-top: 50px;
+        background: $gradientPrimary;
+        border-radius: $radiusLg;
+        padding: 40px 20px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: $shadowLg;
+        border: 1px solid rgba($white, 0.1);
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        @media only screen and (max-width: 768px) {
+            margin-top: 30px;
+            padding: 30px 10px;
+        }
+
+        .ka-stat-item {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+
+            @media only screen and (max-width: 768px) {
+                margin: 15px 0;
+            }
+
+            .ka-stat-number {
+                font-family: $robotoCondesed;
+                font-size: 42px;
+                font-weight: 800;
+                color: $white;
+                margin-bottom: 5px;
+                line-height: 1;
+
+                @media only screen and (max-width: 768px) {
+                    font-size: 32px;
+                }
+
+                .ka-stat-symbol {
+                    color: $accentLight;
+                    margin-left: 2px;
+                    font-size: 0.8em;
+                }
+            }
+
+            .ka-stat-label {
+                font-size: 14px;
+                font-weight: 500;
+                color: rgba($white, 0.85);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                display: block;
+
+                @media only screen and (max-width: 768px) {
+                    font-size: 11px;
+                }
             }
         }
     }

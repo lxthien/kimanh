@@ -166,108 +166,147 @@
 					</div>
 				</div>
 			</div>
-		</section>
 
-		{% for blockOnHomepage in blocksOnHomepage %}
-			{% if blockOnHomepage.category.getParentcat() == 'root' %}
-				{% set linkCat = path('dynamic_post_page', {'slug': blockOnHomepage.category.getUrl() }) %}
-			{% else %}
-				{% set linkCat = path('dynamic_category_post', {'level1': blockOnHomepage.category.getParentcat().getUrl(), 'level2': blockOnHomepage.category.getUrl() }) %}
-			{% endif %}
-			<section class="ka-category-block">
-				<div class="container">
-					<div class="ka-block-header">
-						<div class="text-uppercase ka-header-title">
-							<img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset('assets/images/icon-logo.png') }}" width="35" height="25">
-							<p class="ka-header-subtitle">{{ blockOnHomepage.title }}</p>
-							<i class="fa fa-angle-right"></i>
-							<h2>
-								<a href="{{ linkCat }}">{{ blockOnHomepage.category.getName() }}</a>
-							</h2>
+			<div class="row ka-stats-row">
+				<div class="col-md-3 col-xs-6">
+					<div class="ka-stat-item">
+						<div class="ka-stat-number">15<span class="ka-stat-symbol">+</span>
 						</div>
-						<span class="ka-header-line"></span>
-						<p class="ka-header-desc">{{ blockOnHomepage.description }}</p>
-						{% if blockOnHomepage.listSubTabs|length > 0 %}
-							<ul class="nav nav-tabs ka-header-tabs" role="tablist">
-								{% for listSubTab in blockOnHomepage.listSubTabs %}
-									<li role="presentation" {{ loop.first ? ' class="active"' : '' }}>
-										<a href="#tab_{{ listSubTab.subCategory.getId() }}" role="tab" data-toggle="tab">{{ listSubTab.subCategory.getName() }}</a>
-									</li>
-								{% endfor %}
-							</ul>
-						{% endif %}
+						<div class="ka-stat-label">Năm kinh nghiệm</div>
 					</div>
-					{% if blockOnHomepage.listSubTabs|length > 0 %}
-						<div class="tab-content">
-							{% for listSubTab in blockOnHomepage.listSubTabs %}
-								<div role="tabpanel" class="tab-pane{{ loop.first ? ' active' : '' }}" id="tab_{{ listSubTab.subCategory.getId() }}">
-									<div class="ka-list-items">
-										<div class="row">
-											{% for row in listSubTab.posts %}
-												{% include 'news/components/itemsGridHomepage.html.twig' with {'category': listSubTab.subCategory} %}
-											{% endfor %}
-										</div>
-									</div>
-									<div class="ka-view-more text-center">
-										<a href="{{ path('list_category', {'level1': blockOnHomepage.category.getUrl(), 'level2': listSubTab.subCategory.getUrl() }) }}">{{ listSubTab.subCategory.getName() }}</a>
-									</div>
-								</div>
-							{% endfor %}
-						</div>
-					{% else %}
-						<div class="ka-list-items">
-							<div class="row">
-								{% for row in blockOnHomepage.posts %}
-									{% include 'news/components/itemsGridHomepage.html.twig' with {'category': blockOnHomepage.category} %}
-								{% endfor %}
-							</div>
-						</div>
-						<div class="ka-view-more text-center">
-							<a href="{{ linkCat }}">{{ blockOnHomepage.category.getName() }}</a>
-						</div>
-					{% endif %}
 				</div>
-			</section>
-		{% endfor %}
-
-		<section class="ka-testimonials-section">
-			<div class="container">
-				<h2 class="text-center text-uppercase ka-testimonials-heading">Khách hàng đánh giá</h2>
-				<div class="row ka-video-grid">
-					<div class="col-sm-3 col-xs-6 mb-15">
-						<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=76AB9uOFBos" class="ka-video-item">
-							<div class="ka-video-thumb">
-								<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-1.jpg'), '')) }}" class="lazyload" alt="Khách hàng chia sẻ về Xây Dựng Kim Anh" width="277" height="208">
-								<div class="ka-play-icon"><i class="fas fa-play"></i></div>
-							</div>
-						</a>
+				<div class="col-md-3 col-xs-6">
+					<div class="ka-stat-item">
+						<div class="ka-stat-number">1000<span class="ka-stat-symbol">+</span>
+						</div>
+						<div class="ka-stat-label">Công trình hoàn thiện</div>
 					</div>
-					<div class="col-sm-3 col-xs-6 mb-15">
-						<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=qZHPIqGX7pA" class="ka-video-item">
-							<div class="ka-video-thumb">
-								<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-2.jpg'), '')) }}" class="lazyload" alt="Ý kiến khách hàng về Xây Dựng Kim Anh" width="282" height="212">
-								<div class="ka-play-icon"><i class="fas fa-play"></i></div>
-							</div>
-						</a>
+				</div>
+				<div class="col-md-3 col-xs-6">
+					<div class="ka-stat-item">
+						<div class="ka-stat-number">100<span class="ka-stat-symbol">%</span>
+						</div>
+						<div class="ka-stat-label">Khách hàng hài lòng</div>
 					</div>
-					<div class="col-sm-3 col-xs-6 mb-15">
-						<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=CsMoN-G_QK8" class="ka-video-item">
-							<div class="ka-video-thumb">
-								<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-3.jpg'), '')) }}" class="lazyload" alt="Xây Nhà Quận Bình Tân - Uy Tín" width="277" height="208">
-								<div class="ka-play-icon"><i class="fas fa-play"></i></div>
-							</div>
-						</a>
-					</div>
-					<div class="col-sm-3 col-xs-6 mb-15">
-						<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=Jw70fD5eZp4" class="ka-video-item">
-							<div class="ka-video-thumb">
-								<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-4.jpg'), '')) }}" class="lazyload" alt="Ý kiến khách hàng về Kim Anh" width="277" height="208">
-								<div class="ka-play-icon"><i class="fas fa-play"></i></div>
-							</div>
-						</a>
+				</div>
+				<div class="col-md-3 col-xs-6">
+					<div class="ka-stat-item">
+						<div class="ka-stat-number">50<span class="ka-stat-symbol">+</span>
+						</div>
+						<div class="ka-stat-label">Nhân sự chuyên nghiệp</div>
 					</div>
 				</div>
 			</div>
+		</div>
+	</section>
+
+	{% for blockOnHomepage in blocksOnHomepage %}
+		{% if blockOnHomepage.category.getParentcat() == 'root' %}
+			{% set linkCat = path('dynamic_post_page', {'slug': blockOnHomepage.category.getUrl() }) %}
+		{% else %}
+			{% set linkCat = path('dynamic_category_post', {'level1': blockOnHomepage.category.getParentcat().getUrl(), 'level2': blockOnHomepage.category.getUrl() }) %}
+		{% endif %}
+		<section class="ka-category-block">
+			<div class="container">
+				<div class="ka-block-header">
+					<div class="text-uppercase ka-header-title">
+						<img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset('assets/images/icon-logo.png') }}" width="35" height="25">
+						<p class="ka-header-subtitle">{{ blockOnHomepage.title }}</p>
+						<i class="fa fa-angle-right"></i>
+						<h2>
+							<a href="{{ linkCat }}">{{ blockOnHomepage.category.getName() }}</a>
+						</h2>
+					</div>
+					<span class="ka-header-line"></span>
+					<p class="ka-header-desc">{{ blockOnHomepage.description }}</p>
+					{% if blockOnHomepage.listSubTabs|length > 0 %}
+						<ul class="nav nav-tabs ka-header-tabs" role="tablist">
+							{% for listSubTab in blockOnHomepage.listSubTabs %}
+								<li role="presentation" {{ loop.first ? ' class="active"' : '' }}>
+									<a href="#tab_{{ listSubTab.subCategory.getId() }}" role="tab" data-toggle="tab">{{ listSubTab.subCategory.getName() }}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					{% endif %}
+				</div>
+				{% if blockOnHomepage.listSubTabs|length > 0 %}
+					<div class="tab-content">
+						{% for listSubTab in blockOnHomepage.listSubTabs %}
+							<div role="tabpanel" class="tab-pane{{ loop.first ? ' active' : '' }}" id="tab_{{ listSubTab.subCategory.getId() }}">
+								<div class="ka-list-items">
+									<div class="row">
+										{% for row in listSubTab.posts %}
+											{% include 'news/components/itemsGridHomepage.html.twig' with {'category': listSubTab.subCategory} %}
+										{% endfor %}
+									</div>
+								</div>
+								<div class="ka-view-more text-center">
+									<a href="{{ path('list_category', {'level1': blockOnHomepage.category.getUrl(), 'level2': listSubTab.subCategory.getUrl() }) }}">{{ listSubTab.subCategory.getName() }}</a>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				{% else %}
+					<div class="ka-list-items">
+						<div class="row">
+							{% for row in blockOnHomepage.posts %}
+								{% include 'news/components/itemsGridHomepage.html.twig' with {'category': blockOnHomepage.category} %}
+							{% endfor %}
+						</div>
+					</div>
+					<div class="ka-view-more text-center">
+						<a href="{{ linkCat }}">{{ blockOnHomepage.category.getName() }}</a>
+					</div>
+				{% endif %}
+			</div>
 		</section>
-	</div>
-{% endblock %}
+	{% endfor %}
+
+	<section class="ka-testimonials-section">
+		<div class="container">
+			<h2 class="text-center text-uppercase ka-testimonials-heading">Khách hàng đánh giá</h2>
+			<div class="row ka-video-grid">
+				<div class="col-sm-3 col-xs-6 mb-15">
+					<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=76AB9uOFBos" class="ka-video-item">
+						<div class="ka-video-thumb">
+							<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-1.jpg'), '')) }}" class="lazyload" alt="Khách hàng chia sẻ về Xây Dựng Kim Anh" width="277" height="208">
+							<div class="ka-play-icon">
+								<i class="fas fa-play"></i>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-sm-3 col-xs-6 mb-15">
+					<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=qZHPIqGX7pA" class="ka-video-item">
+						<div class="ka-video-thumb">
+							<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-2.jpg'), '')) }}" class="lazyload" alt="Ý kiến khách hàng về Xây Dựng Kim Anh" width="282" height="212">
+							<div class="ka-play-icon">
+								<i class="fas fa-play"></i>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-sm-3 col-xs-6 mb-15">
+					<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=CsMoN-G_QK8" class="ka-video-item">
+						<div class="ka-video-thumb">
+							<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-3.jpg'), '')) }}" class="lazyload" alt="Xây Nhà Quận Bình Tân - Uy Tín" width="277" height="208">
+							<div class="ka-play-icon">
+								<i class="fas fa-play"></i>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col-sm-3 col-xs-6 mb-15">
+					<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=Jw70fD5eZp4" class="ka-video-item">
+						<div class="ka-video-thumb">
+							<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-4.jpg'), '')) }}" class="lazyload" alt="Ý kiến khách hàng về Kim Anh" width="277" height="208">
+							<div class="ka-play-icon">
+								<i class="fas fa-play"></i>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>{% endblock %}

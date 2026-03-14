@@ -88,7 +88,16 @@ class PageController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->getDoctrine()->getManager()->flush();
+            $em = $this->getDoctrine()->getManager();
+            $unitOfWork = $em->getUnitOfWork();
+            $originalData = $unitOfWork->getOriginalEntityData($news);
+
+            // Update createdAt if enable changed from false to true
+            if (isset($originalData['enable']) && !$originalData['enable'] && $news->getEnable()) {
+                $news->setCreatedAt(new \DateTime());
+            }
+
+            $em->flush();
             $this->addFlash('success', 'action.updated_successfully');
 
             return $this->redirectToRoute('admin_page_edit', array(
