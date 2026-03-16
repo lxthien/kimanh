@@ -467,8 +467,18 @@
             border-collapse: separate;
             border-spacing: 0;
             border-radius: $radiusMd;
-            overflow: hidden;
             box-shadow: $shadowSm;
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+
+            &::-webkit-scrollbar {
+                height: 6px;
+            }
+            &::-webkit-scrollbar-thumb {
+                background-color: rgba($primaryColor, 0.2);
+                border-radius: 3px;
+            }
 
             th {
                 background: $gradientPrimary;
@@ -477,6 +487,7 @@
                 font-weight: 600;
                 text-align: left;
                 font-size: 15px;
+                white-space: nowrap;
             }
 
             td {
