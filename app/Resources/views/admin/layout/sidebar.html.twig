@@ -100,11 +100,11 @@
                         </li>
                         <li>
                             <i class="fa fa-edit"></i>
-                            <a href="{{ path('admin_user_index') }}">{{ 'menu.add_new'|trans }}</a>
+                            <a href="{{ path('admin_user_new') }}">{{ 'menu.add_new'|trans }}</a>
                         </li>
                         <li>
                             <i class="fa fa-user"></i>
-                            <a href="{{ path('fos_user_profile_edit') }}">{{ 'menu.users_profile'|trans }}</a>
+                            <a href="{{ path('admin_user_edit', {id: app.user.id}) }}">{{ 'menu.users_profile'|trans }}</a>
                         </li>
                     </ul>
                 </li>
