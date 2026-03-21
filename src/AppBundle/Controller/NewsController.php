@@ -407,9 +407,9 @@ class NewsController extends Controller
             throw $this->createNotFoundException("The item does not exist");
         }
 
-        // Update viewCount for post
-        //$post->setViewCounts( $post->getViewCounts() + 1 );
-        //$this->getDoctrine()->getManager()->flush();
+        // Update viewCount for post using direct SQL query for better performance
+        // This avoids ORM overhead and doesn't block page rendering
+        $this->incrementPostViewCount($post->getId());
 
         $categoryPrimary = $request->query->get('danh-muc');
         
@@ -1409,6 +1409,34 @@ class NewsController extends Controller
                 'costs' => $costs ? $costs : null,
                 'post' => $post
             ]);
+        }
+    }
+
+    /**
+     * Increment post view count using direct SQL query for optimal performance
+     * 
+     * Avoids ORM overhead by using direct database update which:
+     * - Executes in a single database operation
+     * - Doesn't require object hydration
+     * - Doesn't lock the entity manager
+     * - Doesn't impact page rendering time
+     * 
+     * @param int $postId
+     */
+    private function incrementPostViewCount($postId)
+    {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $connection = $em->getConnection();
+            
+            // Direct SQL update for maximum performance
+            $connection->executeUpdate(
+                'UPDATE news SET viewCounts = viewCounts + 1 WHERE id = ?',
+                [$postId]
+            );
+        } catch (\Exception $e) {
+            // Silently fail if view count update fails - don't break page rendering
+            // You can log this error if needed: $this->get('logger')->error($e->getMessage());
         }
     }
 }
