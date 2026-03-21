@@ -13,7 +13,7 @@ class Builder implements ContainerAwareInterface
     public function mainMenu(FactoryInterface $factory, array $options)
     {
         $menu = $factory->createItem('root', array(
-            'childrenAttributes' => array (
+            'childrenAttributes' => array(
                 'class' => 'nav navbar-nav',
             ),
         ));
@@ -22,17 +22,17 @@ class Builder implements ContainerAwareInterface
             'route' => 'homepage',
             'extras' => ['safe_label' => true]
         ])
-        ->setLinkAttribute('class', 'home')
-        ->setLinkAttribute('aria-label', 'Xây Dựng Kim Anh');
+            ->setLinkAttribute('class', 'home')
+            ->setLinkAttribute('aria-label', 'Xây Dựng Kim Anh');
 
         $menu->addChild('Giới thiệu', [
             'route' => 'dynamic_post_page',
             'routeParameters' => ['slug' => 'gioi-thieu']
         ])
-        ->setAttribute('class', 'dropdown')
-        ->setLinkAttribute('class', 'dropdown-toggle')
-        ->setLinkAttribute('data-toggle', 'dropdown')
-        ->setChildrenAttribute('class', 'dropdown-menu');
+            ->setAttribute('class', 'dropdown')
+            ->setLinkAttribute('class', 'dropdown-toggle')
+            ->setLinkAttribute('data-toggle', 'dropdown')
+            ->setChildrenAttribute('class', 'dropdown-menu');
 
         $menu['Giới thiệu']->addChild('Về chúng tôi', [
             'route' => 'dynamic_post_page',
@@ -47,10 +47,10 @@ class Builder implements ContainerAwareInterface
         $menu->addChild('Dịch vụ', [
             'uri' => '#'
         ])
-        ->setAttribute('class', 'dropdown')
-        ->setLinkAttribute('class', 'dropdown-toggle')
-        ->setLinkAttribute('data-toggle', 'dropdown')
-        ->setChildrenAttribute('class', 'dropdown-menu');
+            ->setAttribute('class', 'dropdown')
+            ->setLinkAttribute('class', 'dropdown-toggle')
+            ->setLinkAttribute('data-toggle', 'dropdown')
+            ->setChildrenAttribute('class', 'dropdown-menu');
 
         $menu['Dịch vụ']->addChild('Xây nhà trọn gói', [
             'route' => 'dynamic_post_page',
@@ -62,14 +62,38 @@ class Builder implements ContainerAwareInterface
             'routeParameters' => ['slug' => 'bao-gia-xay-nha-phan-tho']
         ]);
 
+        $menu['Dịch vụ']->addChild('Thiết kế kiến trúc', [
+            'route' => 'dynamic_post_page',
+            'routeParameters' => ['slug' => 'bao-gia-thiet-ke-kien-truc']
+        ]);
+
+        $menu->addChild('Công trình', [
+            'route' => 'dynamic_post_page',
+            'routeParameters' => ['slug' => 'cong-trinh']
+        ])
+            ->setAttribute('class', 'dropdown')
+            ->setLinkAttribute('class', 'dropdown-toggle')
+            ->setLinkAttribute('data-toggle', 'dropdown')
+            ->setChildrenAttribute('class', 'dropdown-menu');
+
+        $menu['Công trình']->addChild('Xây dựng nhà', [
+            'route' => 'dynamic_category_post',
+            'routeParameters' => ['level1' => 'cong-trinh', 'level2' => 'xay-dung-nha']
+        ]);
+
+        $menu['Công trình']->addChild('Sửa chữa nhà', [
+            'route' => 'dynamic_category_post',
+            'routeParameters' => ['level1' => 'cong-trinh', 'level2' => 'sua-chua-nha']
+        ]);
+
         $menu->addChild('Blog', [
             'route' => 'dynamic_post_page',
             'routeParameters' => ['slug' => 'blog']
         ])
-        ->setAttribute('class', 'dropdown')
-        ->setLinkAttribute('class', 'dropdown-toggle')
-        ->setLinkAttribute('data-toggle', 'dropdown')
-        ->setChildrenAttribute('class', 'dropdown-menu');
+            ->setAttribute('class', 'dropdown')
+            ->setLinkAttribute('class', 'dropdown-toggle')
+            ->setLinkAttribute('data-toggle', 'dropdown')
+            ->setChildrenAttribute('class', 'dropdown-menu');
 
         $menu['Blog']->addChild('Kiến thức xây nhà', [
             'route' => 'dynamic_category_post',

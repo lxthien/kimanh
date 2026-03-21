@@ -39,7 +39,7 @@ class NewsCategoryController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $categories = $em->getRepository(NewsCategory::class)->findAll();
+        $categories = $em->getRepository(NewsCategory::class)->findBy(['parentcat' => null]);
 
         return $this->render('admin/newscategory/index.html.twig', [
             'objects' => $categories

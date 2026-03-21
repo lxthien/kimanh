@@ -42,23 +42,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for row in objects %}
-                                    <tr>
-                                        <td><a class="btn-link" href="{{ path('admin_news_list_by_category', {categoryId: row.id}) }}">{{ row.getName() }}<a></td>
-                                        <td>{{ row.getParentcat() }}</td>
-                                        <td>{{ row.getUrl() }}</td>
-                                        <td>{{ row.getCreatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
-                                        <td>{{ row.getUpdatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
-                                        <td>
-                                            <div class="item-actions">
-                                                <a href="{{ path('admin_newscategory_edit', {id: row.id}) }}" class="btn-sm btn-edit">
-                                                    <i class="fa fa-edit" aria-hidden="true"></i>
-                                                </a>
-
-                                                {{ include('admin/newscategory/_delete_form.html.twig', {category: row}, with_context = false) }}
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    {% for category in objects %}
+                                        {{ include('admin/newscategory/_tree_row.html.twig', {'category': category, 'level': 0}, with_context = false) }}
                                     {% endfor %}
                                 </tbody>
                             </table>
