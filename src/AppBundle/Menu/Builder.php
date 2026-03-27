@@ -44,6 +44,32 @@ class Builder implements ContainerAwareInterface
             'routeParameters' => ['slug' => 'ho-so-nang-luc']
         ]);
 
+        $menu->addChild('Mẫu nhà đẹp', [
+            'route' => 'dynamic_post_page',
+            'routeParameters' => ['slug' => 'mau-nha-dep']
+        ])
+            ->setAttribute('class', 'dropdown')
+            ->setLinkAttribute('class', 'dropdown-toggle')
+            ->setLinkAttribute('data-toggle', 'dropdown')
+            ->setChildrenAttribute('class', 'dropdown-menu');
+
+        $menu['Mẫu nhà đẹp']->addChild('Mẫu nhà phố', [
+            'route' => 'dynamic_category_post',
+            'routeParameters' => ['level1' => 'mau-nha-dep', 'level2' => 'mau-nha-pho']
+        ]);
+
+        /*
+        $menu['Mẫu nhà đẹp']->addChild('Mẫu nhà biệt thự', [
+            'route' => 'dynamic_category_post',
+            'routeParameters' => ['level1' => 'mau-nha-dep', 'level2' => 'mau-nha-biet-thu']
+        ]);
+
+        $menu['Mẫu nhà đẹp']->addChild('Mẫu nhà cấp 4', [
+            'route' => 'dynamic_category_post',
+            'routeParameters' => ['level1' => 'mau-nha-dep', 'level2' => 'mau-nha-cap-4']
+        ]);
+        */
+
         $menu->addChild('Dịch vụ', [
             'uri' => '#'
         ])
@@ -108,6 +134,11 @@ class Builder implements ContainerAwareInterface
         $menu['Blog']->addChild('Pháp lý xây dựng', [
             'route' => 'dynamic_category_post',
             'routeParameters' => ['level1' => 'blog', 'level2' => 'phap-ly-xay-dung']
+        ]);
+
+        $menu['Blog']->addChild('Phong thủy nhà ở', [
+            'route' => 'dynamic_category_post',
+            'routeParameters' => ['level1' => 'blog', 'level2' => 'phong-thuy']
         ]);
 
         /*

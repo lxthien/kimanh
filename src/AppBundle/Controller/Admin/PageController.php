@@ -87,22 +87,38 @@ class PageController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $unitOfWork = $em->getUnitOfWork();
+                $originalData = $unitOfWork->getOriginalEntityData($news);
 
-            $em = $this->getDoctrine()->getManager();
-            $unitOfWork = $em->getUnitOfWork();
-            $originalData = $unitOfWork->getOriginalEntityData($news);
+                // Update createdAt if enable changed from false to true
+                if (isset($originalData['enable']) && !$originalData['enable'] && $news->getEnable()) {
+                    $news->setCreatedAt(new \DateTime());
+                }
 
-            // Update createdAt if enable changed from false to true
-            if (isset($originalData['enable']) && !$originalData['enable'] && $news->getEnable()) {
-                $news->setCreatedAt(new \DateTime());
+                $em->flush();
+                $this->addFlash('success', 'action.updated_successfully');
+
+                return $this->redirectToRoute('admin_page_edit', array(
+                    'id' => $news->getId()
+                ));
+            } catch (\DBALException $e) {
+                $message = sprintf('DBALException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\PDOException $e) {
+                $message = sprintf('PDOException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\ORMException $e) {
+                $message = sprintf('ORMException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\Exception $e) {
+                $message = sprintf('Exception [%i]: %s', $e->getCode(), $e->getMessage());
             }
 
-            $em->flush();
-            $this->addFlash('success', 'action.updated_successfully');
+            $this->addFlash('error', $message);
 
-            return $this->redirectToRoute('admin_page_edit', array(
-                'id' => $news->getId()
-            ));
+            return $this->render('admin/page/edit.html.twig', [
+                'object' => $news,
+                'form' => $form->createView(),
+            ]);
         }
 
         return $this->render('admin/page/edit.html.twig', [

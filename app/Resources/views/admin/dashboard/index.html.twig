@@ -173,7 +173,7 @@
                                     {% for post in topPosts %}
                                     <tr>
                                         <td>
-                                            <a href="{{ path('admin_news_edit', {id: post.id}) }}" title="Edit">
+                                            <a href="{{ path(post.postType == 'page' ? 'admin_page_edit' : 'admin_news_edit', {id: post.id}) }}" title="Edit">
                                                 {{ post.title|slice(0, 30) }}{{ post.title|length > 30 ? '...' : '' }}
                                             </a>
                                         </td>
@@ -213,14 +213,14 @@
                                     {% for post in recentPosts %}
                                     <tr>
                                         <td>
-                                            <a href="{{ path('admin_news_edit', {id: post.id}) }}">
+                                            <a href="{{ path(post.postType == 'page' ? 'admin_page_edit' : 'admin_news_edit', {id: post.id}) }}">
                                                 {{ post.title|slice(0, 50) }}{{ post.title|length > 50 ? '...' : '' }}
                                             </a>
                                         </td>
                                         <td><small>{{ post.createdAt|localizeddate('short', 'short', null, 'Asia/Ho_Chi_Minh', 'd/m/Y H:i') }}</small></td>
                                         <td><span class="badge badge-info">{{ post.viewCounts }}</span></td>
                                         <td>
-                                            <a href="{{ path('admin_news_edit', {id: post.id}) }}" class="btn btn-sm btn-primary">
+                                            <a href="{{ path(post.postType == 'page' ? 'admin_page_edit' : 'admin_news_edit', {id: post.id}) }}" class="btn btn-sm btn-primary">
                                                 <i class="fa fa-edit"></i>
                                             </a>
                                         </td>

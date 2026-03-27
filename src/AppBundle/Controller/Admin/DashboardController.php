@@ -65,7 +65,7 @@ class DashboardController extends Controller
         
         // Recent posts (last 7 days)
         $recentPosts = $em->getRepository(News::class)->createQueryBuilder('n')
-            ->select('n.id, n.title, n.createdAt, n.viewCounts')
+            ->select('n.id, n.title, n.postType, n.createdAt, n.viewCounts')
             ->where('n.createdAt >= :week_ago')
             ->setParameter('week_ago', new \DateTime('-7 days'))
             ->orderBy('n.createdAt', 'DESC')
@@ -96,7 +96,7 @@ class DashboardController extends Controller
         
         // Top 5 posts by views
         $topPosts = $em->getRepository(News::class)->createQueryBuilder('n')
-            ->select('n.id, n.title, n.viewCounts')
+            ->select('n.id, n.title, n.postType, n.viewCounts')
             ->orderBy('n.viewCounts', 'DESC')
             ->setMaxResults(5)
             ->getQuery()

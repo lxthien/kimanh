@@ -176,8 +176,10 @@ class NewsController extends Controller
             // Verify that the post belongs to this category
             $categories = $post->getCategory();
             foreach ($categories as $category) {
-                if ($category->getId() === $parentCategory->getId() || 
-                    ($category->getParentcat() && $category->getParentcat()->getId() === $parentCategory->getId())) {
+                if (
+                    $category->getId() === $parentCategory->getId() ||
+                    ($category->getParentcat() && $category->getParentcat()->getId() === $parentCategory->getId())
+                ) {
                     // It's a post in this category - show the post
                     return $this->showAction($level2, $request);
                 }
@@ -294,11 +296,11 @@ class NewsController extends Controller
         $breadcrumbs = $this->buildBreadcrums(!empty($level2) ? $subCategory : $category, null, null);
 
         $ordering = $category->getSortBy() == null ? '{"createdAt":"DESC"}' : $category->getSortBy();
-        $orderingData = (array)(json_decode($ordering));
+        $orderingData = (array) (json_decode($ordering));
         $orderingKey = array_keys($orderingData);
 
         $listCategories = array();
-        
+
         if (empty($level2)) {
             // Get all post for this category and sub category
             $listCategoriesIds[] = $category->getId();
@@ -324,7 +326,7 @@ class NewsController extends Controller
                     ->andWhere('n.enable = :enable')
                     ->setParameter('listCategoriesIds', $listCategoriesIds)
                     ->setParameter('enable', 1)
-                    ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
+                    ->orderBy('n.' . $orderingKey[0], $orderingData[$orderingKey[0]])
                     ->getQuery()->getResult();
             } else {
                 $news = $this->getDoctrine()
@@ -335,8 +337,8 @@ class NewsController extends Controller
                     ->andWhere('n.enable = :enable')
                     ->setParameter('newscategory_id', $category->getId())
                     ->setParameter('enable', 1)
-                    ->setMaxResults( 8 )
-                    ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
+                    ->setMaxResults(8)
+                    ->orderBy('n.' . $orderingKey[0], $orderingData[$orderingKey[0]])
                     ->getQuery()
                     ->getResult();
             }
@@ -350,7 +352,7 @@ class NewsController extends Controller
                     ->andWhere('n.enable = :enable')
                     ->setParameter('newscategory_id', $subCategory->getId())
                     ->setParameter('enable', 1)
-                    ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
+                    ->orderBy('n.' . $orderingKey[0], $orderingData[$orderingKey[0]])
                     ->getQuery()->getResult();
             } else {
                 $news = $this->getDoctrine()
@@ -361,14 +363,14 @@ class NewsController extends Controller
                     ->andWhere('n.enable = :enable')
                     ->setParameter('newscategory_id', $subCategory->getId())
                     ->setParameter('enable', 1)
-                    ->setMaxResults( 12 )
-                    ->orderBy('n.'.$orderingKey[0], $orderingData[$orderingKey[0]])
+                    ->setMaxResults(12)
+                    ->orderBy('n.' . $orderingKey[0], $orderingData[$orderingKey[0]])
                     ->getQuery()
                     ->getResult();
             }
         }
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $news,
             $page,
@@ -409,10 +411,10 @@ class NewsController extends Controller
 
         // Update viewCount for post using direct SQL query for better performance
         // This avoids ORM overhead and doesn't block page rendering
-        $this->incrementPostViewCount($post->getId());
+        $this->incrementPostViewCount($post->getId(), $request);
 
         $categoryPrimary = $request->query->get('danh-muc');
-        
+
         if (!$categoryPrimary) {
             if ($post->getCategoryPrimary() > 0) {
                 $categoryPrimary = $post->getCategoryPrimary();
@@ -428,7 +430,7 @@ class NewsController extends Controller
             $catPrimary = $this->getDoctrine()
                 ->getRepository(NewsCategory::class)
                 ->findOneByUrl($categoryPrimary);
-            
+
             $categoryPrimary = $catPrimary->getId();
         }
 
@@ -438,7 +440,7 @@ class NewsController extends Controller
                 ->find($categoryPrimary);
 
             $ordering = $category->getSortBy() == null ? '{"createdAt":"DESC"}' : $category->getSortBy();
-            $orderingData = (array)(json_decode($ordering));
+            $orderingData = (array) (json_decode($ordering));
             $orderingKey = array_keys($orderingData);
 
             // Get news related
@@ -454,11 +456,11 @@ class NewsController extends Controller
                 ->setParameter('id', $post->getId())
                 ->setParameter('postType', $post->getPostType())
                 ->setParameter('enable', 1)
-                ->setMaxResults( 12 )
-                ->orderBy('r.'.$orderingKey[0], $orderingData[$orderingKey[0]])
+                ->setMaxResults(12)
+                ->orderBy('r.' . $orderingKey[0], $orderingData[$orderingKey[0]])
                 ->getQuery()
                 ->getResult();
-            
+
             if ($category->getParentcat() === 'root') {
                 $categoryUrl = $this->generateUrl("dynamic_post_page", array('slug' => $category->getUrl()), UrlGeneratorInterface::ABSOLUTE_URL);
             } else {
@@ -481,8 +483,8 @@ class NewsController extends Controller
 
         // Render form rating for post.
         $formRating = $this->createFormBuilder(null, array(
-                'csrf_protection' => false,
-            ))
+            'csrf_protection' => false,
+        ))
             ->setAction($this->generateUrl('rating'))
             ->add('rating', RatingType::class)
             ->getForm();
@@ -511,16 +513,16 @@ class NewsController extends Controller
             $imageSize = @getimagesize($imagePath);
 
             return $this->render('news/page.html.twig', [
-                'post'          => $post,
-                'contentsLazy'  => $contentsLazy,
-                'form'          => $form->createView(),
-                'formRating'    => $formRating->createView(),
-                'rating'        => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
+                'post' => $post,
+                'contentsLazy' => $contentsLazy,
+                'form' => $form->createView(),
+                'formRating' => $formRating->createView(),
+                'rating' => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
                 'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),
-                'ratingValue'   => round($rating['ratingValue']),
-                'ratingCount'   => round($rating['ratingCount']),
-                'comments'      => $comments,
-                'imageSize'     => $imageSize
+                'ratingValue' => round($rating['ratingValue']),
+                'ratingCount' => round($rating['ratingCount']),
+                'comments' => $comments,
+                'imageSize' => $imageSize
             ]);
         } else {
             $imagePath = $this->helper->asset($post, 'imageFile');
@@ -528,29 +530,30 @@ class NewsController extends Controller
             $imageSize = @getimagesize($imagePath);
 
             return $this->render('news/show.html.twig', [
-                'post'          => $post,
-                'contentsLazy'  => $contentsLazy,
-                'articleBody'   => $this->strip_tags_content($contentsLazy),
-                'wordCount'     => str_word_count($this->strip_tags_content($contentsLazy)),
-                'relatedNews'   => !empty($relatedNews) ? $relatedNews : NULL,
-                'form'          => $form->createView(),
-                'formRating'    => $formRating->createView(),
-                'rating'        => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
+                'post' => $post,
+                'contentsLazy' => $contentsLazy,
+                'articleBody' => $this->strip_tags_content($contentsLazy),
+                'wordCount' => str_word_count($this->strip_tags_content($contentsLazy)),
+                'relatedNews' => !empty($relatedNews) ? $relatedNews : NULL,
+                'form' => $form->createView(),
+                'formRating' => $formRating->createView(),
+                'rating' => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
                 'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),
-                'ratingValue'   => round($rating['ratingValue']),
-                'ratingCount'   => round($rating['ratingCount']),
-                'comments'      => $comments,
-                'imageSize'     => $imageSize,
-                'category'      => !empty($category) ? $category : NULL,
-                'categoryUrl'   => $categoryUrl,
+                'ratingValue' => round($rating['ratingValue']),
+                'ratingCount' => round($rating['ratingCount']),
+                'comments' => $comments,
+                'imageSize' => $imageSize,
+                'category' => !empty($category) ? $category : NULL,
+                'categoryUrl' => $categoryUrl,
                 'urlParameters' => !empty($request->query->get('danh-muc')) ? $request->query->get('danh-muc') : NULL
             ]);
         }
     }
 
-    private function strip_tags_content($string) { 
+    private function strip_tags_content($string)
+    {
         // ----- remove HTML TAGs -----
-        $string = preg_replace ('/<[^>]*>/', ' ', $string);
+        $string = preg_replace('/<[^>]*>/', ' ', $string);
         // ----- remove control characters ----- 
         $string = str_replace("\r", '', $string);
         $string = str_replace("\n", ' ', $string);
@@ -558,14 +561,14 @@ class NewsController extends Controller
 
         // ----- remove multiple spaces -----
         $string = trim(preg_replace('/ {2,}/', ' ', $string));
-        
+
         return $string;
     }
 
     private function lazyloadContent($post)
     {
         $content = $post->getContents();
-        
+
         // Return early if no content
         if (empty($content)) {
             return '';
@@ -616,20 +619,20 @@ class NewsController extends Controller
         }
 
         $newContent = $dom->saveHTML();
-        
+
         // Remove the wrapper div we added
         $newContent = preg_replace('/<div id="lazyload-wrapper">/', '', $newContent);
         $newContent = preg_replace('/<\/div>$/', '', $newContent);
-        
+
         // Clean up any remaining DOCTYPE, html, head, body tags
         $newContent = preg_replace('/^<!DOCTYPE[^>]*>/i', '', $newContent);
         $newContent = preg_replace('/<\/?html[^>]*>/i', '', $newContent);
         $newContent = preg_replace('/<\/?head[^>]*>/i', '', $newContent);
         $newContent = preg_replace('/<\/?body[^>]*>/i', '', $newContent);
-        
+
         // Restore the "<" characters
         $newContent = str_replace($placeholder, '<', $newContent);
-        
+
         return trim($newContent);
     }
 
@@ -664,7 +667,7 @@ class NewsController extends Controller
             ->orderBy('n.createdAt', 'DESC')
             ->getQuery()->getResult();
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $posts,
             !empty($request->query->get('page')) ? $request->query->get('page') : 1,
@@ -749,8 +752,8 @@ class NewsController extends Controller
 
             for ($i = 0; $i < count($listPosts); $i++) {
                 $post = $this->getDoctrine()
-                            ->getRepository(News::class)
-                            ->find($listPosts[$i]);
+                    ->getRepository(News::class)
+                    ->find($listPosts[$i]);
                 if ($post) {
                     $sidebarPostsArray[] = $post;
                 }
@@ -762,7 +765,8 @@ class NewsController extends Controller
         }
     }
 
-    public function sidebarPostsAction ($sidebarPosts) {
+    public function sidebarPostsAction($sidebarPosts)
+    {
         $sidebarPostsArray = array();
 
         if (!empty($sidebarPosts)) {
@@ -773,8 +777,8 @@ class NewsController extends Controller
 
                 for ($i = 0; $i < count($listPosts); $i++) {
                     $post = $this->getDoctrine()
-                                ->getRepository(News::class)
-                                ->find($listPosts[$i]);
+                        ->getRepository(News::class)
+                        ->find($listPosts[$i]);
                     if ($post) {
                         $sidebarPostsArray[] = $post;
                     }
@@ -800,11 +804,11 @@ class NewsController extends Controller
 
         $listCategoriesIds = array($category->getId());
         $allSubCategories = $this->getDoctrine()
-                            ->getRepository(NewsCategory::class)
-                            ->createQueryBuilder('c')
-                            ->where('c.parentcat = (:parentcat)')
-                            ->setParameter('parentcat', $category->getId())
-                            ->getQuery()->getResult();
+            ->getRepository(NewsCategory::class)
+            ->createQueryBuilder('c')
+            ->where('c.parentcat = (:parentcat)')
+            ->setParameter('parentcat', $category->getId())
+            ->getQuery()->getResult();
 
         foreach ($allSubCategories as $value) {
             $listCategoriesIds[] = $value->getId();
@@ -818,7 +822,7 @@ class NewsController extends Controller
             ->andWhere('n.enable = :enable')
             ->setParameter('listCategoriesIds', $listCategoriesIds)
             ->setParameter('enable', 1)
-            ->setMaxResults( 10 )
+            ->setMaxResults(10)
             ->orderBy('n.viewCounts', 'DESC')
             ->getQuery()
             ->getResult();
@@ -836,11 +840,11 @@ class NewsController extends Controller
 
         $listCategoriesIds = array($category->getId());
         $allSubCategories = $this->getDoctrine()
-                            ->getRepository(NewsCategory::class)
-                            ->createQueryBuilder('c')
-                            ->where('c.parentcat = (:parentcat)')
-                            ->setParameter('parentcat', $category->getId())
-                            ->getQuery()->getResult();
+            ->getRepository(NewsCategory::class)
+            ->createQueryBuilder('c')
+            ->where('c.parentcat = (:parentcat)')
+            ->setParameter('parentcat', $category->getId())
+            ->getQuery()->getResult();
 
         foreach ($allSubCategories as $value) {
             $listCategoriesIds[] = $value->getId();
@@ -854,7 +858,7 @@ class NewsController extends Controller
             ->andWhere('n.enable = :enable')
             ->setParameter('listCategoriesIds', $listCategoriesIds)
             ->setParameter('enable', 1)
-            ->setMaxResults( $postNumber )
+            ->setMaxResults($postNumber)
             ->orderBy('n.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
@@ -881,11 +885,11 @@ class NewsController extends Controller
         $em->persist($rating);
 
         $em->flush();
-        
+
         return new Response(
             json_encode(
                 array(
-                    'status'=>'success',
+                    'status' => 'success',
                     'message' => 'Cảm ơn đánh giá của bạn'
                 )
             )
@@ -900,10 +904,10 @@ class NewsController extends Controller
     public function handleSearchFormAction(Request $request)
     {
         $page = !empty($request->query->get('page')) ? $request->query->get('page') : 1;
-        
+
         $form = $this->createFormBuilder(null, array(
-                'csrf_protection' => false,
-            ))
+            'csrf_protection' => false,
+        ))
             ->setAction($this->generateUrl('news_search'))
             ->setMethod('POST')
             ->add('q', TextType::class)
@@ -911,7 +915,7 @@ class NewsController extends Controller
             ->getForm();
 
         $form->handleRequest($request);
-        
+
         if (!$form->isSubmitted() && empty($request->query->get('q'))) {
             return $this->redirectToRoute('homepage', [], 301);
         }
@@ -923,7 +927,7 @@ class NewsController extends Controller
 
         // Improved search: search across multiple fields
         $searchTerm = $request->query->get('q');
-        $searchPattern = '%'.$searchTerm.'%';
+        $searchPattern = '%' . $searchTerm . '%';
 
         $query = $this->getDoctrine()
             ->getRepository(News::class)
@@ -940,9 +944,9 @@ class NewsController extends Controller
             ->setParameter('postType', 'post')
             ->orderBy('p.createdAt', 'DESC')
             ->getQuery();
-        
+
         $results = $query->getResult();
-        
+
         // Highlight search keywords in results
         $highlightedResults = [];
         foreach ($results as $result) {
@@ -950,8 +954,8 @@ class NewsController extends Controller
             $result->highlightedDescription = $this->highlightKeyword($result->getDescription(), $searchTerm);
             $highlightedResults[] = $result;
         }
-        
-        $paginator  = $this->get('knp_paginator');
+
+        $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $highlightedResults,
             $page,
@@ -982,7 +986,7 @@ class NewsController extends Controller
         if (empty($text) || empty($keyword)) {
             return $text;
         }
-        
+
         // Case-insensitive replacement with word boundaries
         $pattern = '/(' . preg_quote($keyword, '/') . ')/i';
         return preg_replace($pattern, '<mark>$1</mark>', $text);
@@ -996,8 +1000,8 @@ class NewsController extends Controller
     private function renderFormComment($post)
     {
         $comment = new Comment();
-        $comment->setIp( $this->container->get('request_stack')->getCurrentRequest()->getClientIp() );
-        $comment->setNewsId( $post->getId() );
+        $comment->setIp($this->container->get('request_stack')->getCurrentRequest()->getClientIp());
+        $comment->setNewsId($post->getId());
 
         $form = $this->createFormBuilder($comment)
             ->setAction($this->generateUrl('handle_comment_form'))
@@ -1028,14 +1032,14 @@ class NewsController extends Controller
             return new Response(
                 json_encode(
                     array(
-                        'status'=>'error',
+                        'status' => 'error',
                         'message' => 'You can access this only using Ajax!'
                     )
                 )
             );
         } else {
             $comment = new Comment();
-            
+
             $form = $this->createFormBuilder($comment)
                 ->add('content', TextareaType::class)
                 ->add('author', TextType::class)
@@ -1070,12 +1074,12 @@ class NewsController extends Controller
                     ;
 
                     $mailer->send($message);
-    
+
                     return new Response(
                         json_encode(
                             array(
-                                'status'=>'success',
-                                'message' => '<div class="alert alert-success" role="alert">'.$this->get('translator')->trans('comment.thank_for_your_comment').'</div>'
+                                'status' => 'success',
+                                'message' => '<div class="alert alert-success" role="alert">' . $this->get('translator')->trans('comment.thank_for_your_comment') . '</div>'
                             )
                         )
                     );
@@ -1083,8 +1087,8 @@ class NewsController extends Controller
                     return new Response(
                         json_encode(
                             array(
-                                'status'=>'error',
-                                'message' => '<div class="alert alert-warning" role="alert">'.$this->get('translator')->trans('comment.have_a_problem_on_your_request').'</div>'
+                                'status' => 'error',
+                                'message' => '<div class="alert alert-warning" role="alert">' . $this->get('translator')->trans('comment.have_a_problem_on_your_request') . '</div>'
                             )
                         )
                     );
@@ -1093,8 +1097,8 @@ class NewsController extends Controller
                 return new Response(
                     json_encode(
                         array(
-                            'status'=>'error',
-                            'message' => '<div class="alert alert-warning" role="alert">'.$this->get('translator')->trans('comment.have_a_problem_on_your_request').'</div>'
+                            'status' => 'error',
+                            'message' => '<div class="alert alert-warning" role="alert">' . $this->get('translator')->trans('comment.have_a_problem_on_your_request') . '</div>'
                         )
                     )
                 );
@@ -1111,32 +1115,32 @@ class NewsController extends Controller
     {
         // Init october breadcrum
         $breadcrumbs = $this->get("white_october_breadcrumbs");
-        
+
         // Add home item into first breadcrum.
         $breadcrumbs->addItem("home", $this->generateUrl("homepage"));
-        
+
         // Breadcrum for page (with parent hierarchy)
         if (!empty($page) && $page->isPage()) {
             // Build the parent chain for the page
             $pageChain = [];
             $currentPage = $page;
-            
+
             // Collect all parents in reverse order
             while ($currentPage) {
                 $pageChain[] = $currentPage;
                 $currentPage = $currentPage->getParent();
             }
-            
+
             // Reverse to get the correct order (parent -> child)
             $pageChain = array_reverse($pageChain);
-            
+
             // Add each page in the chain to breadcrumbs
             foreach ($pageChain as $index => $p) {
                 // Use breadcrumb_title if available (shorter label), otherwise use title
-                $breadcrumbLabel = method_exists($p, 'getBreadcrumbTitle') && !empty($p->getBreadcrumbTitle()) 
-                    ? $p->getBreadcrumbTitle() 
+                $breadcrumbLabel = method_exists($p, 'getBreadcrumbTitle') && !empty($p->getBreadcrumbTitle())
+                    ? $p->getBreadcrumbTitle()
                     : $p->getTitle();
-                
+
                 if ($index < count($pageChain) - 1) {
                     // Add as link for parent pages
                     $breadcrumbs->addItem($breadcrumbLabel, $this->generateUrl('news_show', array('slug' => $p->getUrl())));
@@ -1145,17 +1149,17 @@ class NewsController extends Controller
                     $breadcrumbs->addItem($p->getTitle(), $this->generateUrl('news_show', array('slug' => $p->getUrl())));
                 }
             }
-            
+
             return $breadcrumbs;
         }
-        
+
         // Breadcrum for category page
         if (!empty($category)) {
             if ($category->getParentcat() === 'root') {
-                $breadcrumbs->addItem($category->getName(), $this->generateUrl("dynamic_post_page", array('slug' => $category->getUrl() )));
+                $breadcrumbs->addItem($category->getName(), $this->generateUrl("dynamic_post_page", array('slug' => $category->getUrl())));
             } else {
-                $breadcrumbs->addItem($category->getParentcat()->getName(), $this->generateUrl("dynamic_post_page", array('slug' => $category->getParentcat()->getUrl() )));
-                $breadcrumbs->addItem($category->getName(), $this->generateUrl("dynamic_category_post", array('level1' => $category->getParentcat()->getUrl(), 'level2' => $category->getUrl() )));
+                $breadcrumbs->addItem($category->getParentcat()->getName(), $this->generateUrl("dynamic_post_page", array('slug' => $category->getParentcat()->getUrl())));
+                $breadcrumbs->addItem($category->getName(), $this->generateUrl("dynamic_category_post", array('level1' => $category->getParentcat()->getUrl(), 'level2' => $category->getUrl())));
             }
         }
 
@@ -1165,7 +1169,7 @@ class NewsController extends Controller
 
             if (!$categoryPrimary) {
                 $categoryPrimary = $post->getCategoryPrimary();
-                if ($categoryPrimary > 0 ) {
+                if ($categoryPrimary > 0) {
                     $category = $this->getDoctrine()
                         ->getRepository(NewsCategory::class)
                         ->find($categoryPrimary);
@@ -1182,16 +1186,16 @@ class NewsController extends Controller
 
             if (!empty($category)) {
                 if ($category->getParentcat() === 'root') {
-                    $breadcrumbs->addItem($category->getName(), $this->generateUrl("dynamic_post_page", array('slug' => $category->getUrl() )));
-                    $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('dynamic_post_page', array('slug' => $post->getUrl())) );
+                    $breadcrumbs->addItem($category->getName(), $this->generateUrl("dynamic_post_page", array('slug' => $category->getUrl())));
+                    $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('dynamic_post_page', array('slug' => $post->getUrl())));
                 } else {
                     $parentCategory = $category->getParentcat();
-                    $breadcrumbs->addItem($parentCategory->getName(), $this->generateUrl("dynamic_post_page", array('slug' => $parentCategory->getUrl() )));
-                    $breadcrumbs->addItem($category->getName(), $this->generateUrl("dynamic_category_post", array('level1' => $parentCategory->getUrl(), 'level2' => $category->getUrl() )));
-                    $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('dynamic_post_page', array('slug' => $post->getUrl())) );
+                    $breadcrumbs->addItem($parentCategory->getName(), $this->generateUrl("dynamic_post_page", array('slug' => $parentCategory->getUrl())));
+                    $breadcrumbs->addItem($category->getName(), $this->generateUrl("dynamic_category_post", array('level1' => $parentCategory->getUrl(), 'level2' => $category->getUrl())));
+                    $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('dynamic_post_page', array('slug' => $post->getUrl())));
                 }
             } else {
-                $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('dynamic_post_page', array('slug' => $post->getUrl())) );
+                $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('dynamic_post_page', array('slug' => $post->getUrl())));
             }
         }
 
@@ -1202,14 +1206,15 @@ class NewsController extends Controller
      * @Route("/chi-phi-xay-dung/", name="caculator_cost_construction")
      * 
      */
-    public function caculatorCostConstructionAction($type = null, Request $request) {
+    public function caculatorCostConstructionAction($type = null, Request $request)
+    {
         $form = $this->createFormBuilder(null, array(
-                'csrf_protection' => false,
-            ))
+            'csrf_protection' => false,
+        ))
             ->setAction($this->generateUrl('caculator_cost_construction'))
             ->setMethod('POST')
             ->add('type', ChoiceType::class, array(
-                'choices'  => array(
+                'choices' => array(
                     'Nhà phố' => 1,
                     'Biệt thự' => 2,
                     'Nhà cấp 4' => 3,
@@ -1217,7 +1222,7 @@ class NewsController extends Controller
                 'label' => 'Chọn loại nhà'
             ))
             ->add('method', ChoiceType::class, array(
-                'choices'  => array(
+                'choices' => array(
                     'Xây nhà phần thô' => 1,
                     'Xây nhà trọn gói' => 2,
                 ),
@@ -1236,7 +1241,7 @@ class NewsController extends Controller
                 )
             ))
             ->add('floor', ChoiceType::class, array(
-                'choices'  => array(
+                'choices' => array(
                     '1' => 1,
                     '2' => 2,
                     '3' => 3,
@@ -1248,7 +1253,7 @@ class NewsController extends Controller
                 'label' => 'Chọn số tầng'
             ))
             ->add('mong', ChoiceType::class, array(
-                'choices'  => array(
+                'choices' => array(
                     'Móng băng' => 2,
                     'Móng đơn' => 3,
                     'Móng cọc (Móng đài)' => 1,
@@ -1256,7 +1261,7 @@ class NewsController extends Controller
                 'label' => 'Chọn loại móng'
             ))
             ->add('mai', ChoiceType::class, array(
-                'choices'  => array(
+                'choices' => array(
                     'Mái BTCT đúc bằng' => 1,
                     'Mái lợp tôn lạnh' => 2,
                     'Mái xà gồ thép lợp ngói' => 3,
@@ -1369,7 +1374,7 @@ class NewsController extends Controller
             } else {
                 $titleMai = "Mái BTCT lợp ngói";
             }
-            
+
             $costs = (object) array(
                 'area' => $area,
                 'floor' => $floor,
@@ -1423,12 +1428,18 @@ class NewsController extends Controller
      * 
      * @param int $postId
      */
-    private function incrementPostViewCount($postId)
+    private function incrementPostViewCount($postId, Request $request)
     {
+        // Skip bots and crawlers to keep view counts accurate
+        $userAgent = $request->headers->get('User-Agent', '');
+        if ($this->isBot($userAgent)) {
+            return;
+        }
+
         try {
             $em = $this->getDoctrine()->getManager();
             $connection = $em->getConnection();
-            
+
             // Direct SQL update for maximum performance
             $connection->executeUpdate(
                 'UPDATE news SET viewCounts = viewCounts + 1 WHERE id = ?',
@@ -1438,5 +1449,48 @@ class NewsController extends Controller
             // Silently fail if view count update fails - don't break page rendering
             // You can log this error if needed: $this->get('logger')->error($e->getMessage());
         }
+    }
+
+    /**
+     * Detect if the request is from a bot/crawler based on User-Agent
+     */
+    private function isBot($userAgent)
+    {
+        $bots = [
+            'googlebot',
+            'bingbot',
+            'yandexbot',
+            'baiduspider',
+            'slurp',
+            'duckduckbot',
+            'facebookexternalhit',
+            'twitterbot',
+            'linkedinbot',
+            'whatsapp',
+            'telegrambot',
+            'zalobot',
+            'semrushbot',
+            'ahrefsbot',
+            'mj12bot',
+            'dotbot',
+            'rogerbot',
+            'screaming frog',
+            'bytespider',
+            'petalbot',
+            'crawl',
+            'spider',
+            'bot/',
+            'bot;',
+        ];
+
+        $userAgent = strtolower($userAgent);
+        foreach ($bots as $bot) {
+            if (strpos($userAgent, $bot) !== false) {
+                return true;
+            }
+        }
+
+        // Empty User-Agent is also likely a bot
+        return empty($userAgent);
     }
 }
