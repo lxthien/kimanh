@@ -72,6 +72,7 @@ twig:
     form_themes:
         - 'form/layout.html.twig'
         - 'form/fields.html.twig'
+        - 'form/hierarchical_category_theme.html.twig'
     paths:
         'web/build': 'web'
 

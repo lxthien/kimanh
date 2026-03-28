@@ -64,10 +64,6 @@ class NewsCategoryType extends AbstractType
                 'empty_data' => '"createdAt":"desc"}',
                 'placeholder' => false
             ])
-            ->add('robots', TextType::class, [
-                'required' => false,
-                'label' => 'Robots',
-            ])
             ->add('pageTitle', TextType::class, [
                 'required' => false,
                 'label' => 'label.pageTitle',
@@ -79,6 +75,10 @@ class NewsCategoryType extends AbstractType
             ->add('pageKeyword', TextType::class, [
                 'required' => false,
                 'label' => 'label.pageKeyword',
+            ])
+            ->add('robots', TextType::class, [
+                'required' => false,
+                'label' => 'Robots',
             ])
             ->add('isPage', CheckboxType::class, [
                 'required' => false,

@@ -83,7 +83,7 @@ class PageType extends AbstractType
             ->add('template', ChoiceType::class, [
                 'required' => false,
                 'label' => 'Template',
-                'choices' => ['Mặc định' => '2_columns', 'Landing page' => '1_column'],
+                'choices' => ['Mặc định' => '2_columns', 'Landing page' => '1_column', 'Dịch vụ' => 'service_page'],
                 'empty_data' => '2_column',
                 'placeholder' => false
             ])

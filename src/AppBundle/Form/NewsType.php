@@ -64,6 +64,17 @@ class NewsType extends AbstractType
                 'class' => 'AppBundle:NewsCategory',
                 'multiple' => true,
                 'expanded' => true,
+                'choice_attr' => function (NewsCategory $category) {
+                    $parentId = $category->getParentcat() instanceof NewsCategory 
+                        ? $category->getParentcat()->getId() 
+                        : null;
+                    
+                    return [
+                        'data-parent-id' => $parentId,
+                        'data-category-id' => $category->getId(),
+                        'class' => 'category-checkbox',
+                    ];
+                },
             ])
             ->add('tags', TagsInputType::class, [
                 'attr' => ['data-role' => 'tagsinput'],
@@ -103,7 +114,7 @@ class NewsType extends AbstractType
             ->add('template', ChoiceType::class, [
                 'required' => false,
                 'label' => 'Template',
-                'choices' => ['Mặc định' => '2_columns', 'Landing page' => '1_column'],
+                'choices' => ['Mặc định' => '2_columns', 'Landing page' => '1_column', 'Dịch vụ' => 'service_page'],
                 'empty_data' => '2_column',
                 'placeholder' => false
             ])

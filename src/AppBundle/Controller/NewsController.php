@@ -1121,6 +1121,11 @@ class NewsController extends Controller
 
         // Breadcrum for page (with parent hierarchy)
         if (!empty($page) && $page->isPage()) {
+            // Add "Dịch vụ" item without link for specific pages
+            if ($page->getTemplate() == "service_page") {
+                $breadcrumbs->addItem("Dịch vụ", $this->generateUrl("homepage") . '#dich-vu');
+            }
+
             // Build the parent chain for the page
             $pageChain = [];
             $currentPage = $page;
