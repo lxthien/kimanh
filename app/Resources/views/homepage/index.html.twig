@@ -122,7 +122,7 @@
             {% else %}
                 {% set linkCat = path('list_category', {'level1': blockOnHomepage.category.getParentcat().getUrl(), 'level2': blockOnHomepage.category.getUrl() }) %}
             {% endif %}
-            <section class="services-block">
+            <section class="services-block" id="{{ blockOnHomepage.category.getUrl() }}">
                 <div class="container">
                     <div class="title-list-news-items">
                         <div class="text-uppercase p-title-news-items">

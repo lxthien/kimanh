@@ -1108,7 +1108,11 @@ class NewsController extends Controller
             if ($category->getParentcat() === 'root') {
                 $breadcrumbs->addItem($category->getName(), $this->generateUrl("news_category", array('level1' => $category->getUrl() )));
             } else {
-                $breadcrumbs->addItem($category->getParentcat()->getName(), $this->generateUrl("news_category", array('level1' => $category->getParentcat()->getUrl() )));
+                if ($category->getParentcat()->getUrl() != "sua-chua-nha-dep") {
+                    $breadcrumbs->addItem($category->getParentcat()->getName(), $this->generateUrl("news_category", array('level1' => $category->getParentcat()->getUrl() )));
+                } else {
+                    $breadcrumbs->addItem("Dịch vụ", $this->generateUrl("homepage") . "#sua-chua-nha-dep");
+                }
                 $breadcrumbs->addItem($category->getName(), $this->generateUrl("list_category", array('level1' => $category->getParentcat()->getUrl(), 'level2' => $category->getUrl() )));
             }
         }
