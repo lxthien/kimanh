@@ -1,0 +1,466 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body_id 'admin_media_index' %}
+
+{% block main %}
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <!-- Storage Bar -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">Dung lượng lưu trữ</h5>
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar" role="progressbar" 
+                                     style="width: {{ storageInfo.percent }}%; background-color: {% if storageInfo.percent > 80 %}#dc3545{% elseif storageInfo.percent > 50 %}#ffc107{% else %}#28a745{% endif %};" 
+                                     aria-valuenow="{{ storageInfo.percent }}" aria-valuemin="0" aria-valuemax="100">
+                                    {{ storageInfo.percent }}%
+                                </div>
+                            </div>
+                            <small class="text-muted">
+                                {{ storageInfo.used_formatted }} / {{ storageInfo.limit_formatted }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Area -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Tải lên hình ảnh</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="upload-area" id="uploadArea" style="border: 2px dashed #007bff; border-radius: 8px; padding: 40px; text-align: center; cursor: pointer; background-color: #f8f9fa; transition: all 0.3s;">
+                                <i class="fa fa-cloud-upload" style="font-size: 48px; color: #007bff;"></i>
+                                <h5 class="mt-2">Kéo thả hình ảnh vào đây hoặc nhấp để chọn</h5>
+                                <small class="text-muted">Hỗ trợ: JPG, PNG, GIF, WebP (Tối đa 10MB)</small>
+                                <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+                            </div>
+                            <div id="uploadProgress" style="margin-top: 20px; display: none;">
+                                <div class="progress" style="height: 20px;">
+                                    <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <small id="uploadStatus" class="text-muted"></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Media Files Grid -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Thư viện hình ảnh <span class="badge badge-primary">{{ totalFiles }}</span></strong>
+                        </div>
+                        <div class="card-body">
+                            {% if files|length > 0 %}
+                                <div class="row" id="mediaGrid">
+                                    {% for file in files %}
+                                        <div class="col-md-3 col-sm-4 col-6 mb-4" data-filename="{{ file.filename }}">
+                                            <div class="media-item" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden; text-align: center; background: #f9f9f9; transition: all 0.3s;">
+                                                <div style="position: relative; overflow: hidden; height: 200px; background: #f0f0f0;">
+                                                    <img src="{{ file.thumb }}" alt="{{ file.filename }}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" data-toggle="modal" data-target="#previewModal{{ loop.index }}" title="Xem trước">
+                                                    <div style="position: absolute; top: 0; right: 0; padding: 5px;">
+                                                        <span class="badge badge-info">{{ file.width }}x{{ file.height }}</span>
+                                                    </div>
+                                                </div>
+                                                <div style="padding: 10px;">
+                                                    <small class="text-muted d-block mb-1" title="{{ file.filename }}">
+                                                        {{ file.filename|slice(0, 20) }}{{ file.filename|length > 20 ? '...' : '' }}
+                                                    </small>
+                                                    <small class="text-muted d-block mb-2">{{ file.size_formatted }} • {{ file.date }}</small>
+                                                    <div class="btn-group btn-group-sm w-100" role="group">
+                                                        <button type="button" class="btn btn-outline-primary btn-copy" data-url="{{ file.url }}" title="Copy URL">
+                                                            <i class="fa fa-copy"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#editModal{{ loop.index }}" title="Chỉnh sửa">
+                                                            <i class="fa fa-edit"></i>
+                                                        </button>
+                                                    <button type="button" class="btn btn-outline-danger" onclick="deleteMedia('{{ file.filename }}')" title="Xóa">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Preview Modal -->
+                                        <div class="modal fade" id="previewModal{{ loop.index }}" tabindex="-1">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">{{ file.filename }}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal">
+                                                            <span>&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <img src="{{ file.url }}" alt="{{ file.filename }}" style="max-width: 100%; max-height: 600px;">
+                                                        <div class="mt-3">
+                                                            <small class="text-muted">{{ file.width }}x{{ file.height }} • {{ file.size_formatted }} • {{ file.date }}</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <input type="text" class="form-control" value="{{ file.url }}" id="urlInput{{ loop.index }}" readonly>
+                                                        <button class="btn btn-primary" onclick="copyToClipboard('#urlInput{{ loop.index }}')">
+                                                            <i class="fa fa-copy"></i> Copy
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Edit Modal -->
+                                        <div class="modal fade" id="editModal{{ loop.index }}" tabindex="-1">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Chỉnh sửa: {{ file.filename }}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal">
+                                                            <span>&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <ul class="nav nav-tabs" role="tablist">
+                                                            <li class="nav-item">
+                                                                <a class="nav-link active" data-toggle="tab" href="#resize{{ loop.index }}">Thay đổi kích thước</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" data-toggle="tab" href="#crop{{ loop.index }}">Cắt ảnh</a>
+                                                            </li>
+                                                        </ul>
+                                                        <div class="tab-content mt-3">
+                                                            <!-- Resize Tab -->
+                                                            <div id="resize{{ loop.index }}" class="tab-pane fade show active">
+                                                                <div class="form-group">
+                                                                    <label>Chiều rộng (pixels)</label>
+                                                                    <input type="number" class="form-control" id="resizeWidth{{ loop.index }}" value="{{ file.width }}">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Chiều cao (pixels)</label>
+                                                                    <input type="number" class="form-control" id="resizeHeight{{ loop.index }}" value="{{ file.height }}">
+                                                                </div>
+                                                                <button class="btn btn-primary" onclick="resizeImage('{{ file.filename }}', '#resizeWidth{{ loop.index }}', '#resizeHeight{{ loop.index }}')">
+                                                                    <i class="fa fa-expand"></i> Thay đổi kích thước
+                                                                </button>
+                                                            </div>
+
+                                                            <!-- Crop Tab -->
+                                                            <div id="crop{{ loop.index }}" class="tab-pane fade">
+                                                                <div class="form-group">
+                                                                    <img src="{{ file.url }}" id="cropImage{{ loop.index }}" style="max-width: 100%; max-height: 400px;">
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <div class="col-md-6 form-group">
+                                                                        <label>X</label>
+                                                                        <input type="number" class="form-control" id="cropX{{ loop.index }}" value="0">
+                                                                    </div>
+                                                                    <div class="col-md-6 form-group">
+                                                                        <label>Y</label>
+                                                                        <input type="number" class="form-control" id="cropY{{ loop.index }}" value="0">
+                                                                    </div>
+                                                                    <div class="col-md-6 form-group">
+                                                                        <label>Chiều rộng</label>
+                                                                        <input type="number" class="form-control" id="cropWidth{{ loop.index }}" value="{{ file.width }}">
+                                                                    </div>
+                                                                    <div class="col-md-6 form-group">
+                                                                        <label>Chiều cao</label>
+                                                                        <input type="number" class="form-control" id="cropHeight{{ loop.index }}" value="{{ file.height }}">
+                                                                    </div>
+                                                                </div>
+                                                                <button class="btn btn-primary" onclick="cropImage('{{ file.filename }}', '#cropX{{ loop.index }}', '#cropY{{ loop.index }}', '#cropWidth{{ loop.index }}', '#cropHeight{{ loop.index }}')">
+                                                                    <i class="fa fa-crop"></i> Cắt ảnh
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                                <!-- Pagination -->
+                                {% if totalPages > 1 %}
+                                    <nav aria-label="Page navigation" class="mt-4">
+                                        <ul class="pagination justify-content-center">
+                                            {% if currentPage > 1 %}
+                                                <li class="page-item">
+                                                    <a class="page-link" href="{{ path('admin_media_index', {page: currentPage - 1}) }}">Trước</a>
+                                                </li>
+                                            {% endif %}
+
+                                            {% for page in 1..totalPages %}
+                                                <li class="page-item {% if page == currentPage %}active{% endif %}">
+                                                    <a class="page-link" href="{{ path('admin_media_index', {page: page}) }}">{{ page }}</a>
+                                                </li>
+                                            {% endfor %}
+
+                                            {% if currentPage < totalPages %}
+                                                <li class="page-item">
+                                                    <a class="page-link" href="{{ path('admin_media_index', {page: currentPage + 1}) }}">Tiếp</a>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </nav>
+                                {% endif %}
+                            {% else %}
+                                <p class="text-center text-muted">Chưa có hình ảnh. Hãy tải lên hình ảnh đầu tiên.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <script>
+        // Upload functionality
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const progressBar = document.getElementById('progressBar');
+        const uploadStatus = document.getElementById('uploadStatus');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = '#e7f3ff';
+            uploadArea.style.borderColor = '#0056b3';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.backgroundColor = '#f8f9fa';
+            uploadArea.style.borderColor = '#007bff';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.backgroundColor = '#f8f9fa';
+            uploadArea.style.borderColor = '#007bff';
+            
+            const files = e.dataTransfer.files;
+            uploadFiles(files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            uploadFiles(e.target.files);
+        });
+
+        function uploadFiles(files) {
+            uploadProgress.style.display = 'block';
+            uploadStatus.textContent = 'Đang tải lên...';
+            let uploaded = 0;
+
+            Array.from(files).forEach((file) => {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                fetch('{{ path("admin_media_upload") }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        uploaded++;
+                        const percent = Math.round((uploaded / files.length) * 100);
+                        progressBar.style.width = percent + '%';
+                        uploadStatus.textContent = `${uploaded}/${files.length} hoàn tất`;
+
+                        if (uploaded === files.length) {
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1000);
+                        }
+                    } else {
+                        uploadStatus.innerHTML += '<div class="alert alert-warning mt-2">' + file.name + ': ' + data.message + '</div>';
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    uploadStatus.innerHTML += '<div class="alert alert-warning mt-2">' + file.name + ': Lỗi tải file</div>';
+                });
+            });
+        }
+
+        function resizeImage(filename, widthSelector, heightSelector) {
+            const width = document.querySelector(widthSelector).value;
+            const height = document.querySelector(heightSelector).value;
+
+            fetch('{{ path("admin_media_resize", {filename: "FILENAME"}) }}'.replace('FILENAME', filename), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    width: width,
+                    height: height
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Thay đổi kích thước thành công');
+                    location.reload();
+                } else {
+                    alert('Lỗi: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Lỗi thay đổi kích thước');
+            });
+        }
+
+        function cropImage(filename, xSelector, ySelector, widthSelector, heightSelector) {
+            const x = parseInt(document.querySelector(xSelector).value);
+            const y = parseInt(document.querySelector(ySelector).value);
+            const width = parseInt(document.querySelector(widthSelector).value);
+            const height = parseInt(document.querySelector(heightSelector).value);
+
+            fetch('{{ path("admin_media_crop", {filename: "FILENAME"}) }}'.replace('FILENAME', filename), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    x: x,
+                    y: y,
+                    width: width,
+                    height: height
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Cắt ảnh thành công');
+                    location.reload();
+                } else {
+                    alert('Lỗi: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Lỗi cắt ảnh');
+            });
+        }
+
+        document.querySelectorAll('.btn-copy').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const url = btn.dataset.url;
+                navigator.clipboard.writeText(url).then(() => {
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fa fa-check"></i>';
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                    }, 2000);
+                });
+            });
+        });
+
+        function copyToClipboard(selector) {
+            const element = document.querySelector(selector);
+            element.select();
+            document.execCommand('copy');
+            alert('Đã copy vào clipboard');
+        }
+        // Delete media with AJAX
+        function deleteMedia(filename) {
+            if (!confirm('Bạn có chắc chắn muốn xóa file này?')) {
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('token', '{{ csrf_token("delete-media") }}');
+
+            fetch('{{ path("admin_media_delete", {filename: "FILENAME"}) }}'.replace('FILENAME', filename), {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Remove the media item from the grid
+                    const mediaItem = document.querySelector(`[data-filename="${filename}"]`);
+                    if (mediaItem) {
+                        mediaItem.style.opacity = '0.5';
+                        setTimeout(() => {
+                            mediaItem.remove();
+                        }, 300);
+                    }
+                    // Show success message
+                    const alert = document.createElement('div');
+                    alert.className = 'alert alert-success alert-dismissible fade show';
+                    alert.innerHTML = `<strong>Thành công!</strong> ${data.message}<button type="button" class="close" data-dismiss="alert">&times;</button>`;
+                    document.body.insertBefore(alert, document.body.firstChild);
+                    setTimeout(() => alert.remove(), 3000);
+                    // Reload page after brief delay to update storage
+                    setTimeout(() => { location.reload(); }, 1500);
+                } else {
+                    alert('Lỗi: ' + (data.message || 'Không thể xóa file'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Lỗi khi xóa file');
+            });
+        }
+    </script>
+
+    <style>
+        .upload-area:hover {
+            border-color: #0056b3;
+            background-color: #e7f3ff;
+        }
+
+        .media-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-group-sm .btn {
+            flex: 1;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+        }
+
+        /* Modal backdrop fix */
+        .modal-backdrop {
+            pointer-events: none !important;
+        }
+
+        .modal {
+            pointer-events: auto !important;
+        }
+
+        .modal-content {
+            pointer-events: auto !important;
+        }
+
+        .modal-dialog {
+            pointer-events: auto !important;
+        }
+
+        /* Remove animation delay that might be causing issues */
+        .animated.fadeIn {
+            animation: none !important;
+        }
+    </style>
+{% endblock %}

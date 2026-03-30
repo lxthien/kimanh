@@ -800,7 +800,9 @@
 }
 
 // Alternating section backgrounds
-.services-block {
+.ka-category-block {
+    padding: 30px 0;
+
     &:nth-child(2n) {
         background-color: $grayBg;
     }
@@ -893,7 +895,7 @@
 }
 
 // Category Tabs - BOLDER ACCENT
-.nav-tabs-sub-cat {
+.ka-header-tabs {
     text-align: center;
     border-bottom: none;
     margin-bottom: 25px;
@@ -952,7 +954,7 @@
 }
 
 // View All Button - MORE PROMINENT
-.view-all-category {
+.ka-view-more {
     margin: 15px 0 35px;
 
     @media only screen and (max-width: 767.98px) {

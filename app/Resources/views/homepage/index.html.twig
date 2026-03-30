@@ -233,7 +233,7 @@
 					<div class="tab-content">
 						{% for listSubTab in blockOnHomepage.listSubTabs %}
 							<div role="tabpanel" class="tab-pane{{ loop.first ? ' active' : '' }}" id="tab_{{ listSubTab.subCategory.getId() }}">
-								<div class="ka-list-items">
+								<div class="ka-article-grid">
 									<div class="row">
 										{% for row in listSubTab.posts %}
 											{% include 'news/components/itemsGridHomepage.html.twig' with {'category': listSubTab.subCategory} %}
@@ -241,13 +241,13 @@
 									</div>
 								</div>
 								<div class="ka-view-more text-center">
-									<a href="{{ path('list_category', {'level1': blockOnHomepage.category.getUrl(), 'level2': listSubTab.subCategory.getUrl() }) }}">{{ listSubTab.subCategory.getName() }}</a>
+									<a href="{{ path('dynamic_category_post', {'level1': blockOnHomepage.category.getUrl(), 'level2': listSubTab.subCategory.getUrl() }) }}">{{ listSubTab.subCategory.getName() }}</a>
 								</div>
 							</div>
 						{% endfor %}
 					</div>
 				{% else %}
-					<div class="ka-list-items">
+					<div class="ka-article-grid">
 						<div class="row">
 							{% for row in blockOnHomepage.posts %}
 								{% include 'news/components/itemsGridHomepage.html.twig' with {'category': blockOnHomepage.category} %}

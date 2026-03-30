@@ -22,15 +22,9 @@
     {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
 {% endif %}
 
-{% block title %}
-    {{ pageTitle }}
-{% endblock %}
-{% block description %}
-    {{ pageDesc }}
-{% endblock %}
-{% block keyword %}
-    {{ post.getPageKeyword() }}
-{% endblock %}
+{% block title %}{{ pageTitle }}{% endblock %}
+{% block description %}{{ pageDesc }}{% endblock %}
+{% block keyword %}{{ post.getPageKeyword() }}{% endblock %}
 
 {% block structuredOpenGraph %}
     <meta property="og:type" content="article">

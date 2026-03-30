@@ -47,7 +47,7 @@
                         <div class="card-body pb-0">
                             <div class="stat-widget-content">
                                 <h4 class="mb-0">
-                                    <span class="count">{{ (totalViews / 1000)|round(1) }}{{ totalViews >= 1000 ? 'K' : '' }}</span>
+                                    <span class="count">{{ totalViews >= 1000 ? (totalViews / 1000)|round(1) ~ 'K' : totalViews }}</span>
                                 </h4>
                                 <p class="text-light">{{ 'Lượt xem'|trans }}</p>
                             </div>
