@@ -173,6 +173,12 @@ class NewsCategory
      */
     private $news;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cardFormat", type="string", length=255, nullable=true)
+     */
+    private $cardFormat = null;
 
     public function __construct()
     {
@@ -416,5 +422,17 @@ class NewsCategory
     public function getSchemaMarkup()
     {
         return $this->schemaMarkup;
+    }
+
+    public function setCardFormat($cardFormat)
+    {
+        $this->cardFormat = $cardFormat;
+
+        return $this;
+    }
+
+    public function getCardFormat()
+    {
+        return $this->cardFormat;
     }
 }

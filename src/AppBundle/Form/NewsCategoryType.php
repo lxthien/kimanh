@@ -56,6 +56,16 @@ class NewsCategoryType extends AbstractType
                 'empty_data' => '"createdAt":"desc"}',
                 'placeholder' => false
             ])
+            ->add('cardFormat', ChoiceType::class, [
+                'required' => false,
+                'label' => 'Định dạng Card (Tỉ lệ ảnh)',
+                'choices' => [
+                    'Ảnh Thường (277x220)' => 'news_277_220',
+                    'Ảnh Dọc (277x350)' => 'news_277_350'
+                ],
+                'empty_data' => 'news_277_220',
+                'placeholder' => false
+            ])
             ->add('pageTitle', TextType::class, [
                 'required' => false,
                 'label' => 'label.pageTitle',

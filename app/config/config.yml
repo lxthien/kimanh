@@ -156,42 +156,10 @@ liip_imagine:
             quality: 75
             filters:
                 thumbnail: { size: [50, 50], mode: outbound }
-        news_thumb:
-            quality: 75
-            filters:
-                thumbnail: { size: [218, 150], mode: outbound }
-        news_70_50:
-            quality: 75
-            filters:
-                thumbnail: { size: [70, 50], mode: outbound }
         news_70_65:
             quality: 75
             filters:
                 thumbnail: { size: [70, 65], mode: outbound }
-        news_382_285:
-            quality: 75
-            filters:
-                thumbnail: { size: [382, 285], mode: outbound }
-        news_564_440:
-            quality: 75
-            filters:
-                thumbnail: { size: [564, 440], mode: outbound }
-        news_494_340:
-            quality: 75
-            filters:
-                thumbnail: { size: [494, 340], mode: outbound }
-        news_440_440:
-            quality: 75
-            filters:
-                thumbnail: { size: [440, 440], mode: outbound }
-        news_406_280:
-            quality: 75
-            filters:
-                thumbnail: { size: [406, 280], mode: outbound }
-        news_406_400:
-            quality: 75
-            filters:
-                thumbnail: { size: [406, 400], mode: outbound }
         news_554_400:
             quality: 75
             filters:
@@ -204,22 +172,26 @@ liip_imagine:
             quality: 75
             filters:
                 thumbnail: { size: [277, 220], mode: outbound }
+        news_277_350:
+            quality: 75
+            filters:
+                thumbnail: { size: [277, 350], mode: outbound }
+        news_345_435:
+            quality: 75
+            filters:
+                thumbnail: { size: [345, 435], mode: outbound }
         news_218_218:
             quality: 75
             filters:
                 thumbnail: { size: [218, 218], mode: outbound }
-        news_share_800_420:
+        news_share_1200_630:
             quality: 75
             filters:
-                thumbnail: { size: [800, 420], mode: outbound }
+                thumbnail: { size: [1200, 630], mode: outbound }
         banner_768_400:
             quality: 100
             filters:
                 thumbnail: { size: [768, 400], mode: outbound }
-        banner_1500_500:
-            quality: 100
-            filters:
-                thumbnail: { size: [1500, 500], mode: outbound }
         banner_1500_550:
             quality: 100
             filters:

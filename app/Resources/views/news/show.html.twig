@@ -13,11 +13,11 @@
 {% set authorUrl = absolute_url(path('author', {'slug': 'nguyenduytuan'})) %}
 
 {% set imagePath = vich_uploader_asset(post, 'imageFile') ?: absolute_url(asset('assets/images/no-image.png')) %}
-{% set imagePathFilter = (vich_uploader_asset(post, 'imageFile') ?: absolute_url(asset('assets/images/no-image.png')))|imagine_filter('news_share_800_420') %}
+{% set imagePathFilter = (vich_uploader_asset(post, 'imageFile') ?: absolute_url(asset('assets/images/no-image.png')))|imagine_filter('news_share_1200_630') %}
 {% set userPath = asset('/assets/images/user.png')|imagine_filter('user') %}
 {% set keywords = post.getPageKeyword() ? post.getPageKeyword()|split(',') : null %}
 {% if not convert_images.fileExists(imagePath) %}
-    {% set imagePath = imagePath|imagine_filter('news_share_800_420') %}
+    {% set imagePath = imagePath|imagine_filter('news_share_1200_630') %}
 {% else %}
     {% set imagePath = convert_images.webpConvert(imagePathFilter, '', true) %}
 {% endif %}
@@ -35,8 +35,8 @@
     <meta property="article:modified_time" content="{{ post.getUpdatedAt()|date("Y-m-d h:m:s") }}+07:00">
     <meta property="og:image" content="{{ absolute_url(imagePathFilter) }}">
     <meta property="og:image:alt" content="{{ post.getTitle() }}">
-    <meta property="og:image:width" content="800">
-    <meta property="og:image:height" content="420">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
 {% endblock %}
 
 {% block twitterImage %}<meta property="twitter:image" content="{{ absolute_url(imagePathFilter) }}">
@@ -127,8 +127,8 @@
                 "@type": "ImageObject",
                 "@id": "{{ absolute_url(imagePathFilter) }}#image",
                 "url": "{{ absolute_url(imagePathFilter) }}",
-                "height": "800",
-                "width": "420"
+                "height": "630",
+                "width": "1200"
             },
             "url": "{{ postUrl }}",
             "wordCount": "{{ wordCount }}",
