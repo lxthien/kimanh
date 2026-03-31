@@ -1108,10 +1108,10 @@ class NewsController extends Controller
             if ($category->getParentcat() === 'root') {
                 $breadcrumbs->addItem($category->getName(), $this->generateUrl("news_category", array('level1' => $category->getUrl() )));
             } else {
-                if ($category->getParentcat()->getUrl() != "sua-chua-nha-dep") {
-                    $breadcrumbs->addItem($category->getParentcat()->getName(), $this->generateUrl("news_category", array('level1' => $category->getParentcat()->getUrl() )));
-                } else {
+                if ($category->getParentcat()->getUrl() == "sua-chua-nha-dep") {
                     $breadcrumbs->addItem("Dịch vụ", $this->generateUrl("homepage") . "#sua-chua-nha-dep");
+                } else {
+                    $breadcrumbs->addItem($category->getParentcat()->getName(), $this->generateUrl("news_category", array('level1' => $category->getParentcat()->getUrl() )));
                 }
                 $breadcrumbs->addItem($category->getName(), $this->generateUrl("list_category", array('level1' => $category->getParentcat()->getUrl(), 'level2' => $category->getUrl() )));
             }
@@ -1144,7 +1144,11 @@ class NewsController extends Controller
                     $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('news_show', array('slug' => $post->getUrl())) );
                 } else {
                     $parentCategory = $category->getParentcat();
-                    $breadcrumbs->addItem($parentCategory->getName(), $this->generateUrl("news_category", array('level1' => $parentCategory->getUrl() )));
+                    if ($parentCategory->getUrl() == "sua-chua-nha-dep") {
+                        $breadcrumbs->addItem("Dịch vụ", $this->generateUrl("homepage") . "#sua-chua-nha-dep");
+                    } else {
+                        $breadcrumbs->addItem($parentCategory->getName(), $this->generateUrl("news_category", array('level1' => $parentCategory->getUrl() )));
+                    }
                     $breadcrumbs->addItem($category->getName(), $this->generateUrl("list_category", array('level1' => $parentCategory->getUrl(), 'level2' => $category->getUrl() )));
                     $breadcrumbs->addItem($post->getTitle(), $this->generateUrl('news_show', array('slug' => $post->getUrl())) );
                 }
