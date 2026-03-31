@@ -309,4 +309,30 @@
 			</div>
 		</div>
 	</section>
+
+	<section class="ka-contact-form-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2">
+					<div class="ka-contact-form-wrapper">
+						<h2 class="text-center text-uppercase ka-section-heading">Nhận tư vấn miễn phí</h2>
+						<p class="text-center ka-section-desc">Chúng tôi sẽ liên hệ lại với bạn trong thời gian sớm nhất</p>
+						
+						{{ form_start(form, {'attr': {'id': 'ka-homepage-contact-form', 'class': 'ka-ajax-form'}}) }}
+							<div class="row">
+								<div class="col-md-6">{{ form_row(form.name) }}</div>
+								<div class="col-md-6">{{ form_row(form.phone) }}</div>
+							</div>
+							{{ form_row(form.email) }}
+							{{ form_row(form.contents) }}
+							<div class="text-center form-submit-group">
+								{{ form_row(form.send) }}
+							</div>
+						{{ form_end(form) }}
+						<div id="ka-contact-form-message" style="display: none; margin-top: 15px;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 </div>{% endblock %}

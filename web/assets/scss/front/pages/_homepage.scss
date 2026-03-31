@@ -988,3 +988,114 @@
         }
     }
 }
+
+// Contact Form Section
+.ka-contact-form-section {
+    padding: 40px 0;
+    background: $white;
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("../../../images/background-contact-us.jpg") center/cover no-repeat fixed;
+        opacity: 0.15;
+        z-index: 0;
+    }
+
+    .container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .ka-section-heading {
+        color: $primaryColor;
+        margin-bottom: 10px;
+    }
+
+    .ka-section-desc {
+        color: $textSecondary;
+        font-size: 16px;
+        margin-bottom: 40px;
+    }
+
+    .ka-contact-form-wrapper {
+        background: $white;
+        border-radius: $radiusLg;
+        padding: 20px 40px;
+        box-shadow: 0 10px 40px rgba($primaryColor, 0.08);
+        border: 1px solid rgba($primaryColor, 0.05);
+
+        @media only screen and (max-width: 768px) {
+            padding: 25px 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+
+            label {
+                font-weight: 600;
+                color: $primaryColor;
+                margin-bottom: 8px;
+                display: block;
+            }
+
+            .form-control {
+                border-radius: $radiusMd;
+                border: 2px solid #eaeaea;
+                padding: 12px 15px;
+                height: auto;
+                box-shadow: none;
+                transition: $transitionFast;
+                font-size: 15px;
+
+                &:focus {
+                    border-color: $accentColor;
+                    box-shadow: 0 0 0 3px rgba($accentColor, 0.1);
+                }
+            }
+
+            textarea.form-control {
+                resize: vertical;
+                min-height: 120px;
+            }
+        }
+
+        .form-submit-group {
+            margin-top: 30px;
+            text-align: center;
+
+            button.ka-btn {
+                background: $gradientAccent;
+                border: none;
+                padding: 14px 40px;
+                border-radius: $radiusXl;
+                color: $white;
+                font-family: $robotoCondesed;
+                font-size: 18px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                transition: $transitionBase;
+                min-width: 200px;
+                box-shadow: 0 5px 15px rgba($accentColor, 0.3);
+
+                &:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 8px 25px rgba($accentColor, 0.4);
+                }
+
+                &:disabled {
+                    background: #cccccc;
+                    transform: none;
+                    box-shadow: none;
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+}

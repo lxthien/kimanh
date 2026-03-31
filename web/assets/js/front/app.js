@@ -7,12 +7,14 @@ require('bootstrap-sass');
 var news = require('./pages/news');
 var global = require('./global/global');
 var videoPopup = require('./video_popup');
+var homepageContact = require('./pages/homepage_contact');
 
 var app = {
     init: function () {
         news.init();
         global.init();
         videoPopup.init();
+        homepageContact.init();
     }
 };
 

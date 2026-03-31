@@ -29,17 +29,9 @@ class NewsCategoryType extends AbstractType
                 'attr' => ['class' => 'sluggable'],
                 'label' => 'label.name',
             ])
-            ->add('titleLandingPage', TextType::class, [
-                'required' => false,
-                'label' => 'Tiêu đề trang Landing',
-            ])
             ->add('url', TextType::class, [
                 'attr' => ['class' => 'url', 'readonly' => 'readonly'],
                 'label' => 'label.url',
-            ])
-            ->add('urlReplace', TextType::class, [
-                'required' => false,
-                'label' => 'URL thay thế',
             ])
             ->add('description', TextareaType::class, [
                 'attr' => ['class' => 'txt-ckeditor', 'data-height' => '200'],
@@ -79,10 +71,6 @@ class NewsCategoryType extends AbstractType
             ->add('robots', TextType::class, [
                 'required' => false,
                 'label' => 'Robots',
-            ])
-            ->add('isPage', CheckboxType::class, [
-                'required' => false,
-                'label' => 'Trang tĩnh?',
             ])
             ->add('schemaMarkup', TextareaType::class, [
                 'attr' => ['rows' => '10'],

@@ -8,6 +8,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Entity\News;
+use AppBundle\Entity\Contact;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class HomepageController extends Controller
 {
@@ -91,10 +96,24 @@ class HomepageController extends Controller
             }
         }
 
+        $contact = new Contact();
+        $form = $this->createFormBuilder($contact)
+            ->setAction($this->generateUrl('contact_ajax'))
+            ->add('name', TextType::class, array('label' => 'label.author', 'attr' => array('placeholder' => 'Họ và tên *')))
+            ->add('phone', TextType::class, array('label' => 'label.phone', 'attr' => array('placeholder' => 'Số điện thoại *')))
+            ->add('email', EmailType::class, array('label' => 'label.author_email', 'attr' => array('placeholder' => 'Email (không bắt buộc)'), 'required' => false))
+            ->add('contents', TextareaType::class, array(
+                'label' => 'label.content',
+                'attr' => array('rows' => '4', 'placeholder' => 'Nội dung yêu cầu tư vấn *')
+            ))
+            ->add('send', SubmitType::class, array('label' => 'Gửi yêu cầu', 'attr' => array('class' => 'btn btn-primary ka-btn')))
+            ->getForm();
+
         return $this->render('homepage/index.html.twig', [
             'blocksOnHomepage' => $blocksOnHomepage,
             'blockPricesOnHomepage' => $blockPricesOnHomepage,
-            'showSlide' => true
+            'showSlide' => true,
+            'form' => $form->createView()
         ]);
     }
 }

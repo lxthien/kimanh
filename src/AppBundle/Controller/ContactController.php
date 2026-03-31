@@ -12,9 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
-
-use AppBundle\Entity\Contact;
+use Symfony\Component\HttpFoundation\JsonResponse;use AppBundle\Entity\Contact;
 use AppBundle\Entity\News;
 
 class ContactController extends Controller
@@ -27,15 +25,14 @@ class ContactController extends Controller
         $contact = new Contact();
         
         $form = $this->createFormBuilder($contact)
-            ->add('name', TextType::class, array('label' => 'label.author'))
-            ->add('email', EmailType::class, array('label' => 'label.author_email'))
-            ->add('phone', TextType::class, array('label' => 'label.phone'))
+            ->add('name', TextType::class, array('label' => 'Họ và tên *'))
+            ->add('phone', TextType::class, array('label' => 'Số điện thoại *'))
+            ->add('email', EmailType::class, array('label' => 'Email (không bắt buộc)', 'required' => false))
             ->add('contents', TextareaType::class, array(
-                'label' => 'label.content',
+                'label' => 'Nội dung yêu cầu tư vấn *',
                 'attr' => array('rows' => '7')
             ))
-            ->add('recaptcha', EWZRecaptchaType::class)
-            ->add('send', SubmitType::class, array('label' => 'label.send', 'attr' => array('class' => 'btn btn-primary')))
+            ->add('send', SubmitType::class, array('label' => 'Gửi yêu cầu tư vấn', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
 
         $form->handleRequest($request);
@@ -99,5 +96,63 @@ class ContactController extends Controller
             'form' => $form->createView(),
             'post' => $post
         ]);
+    }
+
+    /**
+     * @Route("lien-he-ajax/", name="contact_ajax")
+     */
+    public function ajaxAction(Request $request, \Swift_Mailer $mailer)
+    {
+        $contact = new Contact();
+        
+        $form = $this->createFormBuilder($contact)
+            ->add('name', TextType::class, array('label' => 'label.author'))
+            ->add('email', EmailType::class, array('label' => 'label.author_email'))
+            ->add('phone', TextType::class, array('label' => 'label.phone'))
+            ->add('contents', TextareaType::class, array(
+                'label' => 'label.content',
+                'attr' => array('rows' => '7')
+            ))
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($contact);
+            $em->flush();
+            
+            if (null === $contact->getId()) {
+                return new JsonResponse(['success' => false, 'message' => $this->get('translator')->trans('contact.message.error')]);
+            } else {
+                $message = \Swift_Message::newInstance()
+                        ->setSubject($this->get('translator')->trans('contact.email.title', ['%siteName%' => $this->get('settings_manager')->get('siteName')]))
+                        ->setFrom(['hotro.xaydungminhduy@gmail.com' => $this->get('settings_manager')->get('siteName')])
+                        ->setTo($this->get('settings_manager')->get('emailContact'))
+                        ->setBody(
+                            $this->renderView(
+                                'Emails/contact.html.twig',
+                                array(
+                                    'name' => $form->get('name')->getData(),
+                                    'phone' => $form->get('phone')->getData(),
+                                    'email' => $form->get('email')->getData(),
+                                    'body' => $form->get('contents')->getData()
+                                )
+                            ),
+                            'text/html'
+                        );
+
+                $mailer->send($message);
+
+                return new JsonResponse(['success' => true, 'message' => $this->get('translator')->trans('contact.message.success')]);
+            }
+        }
+
+        $errors = [];
+        foreach ($form->getErrors(true) as $error) {
+            $errors[] = $error->getMessage();
+        }
+
+        return new JsonResponse(['success' => false, 'message' => implode(', ', $errors) ?: 'Form không hợp lệ. Vui lòng kiểm tra lại.']);
     }
 }

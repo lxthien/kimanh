@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
 
 /**
  * Contact
@@ -42,14 +41,14 @@ class Contact
     /**
      * @var string
      *
-     * @ORM\Column(name="phone", type="string", length=255, nullable=true)
+     * @ORM\Column(name="phone", type="string", length=255)
      */
     private $phone;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255)
+     * @ORM\Column(name="email", type="string", length=255, nullable=true)
      */
     private $email;
 
@@ -76,10 +75,6 @@ class Contact
      */
     private $updatedAt;
 
-    /**
-     * @Recaptcha\IsTrue
-     */
-    public $recaptcha;
 
     /**
      * Get id
