@@ -143,8 +143,33 @@ class NewsController extends Controller
                     $news->setCreatedAt(new \DateTime());
                 }
 
+                // Handle postType change logic
+                $originalPostType = isset($originalData['postType']) ? $originalData['postType'] : 'post';
+                $newPostType = $news->getPostType();
+
+                // From post to page
+                if ($originalPostType === 'post' && $newPostType === 'page') {
+                    // Remove relationships with categories and tags
+                    $news->getCategory()->clear();
+                    $news->getTags()->clear();
+                    // Ensure parent is null for new pages
+                    $news->setParent(null);
+                }
+                // From page to post
+                elseif ($originalPostType === 'page' && $newPostType === 'post') {
+                    // Remove parent relationship
+                    $news->setParent(null);
+                }
+
                 $em->flush();
                 $this->addFlash('success', 'action.updated_successfully');
+
+                // If postType changed to page, redirect to page edit
+                if ($originalPostType === 'post' && $newPostType === 'page') {
+                    return $this->redirectToRoute('admin_page_edit', array(
+                        'id' => $news->getId()
+                    ));
+                }
 
                 return $this->redirectToRoute('admin_news_edit', array(
                     'id' => $news->getId()

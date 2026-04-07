@@ -14,6 +14,7 @@ CKEDITOR.editorConfig = function( config ) {
     config.tabSpaces = 0;
     config.fillEmptyBlocks = false;
     config.extraPlugins = "toc";
+    config.extraAllowedContent = 'img[data-fancybox,data-caption]; a[data-fancybox,data-caption]';
     config.toolbar_MyEditor =
     [
         { name: 'document', items : [ 'Source','-','Save','NewPage','DocProps','Preview','Print','-','Templates' ] },

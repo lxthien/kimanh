@@ -13,12 +13,22 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class NewsType extends AbstractType
 {
+    private $authorizationChecker;
+
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
+    {
+        $this->authorizationChecker = $authorizationChecker;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -97,6 +107,17 @@ class NewsType extends AbstractType
                 'required' => false,
                 'label' => 'Robots',
             ])
+            ->add('postType', ChoiceType::class, [
+                'required' => false,
+                'label' => 'Type',
+                'choices' => [
+                    'Post' => 'post',
+                    'Page' => 'page',
+                ],
+                'placeholder' => false,
+                'empty_data' => 'post',
+                'attr' => ['class' => 'postType-select'],
+            ])
             ->add('relatedNews', TextType::class, [
                 'required' => false,
                 'label' => 'label.relatedNews',
@@ -118,7 +139,14 @@ class NewsType extends AbstractType
                 'empty_data' => '2_column',
                 'placeholder' => false
             ])
-        ;
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $form = $event->getForm();
+                
+                // Remove postType field for non-admin users
+                if (!$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
+                    $form->remove('postType');
+                }
+            });
     }
 
     /**

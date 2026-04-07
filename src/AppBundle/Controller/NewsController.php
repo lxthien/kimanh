@@ -938,10 +938,8 @@ class NewsController extends Controller
                     OR p.pageDescription LIKE :q 
                     OR p.pageKeyword LIKE :q')
             ->andWhere('p.enable = :enable')
-            ->andWhere('p.postType = :postType')
             ->setParameter('q', $searchPattern)
             ->setParameter('enable', 1)
-            ->setParameter('postType', 'post')
             ->orderBy('p.createdAt', 'DESC')
             ->getQuery();
 
@@ -1122,9 +1120,9 @@ class NewsController extends Controller
         // Breadcrum for page (with parent hierarchy)
         if (!empty($page) && $page->isPage()) {
             // Add "Dịch vụ" item without link for specific pages
-            if ($page->getTemplate() == "service_page") {
+            /* if ($page->getTemplate() == "service_page") {
                 $breadcrumbs->addItem("Dịch vụ", $this->generateUrl("homepage") . '#dich-vu');
-            }
+            } */
 
             // Build the parent chain for the page
             $pageChain = [];
@@ -1141,6 +1139,11 @@ class NewsController extends Controller
 
             // Add each page in the chain to breadcrumbs
             foreach ($pageChain as $index => $p) {
+                // Add "Dịch vụ" item without link for specific pages
+                if ($index === 0 && $p->getTemplate() == "service_page") {
+                    $breadcrumbs->addItem("Dịch vụ", $this->generateUrl("homepage") . '#dich-vu');
+                }
+
                 // Use breadcrumb_title if available (shorter label), otherwise use title
                 $breadcrumbLabel = method_exists($p, 'getBreadcrumbTitle') && !empty($p->getBreadcrumbTitle())
                     ? $p->getBreadcrumbTitle()

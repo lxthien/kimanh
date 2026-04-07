@@ -53,21 +53,40 @@ class PageController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $unitOfWork = $em->getUnitOfWork();
+                $originalData = $unitOfWork->getOriginalEntityData($news);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($news);
-            $em->flush();
+                // Update createdAt if enable changed from false to true
+                if (isset($originalData['enable']) && !$originalData['enable'] && $news->getEnable()) {
+                    $news->setCreatedAt(new \DateTime());
+                }
 
-            $this->addFlash('success', 'action.created_successfully');
+                $em->persist($news);
+                $em->flush();
 
-            if ($form->get('saveAndCreateNew')->isClicked()) {
-                return $this->redirectToRoute('admin_page_new');
+                $this->addFlash('success', 'action.created_successfully');
+
+                if ($form->get('saveAndCreateNew')->isClicked()) {
+                    return $this->redirectToRoute('admin_page_new');
+                }
+
+                return $this->redirectToRoute('admin_page_edit', array(
+                    'id' => $news->getId()
+                ));
+            } catch (\DBALException $e) {
+                $message = sprintf('DBALException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\PDOException $e) {
+                $message = sprintf('PDOException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\ORMException $e) {
+                $message = sprintf('ORMException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (\Exception $e) {
+                $message = sprintf('Exception [%i]: %s', $e->getCode(), $e->getMessage());
             }
-
-            return $this->redirectToRoute('admin_page_edit', array(
-                'id' => $news->getId()
-            ));
         }
+
+        $this->addFlash('error', $message);
 
         return $this->render('admin/page/new.html.twig', [
             'object' => $news,
@@ -97,8 +116,33 @@ class PageController extends Controller
                     $news->setCreatedAt(new \DateTime());
                 }
 
+                // Handle postType change logic
+                $originalPostType = isset($originalData['postType']) ? $originalData['postType'] : 'page';
+                $newPostType = $news->getPostType();
+
+                // From page to post
+                if ($originalPostType === 'page' && $newPostType === 'post') {
+                    // Remove parent relationship
+                    $news->setParent(null);
+                }
+                // From post to page
+                elseif ($originalPostType === 'post' && $newPostType === 'page') {
+                    // Remove relationships with categories and tags
+                    $news->getCategory()->clear();
+                    $news->getTags()->clear();
+                    // Ensure parent is null for pages
+                    $news->setParent(null);
+                }
+
                 $em->flush();
                 $this->addFlash('success', 'action.updated_successfully');
+
+                // If postType changed to post, redirect to news edit
+                if ($originalPostType === 'page' && $newPostType === 'post') {
+                    return $this->redirectToRoute('admin_news_edit', array(
+                        'id' => $news->getId()
+                    ));
+                }
 
                 return $this->redirectToRoute('admin_page_edit', array(
                     'id' => $news->getId()
