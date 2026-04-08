@@ -1,5 +1,4 @@
 import 'typeahead.js';
-import Bloodhound from "bloodhound-js";
 import 'bootstrap-tagsinput';
 
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal.js';
@@ -87,11 +86,12 @@ $(function() {
      * Update object when change the enable button toggle
      **/
     function initEnableToggleButton() {
-        $('.switch-input').on('change', function() {
-            let isChecked = $(this).prop('checked');
+        $(document).on('change', '.switch-input[data-action]', function() {
+            let $input = $(this);
+            let isChecked = $input.prop('checked');
             isChecked = isChecked ? 1 : 0;
-            let id = $(this).data('id');
-            let url = $(this).data('action');
+            let id = $input.data('id');
+            let url = $input.data('action');
             
             $.ajax({
                 type: "POST",
@@ -105,9 +105,8 @@ $(function() {
     }
 
     // Bootstrap-tagsinput initialization
-    // http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/examples/
     var $input = $('input[data-toggle="tagsinput"]');
-    if ($input.length) {
+    if ($input.length && typeof Bloodhound !== 'undefined') {
         var source = new Bloodhound({
             local: $input.data('tags'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,

@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller used to manage post contents in the backend.
@@ -30,12 +31,22 @@ class NewsController extends Controller
      * @Route("/", name="admin_news_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $news = $em->getRepository(News::class)->findAllPosts();
+        $repository = $em->getRepository(News::class);
+        $searchQuery = trim((string) $request->query->get('q', ''));
 
-        return $this->render('admin/news/index.html.twig', ['objects' => $news]);
+        if ($searchQuery !== '') {
+            $news = $repository->searchPosts($searchQuery);
+        } else {
+            $news = $repository->findAllPosts();
+        }
+
+        return $this->render('admin/news/index.html.twig', [
+            'objects' => $news,
+            'search_query' => $searchQuery,
+        ]);
     }
 
     /**
@@ -47,17 +58,27 @@ class NewsController extends Controller
     public function listAction(Request $request, $categoryId)
     {
         $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository(News::class);
+        $searchQuery = trim((string) $request->query->get('q', ''));
 
-        $news = $em->getRepository(News::class)
-            ->createQueryBuilder('n')
-            ->leftJoin('n.category', 'c')
-            ->where('c.id = :categoryId')
-            ->setParameter('categoryId', $categoryId)
-            ->orderBy('n.createdAt', 'DESC')
-            ->getQuery()
-            ->getResult();
+        if ($searchQuery !== '') {
+            $news = $repository->searchPosts($searchQuery, $categoryId);
+        } else {
+            $news = $repository
+                ->createQueryBuilder('n')
+                ->leftJoin('n.category', 'c')
+                ->where('c.id = :categoryId')
+                ->setParameter('categoryId', $categoryId)
+                ->orderBy('n.createdAt', 'DESC')
+                ->getQuery()
+                ->getResult();
+        }
 
-        return $this->render('admin/news/list.html.twig', ['objects' => $news]);
+        return $this->render('admin/news/list.html.twig', [
+            'objects' => $news,
+            'search_query' => $searchQuery,
+            'category_id' => $categoryId,
+        ]);
     }
 
     

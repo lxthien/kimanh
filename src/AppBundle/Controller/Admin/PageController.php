@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -27,12 +28,29 @@ class PageController extends Controller
      * @Route("/", name="admin_page_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $pages = $em->getRepository(News::class)->findPagesAsTree();
+        $repository = $em->getRepository(News::class);
+        $searchQuery = trim((string) $request->query->get('q', ''));
 
-        return $this->render('admin/page/index.html.twig', ['pages' => $pages]);
+        if ($searchQuery !== '') {
+            $pages = $repository->searchPages($searchQuery);
+            $pageLevels = [];
+
+            foreach ($pages as $page) {
+                $pageLevels[$page->getId()] = $this->getPageLevel($page);
+            }
+        } else {
+            $pages = $repository->findPagesAsTree();
+            $pageLevels = [];
+        }
+
+        return $this->render('admin/page/index.html.twig', [
+            'pages' => $pages,
+            'page_levels' => $pageLevels,
+            'search_query' => $searchQuery,
+        ]);
     }
 
     /**
@@ -48,6 +66,7 @@ class PageController extends Controller
         $news->setPostType('page');
 
         $form = $this->createForm(PageType::class, $news)
+            ->add('save', SubmitType::class)
             ->add('saveAndCreateNew', SubmitType::class);
 
         $form->handleRequest($request);
@@ -84,9 +103,9 @@ class PageController extends Controller
             } catch (\Exception $e) {
                 $message = sprintf('Exception [%i]: %s', $e->getCode(), $e->getMessage());
             }
-        }
 
-        $this->addFlash('error', $message);
+            $this->addFlash('error', $message);
+        }
 
         return $this->render('admin/page/new.html.twig', [
             'object' => $news,
@@ -189,5 +208,43 @@ class PageController extends Controller
         $this->addFlash('success', 'action.deleted_successfully');
 
         return $this->redirectToRoute('admin_page_index');
+    }
+
+    /**
+     * @Route("/disable", name="admin_page_disable")
+     * @Method("POST")
+     */
+    public function disableAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $page = $this->getDoctrine()->getRepository(News::class)->find($request->request->get('newsId'));
+
+        if ($page && $page->getPostType() === 'page') {
+            $page->setEnable((bool) $request->request->get('enable'));
+            $em->persist($page);
+            $em->flush();
+        }
+
+        return new Response(
+            json_encode(
+                array(
+                    'status' => 'success',
+                    'message' => 'Thao tác thành công'
+                )
+            )
+        );
+    }
+
+    private function getPageLevel(News $page)
+    {
+        $level = 0;
+        $currentParent = $page->getParent();
+
+        while (null !== $currentParent) {
+            ++$level;
+            $currentParent = $currentParent->getParent();
+        }
+
+        return $level;
     }
 }

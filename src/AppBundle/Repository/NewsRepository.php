@@ -41,4 +41,51 @@ class NewsRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter('postType', "page")
             ->getResult();
     }
+
+    public function searchPages($query)
+    {
+        return $this->createQueryBuilder('n')
+            ->where('n.postType = :postType')
+            ->andWhere(
+                'n.title LIKE :query
+                OR n.url LIKE :query
+                OR n.description LIKE :query
+                OR n.contents LIKE :query
+                OR n.pageTitle LIKE :query
+                OR n.pageDescription LIKE :query
+                OR n.pageKeyword LIKE :query'
+            )
+            ->setParameter('postType', 'page')
+            ->setParameter('query', '%'.$query.'%')
+            ->orderBy('n.title', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function searchPosts($query, $categoryId = null)
+    {
+        $qb = $this->createQueryBuilder('n')
+            ->where('n.postType = :postType')
+            ->andWhere(
+                'n.title LIKE :query
+                OR n.url LIKE :query
+                OR n.description LIKE :query
+                OR n.contents LIKE :query
+                OR n.pageTitle LIKE :query
+                OR n.pageDescription LIKE :query
+                OR n.pageKeyword LIKE :query'
+            )
+            ->setParameter('postType', 'post')
+            ->setParameter('query', '%'.$query.'%')
+            ->orderBy('n.createdAt', 'DESC');
+
+        if (null !== $categoryId) {
+            $qb
+                ->leftJoin('n.category', 'c')
+                ->andWhere('c.id = :categoryId')
+                ->setParameter('categoryId', $categoryId);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

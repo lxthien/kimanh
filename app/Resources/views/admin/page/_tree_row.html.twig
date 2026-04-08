@@ -5,16 +5,45 @@
         </div>
     </td>
     <td>
-        <span style="margin-left: {{ level * 30 }}px;">
+        <span>
+            {% if level > 0 %}
+                <span class="text-muted">
+                    {% for i in 1..level %}------ {% endfor %}
+                </span>
+            {% endif %}
             {% if page.getChildren().count() > 0 %}
                 <i class="fa fa-folder text-primary"></i>
             {% else %}
                 <i class="fa fa-file-text text-gray"></i>
             {% endif %}
             <a class="btn-link" href="{{ path('admin_page_edit', {id: page.id}) }}">{{ page.getTitle() }}</a>
+
+            {% if page.getChildren().count() > 0 %}
+                <span class="badge badge-primary ml-1">Trang cha</span>
+            {% elseif page.getParent() %}
+                <span class="badge badge-info ml-1">Trang con</span>
+            {% else %}
+                <span class="badge badge-light ml-1">Độc lập</span>
+            {% endif %}
+
+            <small class="d-block text-muted" style="margin-left: {{ level > 0 ? (level * 28) : 0 }}px;">
+                URL: {{ page.getUrl() }}
+            </small>
         </span>
     </td>
-    <td>{{ page.getParent() ? page.getParent().getTitle() : '-' }}</td>
+    <td>
+        <label class="switch switch-text switch-primary switch-pill mb-0">
+            <input
+                type="checkbox"
+                class="switch-input"
+                {{ page.getEnable() ? 'checked="true"' : '' }}
+                data-id="{{ page.getId() }}"
+                data-action="{{ path('admin_page_disable') }}"
+            >
+            <span data-on="On" data-off="Off" class="switch-label"></span>
+            <span class="switch-handle"></span>
+        </label>
+    </td>
     <td>{{ page.getCreatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
     <td>{{ page.getUpdatedAt() | localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
     <td>
@@ -28,6 +57,8 @@
     </td>
 </tr>
 
-{% for child in page.getChildren() %}
-    {{ include('admin/page/_tree_row.html.twig', {'page': child, 'level': level + 1}, with_context = false) }}
-{% endfor %}
+{% if render_children|default(true) %}
+    {% for child in page.getChildren() %}
+        {{ include('admin/page/_tree_row.html.twig', {'page': child, 'level': level + 1, 'render_children': true}, with_context = false) }}
+    {% endfor %}
+{% endif %}

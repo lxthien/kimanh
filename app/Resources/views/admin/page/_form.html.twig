@@ -1,9 +1,29 @@
 {{ form_start(form, {attr: attr|default({})}) }}
-    {{ form_widget(form) }}
+    {{ form_row(form.parent) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.url) }}
+    {{ form_row(form.enable) }}
+    {{ form_row(form.imageFile) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.contents) }}
 
-    <button type="submit" class="{{ button_css|default("btn btn-primary") }}">
-        <i class="fa fa-save" aria-hidden="true"></i> {{ button_label|default('label.create_post'|trans) }}
-    </button>
+    {{ form_row(form.pageTitle) }}
+    {{ form_row(form.pageDescription) }}
+    {{ form_row(form.pageKeyword) }}
+    {{ form_row(form.robots) }}
+    {{ form_row(form.postType) }}
+    {{ form_row(form.breadcrumbTitle) }}
+    {{ form_row(form.template) }}
+
+    {% if form.save is defined %}
+        {{ form_widget(form.save, {label: 'action.create_post', attr: {class: 'btn btn-primary'}}) }}
+    {% endif %}
+
+    {% if form.saveAndCreateNew is defined %}
+        {{ form_widget(form.saveAndCreateNew, {label: 'label.save_and_create_new', attr: {class: 'btn btn-primary'}}) }}
+    {% endif %}
+
+    {{ form_rest(form) }}
 
     {% if include_back_to_home_link|default(false) %}
         <a href="{{ path('admin_page_index') }}" class="btn btn-link">

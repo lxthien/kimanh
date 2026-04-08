@@ -1,6 +1,7 @@
 (function ($) {
     $('#bootstrap-data-table').DataTable({
         order: [],
+        searching: false,
         lengthMenu: [[50, 100, 150, -1], [50, 100, 150, "All"]],
         language: {
             url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Vietnamese.json'

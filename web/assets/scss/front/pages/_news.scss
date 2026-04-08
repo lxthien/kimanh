@@ -440,8 +440,12 @@
             p {
                 position: relative;
                 z-index: 1;
-                margin-bottom: 0;
+                margin-bottom: 8px;
                 font-style: normal;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
 
                 a {
                     color: $accentColor;
