@@ -63,3 +63,12 @@ services:
     convertImages:
         alias: AppBundle\Utils\ConvertImages
         public: true
+
+    app.menu_service:
+        class: AppBundle\Service\MenuService
+        arguments: ['@doctrine.orm.entity_manager']
+
+    AppBundle\Twig\MenuExtension:
+        arguments: ['@app.menu_service']
+        tags:
+            - { name: twig.extension }

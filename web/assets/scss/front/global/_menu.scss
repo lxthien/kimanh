@@ -74,7 +74,14 @@
                     }
                 }
 
+                ul {
+                    list-style: none;
+                    padding-left: 0;
+                    margin: 0;
+                }
+
                 ul li {
+                    list-style: none;
                     margin-bottom: 0px;
                     position: relative;
 
@@ -135,6 +142,17 @@
 
                         i {
                             margin-right: 0;
+                        }
+
+                        &.home {
+                            font-size: 18px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+
+                        .hidden {
+                            display: none;
                         }
                     }
 

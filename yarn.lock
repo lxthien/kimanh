@@ -3463,7 +3463,7 @@ jquery-validation@^1.19.0:
   dependencies:
     jquery "^1.7 || ^2.0 || ^3.1"
 
-"jquery@^1.7 || ^2.0 || ^3.1", jquery@^3.3.1, jquery@>=1.7, "jquery@>=1.9.0 <4.0.0":
+"jquery@^1.7 || ^2.0 || ^3.1", jquery@^3.3.1, jquery@>=1.7, jquery@>=1.7.2, "jquery@>=1.9.0 <4.0.0":
   version "3.3.1"
   resolved "https://registry.npmjs.org/jquery/-/jquery-3.3.1.tgz"
   integrity sha512-Ubldcmxp5np52/ENotGxlLe6aGMvmF4R8S6tZjsP6Knsaxd/xp3Zrh50cG93lR6nPXyUFwzN3ZSOQI0wRJNdGg==
@@ -4292,6 +4292,13 @@ neo-async@^2.5.0:
   version "2.6.0"
   resolved "https://registry.npmjs.org/neo-async/-/neo-async-2.6.0.tgz"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
+
+nestable2@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.npmjs.org/nestable2/-/nestable2-1.6.0.tgz"
+  integrity sha512-/jBy2FhAqik/yV1fYDqbP3OvGLb/wpjweg91UTzIREI+69hbqkKjJ9L+/FSBejYM0WMhvd2Q2p0+8XXetv0egA==
+  dependencies:
+    jquery ">=1.7.2"
 
 node-forge@0.7.5:
   version "0.7.5"

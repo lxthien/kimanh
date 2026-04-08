@@ -15,7 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * News
  *
- * @ORM\Table(name="news", options={"collate"="utf8_general_ci"})
+ * @ORM\Table(name="news", options={"charset"="utf8mb4", "collate"="utf8mb4_unicode_ci"})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\NewsRepository")
  * @UniqueEntity("url")
  * @Vich\Uploadable
@@ -81,7 +81,7 @@ class News
      * @var text
      *
      * @Assert\NotBlank()
-     * @ORM\Column(name="contents", type="text")
+     * @ORM\Column(name="contents", type="text", columnDefinition="LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL")
      */
     private $contents;
 
