@@ -4,8 +4,10 @@ namespace AppBundle\Twig;
 
 use AppBundle\Service\MenuService;
 use AppBundle\Entity\Menu;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class MenuExtension extends \Twig_Extension
+class MenuExtension extends AbstractExtension
 {
     private $menuService;
 
@@ -17,8 +19,8 @@ class MenuExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('render_menu', [$this, 'renderMenu'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('get_menu', [$this, 'getMenu']),
+            new TwigFunction('render_menu', [$this, 'renderMenu'], ['is_safe' => ['html']]),
+            new TwigFunction('get_menu', [$this, 'getMenu']),
         ];
     }
 
@@ -51,8 +53,4 @@ class MenuExtension extends \Twig_Extension
         return $this->menuService->getMenuByName($menuName);
     }
 
-    public function getName()
-    {
-        return 'menu_extension';
-    }
 }

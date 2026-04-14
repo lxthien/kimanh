@@ -121,7 +121,8 @@ class PageController extends Controller
      */
     public function editAction(Request $request, News $news, Slugger $slugger)
     {
-        $form = $this->createForm(PageType::class, $news);
+        $form = $this->createForm(PageType::class, $news)
+            ->add('save', SubmitType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -1,9 +1,23 @@
 {{ form_start(form, {attr: attr|default({})}) }}
-    {{ form_widget(form) }}
+    {% for child in form %}
+        {% if child.vars.name not in ['save', 'saveAndCreateNew'] %}
+            {{ form_row(child) }}
+        {% endif %}
+    {% endfor %}
 
-    <button type="submit" class="{{ button_css|default("btn btn-primary") }}">
-        <i class="fa fa-save" aria-hidden="true"></i> {{ button_label|default('label.create_post'|trans) }}
-    </button>
+    {% if form.save is defined %}
+        {{ form_widget(form.save, {label: button_label|default('label.create_post'|trans), attr: {class: button_css|default("btn btn-primary")}}) }}
+    {% else %}
+        <button type="submit" class="{{ button_css|default("btn btn-primary") }}">
+            <i class="fa fa-save" aria-hidden="true"></i> {{ button_label|default('label.create_post'|trans) }}
+        </button>
+    {% endif %}
+
+    {% if form.saveAndCreateNew is defined %}
+        {{ form_widget(form.saveAndCreateNew, {label: 'label.save_and_create_new', attr: {class: button_css|default("btn btn-primary")}}) }}
+    {% endif %}
+
+    {{ form_rest(form) }}
 
     {% if include_back_to_home_link|default(false) %}
         <a href="{{ path('admin_news_index') }}" class="btn btn-link">

@@ -868,14 +868,14 @@
             font-weight: 600;
             color: $textPrimary;
             line-height: 1.5;
-            height: 48px;
-            /* 16px * 1.5 * 2 lines */
+            height: 75px;
+            /* 16px * 1.5 * 3 lines */
             transition: $transitionFast;
 
             /* Line clamping for multiline truncation */
             display: -webkit-box;
-            -webkit-line-clamp: 2;
-            line-clamp: 2;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -1117,7 +1117,7 @@
 
 #respond {
     margin-top: 40px;
-    padding: 30px;
+    padding: 20px 10px;
     background: $surfaceLight;
     border-radius: $radiusMd;
 

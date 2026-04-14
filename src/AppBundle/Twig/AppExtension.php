@@ -13,6 +13,9 @@ namespace AppBundle\Twig;
 
 use AppBundle\Utils\Markdown;
 use Symfony\Component\Intl\Intl;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * This Twig extension adds a new 'md2html' filter to easily transform Markdown
@@ -27,7 +30,7 @@ use Symfony\Component\Intl\Intl;
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
  * @author Julien ITARD <julienitard@gmail.com>
  */
-class AppExtension extends \Twig_Extension
+class AppExtension extends AbstractExtension
 {
     /**
      * @var Markdown
@@ -51,7 +54,7 @@ class AppExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('md2html', [$this, 'markdownToHtml'], ['is_safe' => ['html']]),
+            new TwigFilter('md2html', [$this, 'markdownToHtml'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -61,7 +64,7 @@ class AppExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('locales', [$this, 'getLocales']),
+            new TwigFunction('locales', [$this, 'getLocales']),
         ];
     }
 
