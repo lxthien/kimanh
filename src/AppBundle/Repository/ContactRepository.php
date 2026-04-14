@@ -25,4 +25,36 @@ use Doctrine\ORM\EntityRepository;
  */
 class ContactRepository extends EntityRepository
 {
+    public function countUnread()
+    {
+        return (int) $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.isRead = :isRead')
+            ->setParameter('isRead', false)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function findUnreadNotifications($limit = 5)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.isRead = :isRead')
+            ->setParameter('isRead', false)
+            ->orderBy('c.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function markAllAsRead()
+    {
+        return $this->createQueryBuilder('c')
+            ->update()
+            ->set('c.isRead', ':isRead')
+            ->where('c.isRead = :currentIsRead')
+            ->setParameter('isRead', true)
+            ->setParameter('currentIsRead', false)
+            ->getQuery()
+            ->execute();
+    }
 }

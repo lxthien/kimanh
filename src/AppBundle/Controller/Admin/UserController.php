@@ -35,7 +35,9 @@ class UserController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $users = $em->getRepository(User::class)->findAll();
+        $userRepository = $em->getRepository(User::class);
+        $userRepository->markAllRegistrationNotificationsAsRead();
+        $users = $userRepository->findBy([], ['createdAt' => 'DESC', 'id' => 'DESC']);
 
         return $this->render('admin/user/index.html.twig', ['objects' => $users]);
     }
@@ -59,6 +61,7 @@ class UserController extends Controller
             $encoder = $this->container->get('security.password_encoder');
             $encoded = $encoder->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($encoded);
+            $user->setAdminNotificationRead(true);
             
             $em->persist($user);
             $em->flush();

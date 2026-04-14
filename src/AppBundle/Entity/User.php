@@ -6,6 +6,7 @@ namespace AppBundle\Entity;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
@@ -35,6 +36,21 @@ class User extends BaseUser
      */
     protected $name;
 
+    /**
+     * @var \DateTime
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="createdAt", type="datetime", nullable=true)
+     */
+    protected $createdAt;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="adminNotificationRead", type="boolean", options={"default": true})
+     */
+    protected $adminNotificationRead = false;
+
     public function __construct()
     {
         parent::__construct();
@@ -53,5 +69,34 @@ class User extends BaseUser
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    public function setAdminNotificationRead($adminNotificationRead)
+    {
+        $this->adminNotificationRead = (bool) $adminNotificationRead;
+
+        return $this;
+    }
+
+    public function getAdminNotificationRead()
+    {
+        return $this->adminNotificationRead;
+    }
+
+    public function isAdminNotificationRead()
+    {
+        return $this->getAdminNotificationRead();
     }
 }

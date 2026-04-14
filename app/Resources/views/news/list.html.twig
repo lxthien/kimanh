@@ -116,9 +116,6 @@
                         </div>
                     </div>
                 {% elseif pagination|length > 0 %}
-                    {% if get_setting('isShowSortOnCategory') %}
-                        {{ include('news/components/sort.html.twig') }}
-                    {% endif %}
                     <div class="ka-article-grid">
                         <div class="row">
                             {% for row in pagination %}

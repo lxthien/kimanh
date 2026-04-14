@@ -14,10 +14,12 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Entity\News;
 use AppBundle\Entity\Comment;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Contact;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -115,6 +117,22 @@ class DashboardController extends Controller
             'viewTrends' => $viewTrends,
         ]);
     }
+
+    /**
+     * @Route("/notifications/feed", name="admin_notifications_feed")
+     * @Method("GET")
+     */
+    public function notificationsFeedAction()
+    {
+        $notifications = $this->buildAdminNotifications();
+
+        return new JsonResponse([
+            'total' => $notifications['total'],
+            'html' => $this->renderView('admin/layout/_notifications_menu.html.twig', [
+                'notifications' => $notifications,
+            ]),
+        ]);
+    }
     
     /**
      * Get view trends for last 30 days
@@ -147,5 +165,32 @@ class DashboardController extends Controller
         }
         
         return $trends;
+    }
+
+    private function buildAdminNotifications()
+    {
+        $contactRepository = $this->getDoctrine()->getRepository(Contact::class);
+        $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
+        $userRepository = $this->getDoctrine()->getRepository(User::class);
+
+        $contactCount = $contactRepository->countUnread();
+        $commentCount = $commentRepository->countPending();
+        $userCount = $userRepository->countUnreadRegistrationNotifications();
+
+        return [
+            'total' => $contactCount + $commentCount + $userCount,
+            'contacts' => [
+                'count' => $contactCount,
+                'items' => $contactRepository->findUnreadNotifications(),
+            ],
+            'comments' => [
+                'count' => $commentCount,
+                'items' => $commentRepository->findPendingNotifications(),
+            ],
+            'users' => [
+                'count' => $userCount,
+                'items' => $userRepository->findUnreadRegistrationNotifications(),
+            ],
+        ];
     }
 }

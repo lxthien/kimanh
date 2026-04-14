@@ -14,6 +14,7 @@ $(function() {
     initEnableToggleButton();
 
     initMakePrimaryCategory();
+    initAdminNotifications();
 
     /**
      * Create sluggable from name
@@ -150,6 +151,48 @@ $(function() {
                 $('#news_categoryPrimary').val(categoryId);
             }
         });
+    }
+
+    function initAdminNotifications() {
+        var $button = $('#notificationDropdown');
+        var $countNode = $('[data-notification-count]');
+        var $menuNode = $('[data-notification-menu]');
+
+        if (!$button.length || !$countNode.length || !$menuNode.length) {
+            return;
+        }
+
+        var feedUrl = $button.data('feed-url');
+        if (!feedUrl) {
+            return;
+        }
+
+        function renderNotificationCount(total) {
+            $countNode.text(total);
+
+            if (total > 0) {
+                $countNode.removeClass('d-none');
+            } else {
+                $countNode.addClass('d-none');
+            }
+        }
+
+        function refreshNotifications() {
+            $.ajax({
+                url: feedUrl,
+                type: 'GET',
+                dataType: 'json'
+            }).done(function(payload) {
+                renderNotificationCount(payload.total || 0);
+
+                if (typeof payload.html === 'string') {
+                    $menuNode.html(payload.html);
+                }
+            });
+        }
+
+        $button.on('click', refreshNotifications);
+        window.setInterval(refreshNotifications, 15000);
     }
 });
 

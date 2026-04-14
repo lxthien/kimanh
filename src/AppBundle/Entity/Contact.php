@@ -75,6 +75,13 @@ class Contact
      */
     private $updatedAt;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="isRead", type="boolean", options={"default": true})
+     */
+    private $isRead = false;
+
 
     /**
      * Get id
@@ -252,6 +259,40 @@ class Contact
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Set isRead
+     *
+     * @param bool $isRead
+     *
+     * @return Contact
+     */
+    public function setIsRead($isRead)
+    {
+        $this->isRead = (bool) $isRead;
+
+        return $this;
+    }
+
+    /**
+     * Get isRead
+     *
+     * @return bool
+     */
+    public function getIsRead()
+    {
+        return $this->isRead;
+    }
+
+    /**
+     * Alias for Twig readability
+     *
+     * @return bool
+     */
+    public function isRead()
+    {
+        return $this->getIsRead();
     }
 }
 

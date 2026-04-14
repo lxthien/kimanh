@@ -35,12 +35,13 @@ class ContactController extends Controller
      */
     public function indexAction()
     {
-        $contacts = $this->getDoctrine()
-                ->getRepository(Contact::class)
-                ->findBy(
-                    array(),
-                    array('createdAt' => 'DESC')
-                );
+        $contactRepository = $this->getDoctrine()->getRepository(Contact::class);
+        $contactRepository->markAllAsRead();
+
+        $contacts = $contactRepository->findBy(
+            array(),
+            array('createdAt' => 'DESC')
+        );
 
         return $this->render('admin/contact/index.html.twig', [
             'objects' => $contacts

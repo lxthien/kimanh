@@ -33,7 +33,11 @@ services:
     # when the service definition only contains arguments, you can omit the
     # 'arguments' key and define the arguments just below the service class
     AppBundle\Twig\AppExtension:
-        $locales: '%app_locales%'
+        arguments:
+            - '@AppBundle\Utils\Markdown'
+            - '%app_locales%'
+            - '@doctrine'
+            - '@security.authorization_checker'
 
     AppBundle\EventListener\CommentNotificationSubscriber:
         $sender: '%app.notifications.email_sender%'

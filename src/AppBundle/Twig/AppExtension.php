@@ -11,8 +11,13 @@
 
 namespace AppBundle\Twig;
 
+use AppBundle\Entity\Comment;
+use AppBundle\Entity\Contact;
+use AppBundle\Entity\User;
 use AppBundle\Utils\Markdown;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Intl\Intl;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -42,10 +47,27 @@ class AppExtension extends AbstractExtension
      */
     private $locales;
 
-    public function __construct(Markdown $parser, $locales)
+    /**
+     * @var Registry
+     */
+    private $doctrine;
+
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
+    public function __construct(
+        Markdown $parser,
+        $locales,
+        Registry $doctrine,
+        AuthorizationCheckerInterface $authorizationChecker
+    )
     {
         $this->parser = $parser;
         $this->locales = $locales;
+        $this->doctrine = $doctrine;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -65,6 +87,7 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFunction('locales', [$this, 'getLocales']),
+            new TwigFunction('admin_notifications', [$this, 'getAdminNotifications']),
         ];
     }
 
@@ -97,5 +120,45 @@ class AppExtension extends AbstractExtension
         }
 
         return $locales;
+    }
+
+    public function getAdminNotifications()
+    {
+        if (!$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
+            return [
+                'total' => 0,
+                'contacts' => ['count' => 0, 'items' => []],
+                'comments' => ['count' => 0, 'items' => []],
+                'users' => ['count' => 0, 'items' => []],
+            ];
+        }
+
+        $contactRepository = $this->doctrine->getRepository(Contact::class);
+        $commentRepository = $this->doctrine->getRepository(Comment::class);
+        $userRepository = $this->doctrine->getRepository(User::class);
+
+        $contacts = $contactRepository->findUnreadNotifications();
+        $comments = $commentRepository->findPendingNotifications();
+        $users = $userRepository->findUnreadRegistrationNotifications();
+
+        $contactCount = $contactRepository->countUnread();
+        $commentCount = $commentRepository->countPending();
+        $userCount = $userRepository->countUnreadRegistrationNotifications();
+
+        return [
+            'total' => $contactCount + $commentCount + $userCount,
+            'contacts' => [
+                'count' => $contactCount,
+                'items' => $contacts,
+            ],
+            'comments' => [
+                'count' => $commentCount,
+                'items' => $comments,
+            ],
+            'users' => [
+                'count' => $userCount,
+                'items' => $users,
+            ],
+        ];
     }
 }

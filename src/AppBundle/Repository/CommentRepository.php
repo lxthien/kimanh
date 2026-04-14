@@ -10,5 +10,24 @@ namespace AppBundle\Repository;
  */
 class CommentRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function countPending()
+    {
+        return (int) $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.approved = :approved')
+            ->setParameter('approved', false)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
+    public function findPendingNotifications($limit = 5)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.approved = :approved')
+            ->setParameter('approved', false)
+            ->orderBy('c.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }
