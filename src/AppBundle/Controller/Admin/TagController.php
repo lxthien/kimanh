@@ -11,8 +11,10 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Entity\ActivityLog;
 use AppBundle\Entity\Tag;
 use AppBundle\Form\TagType;
+use AppBundle\Service\ActivityLogService;
 use AppBundle\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -58,7 +60,20 @@ class TagController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Capture changes before flush
+            $diffDetails = $this->get(ActivityLogService::class)->getEntityDiff($tag);
+
             $this->getDoctrine()->getManager()->flush();
+
+            // Activity Log
+            $this->get(ActivityLogService::class)->log(
+                ActivityLog::ACTION_UPDATE,
+                ActivityLog::ENTITY_TAG,
+                $tag->getId(),
+                $tag->getName(),
+                $diffDetails
+            );
+
             $this->addFlash('success', 'updated_successfully');
             return $this->redirectToRoute('admin_tag_index');
         }
@@ -85,13 +100,20 @@ class TagController extends Controller
             return $this->redirectToRoute('admin_tag_index');
         }
 
-        // Delete the tags associated with this blog post. This is done automatically
-        // by Doctrine, except for SQLite (the database used in this application)
-        // because foreign key support is not enabled by default in SQLite
+        $tagName = $tag->getName();
+        $tagId = $tag->getId();
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($tag);
         $em->flush();
+
+        // Activity Log
+        $this->get(ActivityLogService::class)->log(
+            ActivityLog::ACTION_DELETE,
+            ActivityLog::ENTITY_TAG,
+            $tagId,
+            $tagName
+        );
 
         $this->addFlash('success', 'deleted_successfully');
 

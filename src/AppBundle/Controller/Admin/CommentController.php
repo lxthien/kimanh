@@ -2,8 +2,10 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Entity\ActivityLog;
 use AppBundle\Entity\Comment;
 use AppBundle\Form\CommentType;
+use AppBundle\Service\ActivityLogService;
 use AppBundle\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -54,8 +56,20 @@ class CommentController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Capture changes before flush
+            $diffDetails = $this->get(ActivityLogService::class)->getEntityDiff($comment);
 
             $this->getDoctrine()->getManager()->flush();
+
+            // Activity Log
+            $this->get(ActivityLogService::class)->log(
+                ActivityLog::ACTION_UPDATE,
+                ActivityLog::ENTITY_COMMENT,
+                $comment->getId(),
+                'Bình luận của ' . $comment->getAuthor(),
+                $diffDetails
+            );
+
             $this->addFlash('success', 'action.updated_successfully');
 
             return $this->redirectToRoute('admin_comment_index');
@@ -93,6 +107,14 @@ class CommentController extends Controller
             $em->persist($replyComment);
             $em->flush();
 
+            // Activity Log
+            $this->get(ActivityLogService::class)->log(
+                ActivityLog::ACTION_CREATE,
+                ActivityLog::ENTITY_COMMENT,
+                $replyComment->getId(),
+                'Trả lời bình luận của ' . $comment->getAuthor()
+            );
+
             if (!$comment->getApproved()) {
                 $comment->setApproved( true );
                 
@@ -124,9 +146,20 @@ class CommentController extends Controller
             return $this->redirectToRoute('admin_comment_index');
         }
 
+        $commentAuthor = $comment->getAuthor();
+        $commentId = $comment->getId();
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($comment);
         $em->flush();
+
+        // Activity Log
+        $this->get(ActivityLogService::class)->log(
+            ActivityLog::ACTION_DELETE,
+            ActivityLog::ENTITY_COMMENT,
+            $commentId,
+            'Bình luận của ' . $commentAuthor
+        );
 
         $this->addFlash('success', 'action.deleted_successfully');
 

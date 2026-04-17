@@ -192,7 +192,7 @@ $(function() {
         }
 
         $button.on('click', refreshNotifications);
-        window.setInterval(refreshNotifications, 15000);
+        window.setInterval(refreshNotifications, 30000);
     }
 });
 

@@ -2,8 +2,10 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Entity\ActivityLog;
 use AppBundle\Entity\News;
 use AppBundle\Form\PageType;
+use AppBundle\Service\ActivityLogService;
 use AppBundle\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -85,6 +87,14 @@ class PageController extends Controller
                 $em->persist($news);
                 $em->flush();
 
+                // Activity Log
+                $this->get(ActivityLogService::class)->log(
+                    ActivityLog::ACTION_CREATE,
+                    ActivityLog::ENTITY_PAGE,
+                    $news->getId(),
+                    $news->getTitle()
+                );
+
                 $this->addFlash('success', 'action.created_successfully');
 
                 if ($form->get('saveAndCreateNew')->isClicked()) {
@@ -154,7 +164,20 @@ class PageController extends Controller
                     $news->setParent(null);
                 }
 
+                // Capture changes before flush
+                $diffDetails = $this->get(ActivityLogService::class)->getEntityDiff($news);
+
                 $em->flush();
+
+                // Activity Log
+                $this->get(ActivityLogService::class)->log(
+                    ActivityLog::ACTION_UPDATE,
+                    ActivityLog::ENTITY_PAGE,
+                    $news->getId(),
+                    $news->getTitle(),
+                    $diffDetails
+                );
+
                 $this->addFlash('success', 'action.updated_successfully');
 
                 // If postType changed to post, redirect to news edit
@@ -202,9 +225,20 @@ class PageController extends Controller
             return $this->redirectToRoute('admin_page_index');
         }
 
+        $pageTitle = $page->getTitle();
+        $pageId = $page->getId();
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($page);
         $em->flush();
+
+        // Activity Log
+        $this->get(ActivityLogService::class)->log(
+            ActivityLog::ACTION_DELETE,
+            ActivityLog::ENTITY_PAGE,
+            $pageId,
+            $pageTitle
+        );
 
         $this->addFlash('success', 'action.deleted_successfully');
 
@@ -224,6 +258,15 @@ class PageController extends Controller
             $page->setEnable((bool) $request->request->get('enable'));
             $em->persist($page);
             $em->flush();
+
+            // Activity Log
+            $this->get(ActivityLogService::class)->log(
+                ActivityLog::ACTION_TOGGLE,
+                ActivityLog::ENTITY_PAGE,
+                $page->getId(),
+                $page->getTitle(),
+                $page->getEnable() ? 'Bật hiển thị' : 'Tắt hiển thị'
+            );
         }
 
         return new Response(

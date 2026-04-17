@@ -8,6 +8,8 @@ use AppBundle\Entity\News;
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Form\MenuType;
 use AppBundle\Form\MenuItemType;
+use AppBundle\Entity\ActivityLog;
+use AppBundle\Service\ActivityLogService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

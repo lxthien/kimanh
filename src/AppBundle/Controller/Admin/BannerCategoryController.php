@@ -2,8 +2,10 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Entity\ActivityLog;
 use AppBundle\Entity\BannerCategory;
 use AppBundle\Form\BannerCategoryType;
+use AppBundle\Service\ActivityLogService;
 
 use AppBundle\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -52,6 +54,14 @@ class BannerCategoryController extends Controller
             $em->persist($bannerCategory);
             $em->flush();
 
+            // Activity Log
+            $this->get(ActivityLogService::class)->log(
+                ActivityLog::ACTION_CREATE,
+                ActivityLog::ENTITY_BANNER_CATEGORY,
+                $bannerCategory->getId(),
+                $bannerCategory->getName()
+            );
+
             $this->addFlash('success', 'action.created_successfully');
 
             return $this->redirectToRoute('admin_bannercategory_index');
@@ -75,6 +85,15 @@ class BannerCategoryController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             $this->getDoctrine()->getManager()->flush();
+
+            // Activity Log
+            $this->get(ActivityLogService::class)->log(
+                ActivityLog::ACTION_UPDATE,
+                ActivityLog::ENTITY_BANNER_CATEGORY,
+                $bannerCategory->getId(),
+                $bannerCategory->getName()
+            );
+
             $this->addFlash('success', 'action.updated_successfully');
 
             return $this->redirectToRoute('admin_bannercategory_index');
@@ -98,9 +117,20 @@ class BannerCategoryController extends Controller
             return $this->redirectToRoute('admin_bannercategory_index');
         }
 
+        $catName = $bannerCategory->getName();
+        $catId = $bannerCategory->getId();
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($bannerCategory);
         $em->flush();
+
+        // Activity Log
+        $this->get(ActivityLogService::class)->log(
+            ActivityLog::ACTION_DELETE,
+            ActivityLog::ENTITY_BANNER_CATEGORY,
+            $catId,
+            $catName
+        );
 
         $this->addFlash('success', 'action.deleted_successfully');
 

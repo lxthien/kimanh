@@ -2,11 +2,13 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Entity\ActivityLog;
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Entity\News;
 use AppBundle\Entity\Rating;
 use AppBundle\Form\NewsCategoryType;
 use AppBundle\Form\NewsType;
+use AppBundle\Service\ActivityLogService;
 use AppBundle\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -107,7 +109,16 @@ class NewsController extends Controller
 
                 // Update Ordering for post
                 $news->setOrdering( $news->getId() );
-                $this->getDoctrine()->getManager()->flush();
+                $em = $this->getDoctrine()->getManager();
+                $em->flush();
+
+                // Activity Log
+                $this->get(ActivityLogService::class)->log(
+                    ActivityLog::ACTION_CREATE,
+                    ActivityLog::ENTITY_NEWS,
+                    $news->getId(),
+                    $news->getTitle()
+                );
 
                 $this->addFlash('success', 'action.created_successfully');
 
@@ -182,7 +193,20 @@ class NewsController extends Controller
                     $news->setParent(null);
                 }
 
+                // Capture changes before flush
+                $diffDetails = $this->get(ActivityLogService::class)->getEntityDiff($news);
+
                 $em->flush();
+
+                // Activity Log
+                $this->get(ActivityLogService::class)->log(
+                    ActivityLog::ACTION_UPDATE,
+                    ActivityLog::ENTITY_NEWS,
+                    $news->getId(),
+                    $news->getTitle(),
+                    $diffDetails
+                );
+
                 $this->addFlash('success', 'action.updated_successfully');
 
                 // If postType changed to page, redirect to page edit
@@ -230,11 +254,22 @@ class NewsController extends Controller
             return $this->redirectToRoute('admin_news_index');
         }
 
+        $newsTitle = $news->getTitle();
+        $newsId = $news->getId();
+
         $news->getTags()->clear();
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($news);
         $em->flush();
+
+        // Activity Log
+        $this->get(ActivityLogService::class)->log(
+            ActivityLog::ACTION_DELETE,
+            ActivityLog::ENTITY_NEWS,
+            $newsId,
+            $newsTitle
+        );
 
         $this->addFlash('success', 'action.deleted_successfully');
 
@@ -257,6 +292,15 @@ class NewsController extends Controller
         $em->persist($news);
 
         $em->flush();
+
+        // Activity Log
+        $this->get(ActivityLogService::class)->log(
+            ActivityLog::ACTION_TOGGLE,
+            ActivityLog::ENTITY_NEWS,
+            $news->getId(),
+            $news->getTitle(),
+            $news->getEnable() ? 'Bật hiển thị' : 'Tắt hiển thị'
+        );
 
         return new Response(
             json_encode(

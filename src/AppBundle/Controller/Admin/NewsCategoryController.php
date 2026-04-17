@@ -11,8 +11,10 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Entity\ActivityLog;
 use AppBundle\Entity\NewsCategory;
 use AppBundle\Form\NewsCategoryType;
+use AppBundle\Service\ActivityLogService;
 use AppBundle\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -69,6 +71,14 @@ class NewsCategoryController extends Controller
             $em->persist($category);
             $em->flush();
 
+            // Activity Log
+            $this->get(ActivityLogService::class)->log(
+                ActivityLog::ACTION_CREATE,
+                ActivityLog::ENTITY_CATEGORY,
+                $category->getId(),
+                $category->getName()
+            );
+
             $this->addFlash('success', 'action.created_successfully');
 
             if ($form->get('saveAndCreateNew')->isClicked()) {
@@ -96,7 +106,20 @@ class NewsCategoryController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Capture changes before flush
+            $diffDetails = $this->get(ActivityLogService::class)->getEntityDiff($category);
+            
             $this->getDoctrine()->getManager()->flush();
+
+            // Activity Log
+            $this->get(ActivityLogService::class)->log(
+                ActivityLog::ACTION_UPDATE,
+                ActivityLog::ENTITY_CATEGORY,
+                $category->getId(),
+                $category->getName(),
+                $diffDetails
+            );
+
             $this->addFlash('success', 'action.updated_successfully');
             return $this->redirectToRoute('admin_newscategory_index');
         }
@@ -118,9 +141,20 @@ class NewsCategoryController extends Controller
             return $this->redirectToRoute('admin_newscategory_index');
         }
 
+        $catName = $category->getName();
+        $catId = $category->getId();
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($category);
         $em->flush();
+
+        // Activity Log
+        $this->get(ActivityLogService::class)->log(
+            ActivityLog::ACTION_DELETE,
+            ActivityLog::ENTITY_CATEGORY,
+            $catId,
+            $catName
+        );
 
         $this->addFlash('success', 'action.deleted_successfully');
 

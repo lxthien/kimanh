@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Entity\ActivityLog;
 use AppBundle\Entity\User;
+use AppBundle\Service\ActivityLogService;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -66,6 +68,15 @@ class UserController extends Controller
             $em->persist($user);
             $em->flush();
 
+            // Activity Log
+            $this->get(ActivityLogService::class)->log(
+                ActivityLog::ACTION_CREATE,
+                ActivityLog::ENTITY_USER,
+                $user->getId(),
+                $user->getUsername(),
+                'Vai trò: ' . implode(', ', $user->getRoles())
+            );
+
             $this->addFlash('success', 'Người dùng đã được tạo thành công');
             return $this->redirectToRoute('admin_user_index');
         }
@@ -75,8 +86,7 @@ class UserController extends Controller
             'form' => $form->createView(),
         ]);
     }
-
-    /**
+    /**
      * Display a form to edit an existing user
      *
      * @Route("/{id}/edit", name="admin_user_edit")
@@ -97,7 +107,19 @@ class UserController extends Controller
                 $user->setPassword($encoded);
             }
             
+            // Capture changes before flush
+            $diffDetails = $this->get(\AppBundle\Service\ActivityLogService::class)->getEntityDiff($user);
+            
             $em->flush();
+
+            // Activity Log
+            $this->get(\AppBundle\Service\ActivityLogService::class)->log(
+                \AppBundle\Entity\ActivityLog::ACTION_UPDATE,
+                \AppBundle\Entity\ActivityLog::ENTITY_USER,
+                $user->getId(),
+                $user->getUsername(),
+                $diffDetails
+            );
 
             $this->addFlash('success', 'Thông tin người dùng đã được cập nhật');
             return $this->redirectToRoute('admin_user_index');
@@ -127,9 +149,20 @@ class UserController extends Controller
             return $this->redirectToRoute('admin_user_index');
         }
 
+        $username = $user->getUsername();
+        $userId = $user->getId();
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($user);
         $em->flush();
+
+        // Activity Log
+        $this->get(ActivityLogService::class)->log(
+            ActivityLog::ACTION_DELETE,
+            ActivityLog::ENTITY_USER,
+            $userId,
+            $username
+        );
 
         $this->addFlash('success', 'Người dùng đã được xóa');
         return $this->redirectToRoute('admin_user_index');
@@ -158,6 +191,16 @@ class UserController extends Controller
         $em->flush();
 
         $status = $user->isEnabled() ? 'mở khoá' : 'khoá';
+
+        // Activity Log
+        $this->get(ActivityLogService::class)->log(
+            ActivityLog::ACTION_TOGGLE,
+            ActivityLog::ENTITY_USER,
+            $user->getId(),
+            $user->getUsername(),
+            'Tài khoản đã được ' . $status
+        );
+
         $this->addFlash('success', 'Tài khoản đã được ' . $status);
         return $this->redirectToRoute('admin_user_index');
     }
@@ -208,6 +251,15 @@ class UserController extends Controller
             $encoded = $encoder->encodePassword($user, $plainPassword);
             $user->setPassword($encoded);
             $em->flush();
+
+            // Activity Log
+            $this->get(ActivityLogService::class)->log(
+                ActivityLog::ACTION_UPDATE,
+                ActivityLog::ENTITY_USER,
+                $user->getId(),
+                $user->getUsername(),
+                'Đổi mật khẩu'
+            );
 
             $this->addFlash('success', 'Mật khẩu đã được cập nhật');
             return $this->redirectToRoute('admin_user_index');

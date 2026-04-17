@@ -11,6 +11,7 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Entity\ActivityLog;
 use AppBundle\Entity\News;
 use AppBundle\Entity\Comment;
 use AppBundle\Entity\User;
@@ -103,6 +104,9 @@ class DashboardController extends Controller
             ->setMaxResults(5)
             ->getQuery()
             ->getResult();
+
+        // Recent activity logs
+        $recentActivities = $em->getRepository(ActivityLog::class)->findRecentLogs(10);
         
         return $this->render('admin/dashboard/index.html.twig', [
             'totalPosts' => $totalPosts,
@@ -115,6 +119,7 @@ class DashboardController extends Controller
             'recentComments' => $recentComments,
             'topPosts' => $topPosts,
             'viewTrends' => $viewTrends,
+            'recentActivities' => $recentActivities,
         ]);
     }
 

@@ -2,8 +2,10 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Entity\ActivityLog;
 use AppBundle\Entity\Banner;
 use AppBundle\Form\BannerType;
+use AppBundle\Service\ActivityLogService;
 
 use AppBundle\Utils\Slugger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -52,6 +54,14 @@ class BannerController extends Controller
             $em->persist($banner);
             $em->flush();
 
+            // Activity Log
+            $this->get(ActivityLogService::class)->log(
+                ActivityLog::ACTION_CREATE,
+                ActivityLog::ENTITY_BANNER,
+                $banner->getId(),
+                $banner->getName()
+            );
+
             $this->addFlash('success', 'action.created_successfully');
 
             return $this->redirectToRoute('admin_banner_index');
@@ -73,8 +83,20 @@ class BannerController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Capture changes before flush
+            $diffDetails = $this->get(ActivityLogService::class)->getEntityDiff($banner);
 
             $this->getDoctrine()->getManager()->flush();
+
+            // Activity Log
+            $this->get(ActivityLogService::class)->log(
+                ActivityLog::ACTION_UPDATE,
+                ActivityLog::ENTITY_BANNER,
+                $banner->getId(),
+                $banner->getName(),
+                $diffDetails
+            );
+
             $this->addFlash('success', 'action.updated_successfully');
 
             return $this->redirectToRoute('admin_banner_index');
@@ -98,9 +120,20 @@ class BannerController extends Controller
             return $this->redirectToRoute('admin_banner_index');
         }
 
+        $bannerName = $banner->getName();
+        $bannerId = $banner->getId();
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($banner);
         $em->flush();
+
+        // Activity Log
+        $this->get(ActivityLogService::class)->log(
+            ActivityLog::ACTION_DELETE,
+            ActivityLog::ENTITY_BANNER,
+            $bannerId,
+            $bannerName
+        );
 
         $this->addFlash('success', 'action.deleted_successfully');
 
