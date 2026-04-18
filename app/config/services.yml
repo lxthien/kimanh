@@ -84,6 +84,10 @@ services:
             - '@security.token_storage'
             - '@request_stack'
 
+    AppBundle\Service\ViewCountLogger:
+        arguments:
+            $logDir: '%kernel.logs_dir%'
+
     AppBundle\EventListener\LoginListener:
         arguments: ['@AppBundle\Service\ActivityLogService']
         tags:

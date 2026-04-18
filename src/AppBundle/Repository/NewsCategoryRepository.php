@@ -10,4 +10,12 @@ namespace AppBundle\Repository;
  */
 class NewsCategoryRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getSubCategories($parentId)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.parentcat = :parentcat')
+            ->setParameter('parentcat', $parentId)
+            ->getQuery()
+            ->getResult();
+    }
 }

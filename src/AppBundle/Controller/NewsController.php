@@ -36,16 +36,20 @@ class NewsController extends Controller
      */
     private $helper;
     private $convertImages;
+    private $contentFormatter;
+    private $viewCountLogger;
 
     /**
      * Constructs a new instance of UploaderExtension.
      *
      * @param UploaderHelper $helper
      */
-    public function __construct(UploaderHelper $helper, ConvertImages $convertImages)
+    public function __construct(UploaderHelper $helper, ConvertImages $convertImages, \AppBundle\Service\ContentFormatter $contentFormatter, \AppBundle\Service\ViewCountLogger $viewCountLogger)
     {
         $this->helper = $helper;
         $this->convertImages = $convertImages;
+        $this->contentFormatter = $contentFormatter;
+        $this->viewCountLogger = $viewCountLogger;
     }
 
     /**
@@ -307,10 +311,7 @@ class NewsController extends Controller
 
             $allSubCategories = $this->getDoctrine()
                 ->getRepository(NewsCategory::class)
-                ->createQueryBuilder('c')
-                ->where('c.parentcat = (:parentcat)')
-                ->setParameter('parentcat', $category->getId())
-                ->getQuery()->getResult();
+                ->getSubCategories($category->getId());
 
             foreach ($allSubCategories as $value) {
                 $listCategories[] = $value;
@@ -320,53 +321,21 @@ class NewsController extends Controller
             if ($category->getContent() == NULL) {
                 $news = $this->getDoctrine()
                     ->getRepository(News::class)
-                    ->createQueryBuilder('n')
-                    ->innerJoin('n.category', 't')
-                    ->where('t.id IN (:listCategoriesIds)')
-                    ->andWhere('n.enable = :enable')
-                    ->setParameter('listCategoriesIds', $listCategoriesIds)
-                    ->setParameter('enable', 1)
-                    ->orderBy('n.' . $orderingKey[0], $orderingData[$orderingKey[0]])
-                    ->getQuery()->getResult();
+                    ->getNewsByCategories($listCategoriesIds, $orderingKey[0], $orderingData[$orderingKey[0]]);
             } else {
                 $news = $this->getDoctrine()
                     ->getRepository(News::class)
-                    ->createQueryBuilder('n')
-                    ->innerJoin('n.category', 't')
-                    ->where('t.id = :newscategory_id')
-                    ->andWhere('n.enable = :enable')
-                    ->setParameter('newscategory_id', $category->getId())
-                    ->setParameter('enable', 1)
-                    ->setMaxResults(8)
-                    ->orderBy('n.' . $orderingKey[0], $orderingData[$orderingKey[0]])
-                    ->getQuery()
-                    ->getResult();
+                    ->getNewsByCategory($category->getId(), $orderingKey[0], $orderingData[$orderingKey[0]], 8);
             }
         } else {
             if ($subCategory->getContent() == NULL) {
                 $news = $this->getDoctrine()
                     ->getRepository(News::class)
-                    ->createQueryBuilder('n')
-                    ->innerJoin('n.category', 't')
-                    ->where('t.id = :newscategory_id')
-                    ->andWhere('n.enable = :enable')
-                    ->setParameter('newscategory_id', $subCategory->getId())
-                    ->setParameter('enable', 1)
-                    ->orderBy('n.' . $orderingKey[0], $orderingData[$orderingKey[0]])
-                    ->getQuery()->getResult();
+                    ->getNewsByCategory($subCategory->getId(), $orderingKey[0], $orderingData[$orderingKey[0]]);
             } else {
                 $news = $this->getDoctrine()
                     ->getRepository(News::class)
-                    ->createQueryBuilder('n')
-                    ->innerJoin('n.category', 't')
-                    ->where('t.id = :newscategory_id')
-                    ->andWhere('n.enable = :enable')
-                    ->setParameter('newscategory_id', $subCategory->getId())
-                    ->setParameter('enable', 1)
-                    ->setMaxResults(12)
-                    ->orderBy('n.' . $orderingKey[0], $orderingData[$orderingKey[0]])
-                    ->getQuery()
-                    ->getResult();
+                    ->getNewsByCategory($subCategory->getId(), $orderingKey[0], $orderingData[$orderingKey[0]], 12);
             }
         }
 
@@ -409,9 +378,8 @@ class NewsController extends Controller
             throw $this->createNotFoundException("The item does not exist");
         }
 
-        // Update viewCount for post using direct SQL query for better performance
-        // This avoids ORM overhead and doesn't block page rendering
-        $this->incrementPostViewCount($post->getId(), $request);
+        // Async log viewCount for batch update via cron to prevent database locking
+        $this->viewCountLogger->logView($post->getId(), $request);
 
         $categoryPrimary = $request->query->get('danh-muc');
 
@@ -446,20 +414,7 @@ class NewsController extends Controller
             // Get news related
             $relatedNews = $this->getDoctrine()
                 ->getRepository(News::class)
-                ->createQueryBuilder('r')
-                ->innerJoin('r.category', 't')
-                ->where('t.id = :newscategory_id')
-                ->andWhere('r.id <> :id')
-                ->andWhere('r.postType = :postType')
-                ->andWhere('r.enable = :enable')
-                ->setParameter('newscategory_id', $categoryPrimary)
-                ->setParameter('id', $post->getId())
-                ->setParameter('postType', $post->getPostType())
-                ->setParameter('enable', 1)
-                ->setMaxResults(12)
-                ->orderBy('r.' . $orderingKey[0], $orderingData[$orderingKey[0]])
-                ->getQuery()
-                ->getResult();
+                ->getRelatedNews($categoryPrimary, $post->getId(), $post->getPostType(), $orderingKey[0], $orderingData[$orderingKey[0]], 12);
 
             if ($category->getParentcat() === 'root') {
                 $categoryUrl = $this->generateUrl("dynamic_post_page", array('slug' => $category->getUrl()), UrlGeneratorInterface::ABSOLUTE_URL);
@@ -471,41 +426,27 @@ class NewsController extends Controller
         // Get the list comment for post
         $comments = $this->getDoctrine()
             ->getRepository(Comment::class)
-            ->createQueryBuilder('c')
-            ->where('c.news_id = :news_id')
-            ->andWhere('c.approved = :approved')
-            ->setParameter('news_id', $post->getId())
-            ->setParameter('approved', 1)
-            ->getQuery()->getResult();
+            ->getApprovedCommentsForNews($post->getId());
 
         // Render form comment for post.
         $form = $this->renderFormComment($post);
 
         // Render form rating for post.
-        $formRating = $this->createFormBuilder(null, array(
-            'csrf_protection' => false,
-        ))
-            ->setAction($this->generateUrl('rating'))
-            ->add('rating', RatingType::class)
-            ->getForm();
+        $formRating = $this->createForm(\AppBundle\Form\PostRatingType::class, null, array(
+            'action' => $this->generateUrl('rating'),
+        ));
 
 
         // Get rating of the post
-        $repositoryRating = $this->getDoctrine()->getManager();
-
-        $queryRating = $repositoryRating->createQuery(
-            'SELECT AVG(r.rating) as ratingValue, COUNT(r) as ratingCount
-            FROM AppBundle:Rating r
-            WHERE r.news_id = :news_id'
-        )->setParameter('news_id', $post->getId());
-
-        $rating = $queryRating->setMaxResults(1)->getOneOrNullResult();
+        $rating = $this->getDoctrine()
+            ->getRepository(\AppBundle\Entity\Rating::class)
+            ->getAverageRatingForNews($post->getId());
 
         // Init breadcrum for the post
         $breadcrumbs = $this->buildBreadcrums(null, $post->isPage() ? null : $post, $post->isPage() ? $post : null, $categoryPrimary);
 
         // Filter content to support Lazy Loading
-        $contentsLazy = $this->lazyloadContent($post);
+        $contentsLazy = $this->contentFormatter->lazyloadContent($post);
 
         if ($post->isPage()) {
             $imagePath = $this->helper->asset($post, 'imageFile');
@@ -532,8 +473,8 @@ class NewsController extends Controller
             return $this->render('news/show.html.twig', [
                 'post' => $post,
                 'contentsLazy' => $contentsLazy,
-                'articleBody' => $this->strip_tags_content($contentsLazy),
-                'wordCount' => str_word_count($this->strip_tags_content($contentsLazy)),
+                'articleBody' => $this->contentFormatter->stripTagsContent($contentsLazy),
+                'wordCount' => str_word_count($this->contentFormatter->stripTagsContent($contentsLazy)),
                 'relatedNews' => !empty($relatedNews) ? $relatedNews : NULL,
                 'form' => $form->createView(),
                 'formRating' => $formRating->createView(),
@@ -550,91 +491,7 @@ class NewsController extends Controller
         }
     }
 
-    private function strip_tags_content($string)
-    {
-        // ----- remove HTML TAGs -----
-        $string = preg_replace('/<[^>]*>/', ' ', $string);
-        // ----- remove control characters ----- 
-        $string = str_replace("\r", '', $string);
-        $string = str_replace("\n", ' ', $string);
-        $string = str_replace("\t", ' ', $string);
 
-        // ----- remove multiple spaces -----
-        $string = trim(preg_replace('/ {2,}/', ' ', $string));
-
-        return $string;
-    }
-
-    private function lazyloadContent($post)
-    {
-        $content = $post->getContents();
-
-        // Return early if no content
-        if (empty($content)) {
-            return '';
-        }
-
-        // Protect lone "<" characters that are not part of HTML tags
-        // Match "<" followed by a digit, space, or other non-tag characters
-        $placeholder = '___LESS_THAN_PLACEHOLDER___';
-        $content = preg_replace('/<(?=[0-9\s\-\+\=\.\,])/', $placeholder, $content);
-
-        $dom = new \DOMDocument();
-
-        // set error level
-        $internalErrors = libxml_use_internal_errors(true);
-
-        // Wrap content to preserve structure and handle UTF-8 properly
-        $wrappedContent = '<div id="lazyload-wrapper">' . $content . '</div>';
-        $dom->loadHTML(
-            '<?xml encoding="UTF-8">' . $wrappedContent,
-            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
-        );
-
-        // Remove the XML declaration that was added
-        foreach ($dom->childNodes as $item) {
-            if ($item->nodeType == XML_PI_NODE) {
-                $dom->removeChild($item);
-            }
-        }
-
-        // Restore error level
-        libxml_use_internal_errors($internalErrors);
-
-        $imgs = $dom->getElementsByTagName('img');
-
-        foreach ($imgs as $img) {
-            $src = $img->getAttribute('src');
-            $alt = $img->getAttribute('alt');
-
-            list($width, $height) = @getimagesize(substr($src, 1));
-
-            $src = !is_bool($this->convertImages->webpConvert2($src, '')) ? $this->convertImages->webpConvert2($src, '') : $src;
-
-            $img->setAttribute('src', '/' . $src);
-            $img->setAttribute('loading', 'lazy');
-            $img->setAttribute('alt', !empty($alt) ? $alt : $post->getTitle());
-            $img->setAttribute('width', !empty($width) ? ($width > 900 ? 900 : $width) : 500);
-            $img->setAttribute('height', !empty($height) ? ($width > 900 ? round(($height * 900) / $width) : $height) : 500);
-        }
-
-        $newContent = $dom->saveHTML();
-
-        // Remove the wrapper div we added
-        $newContent = preg_replace('/<div id="lazyload-wrapper">/', '', $newContent);
-        $newContent = preg_replace('/<\/div>$/', '', $newContent);
-
-        // Clean up any remaining DOCTYPE, html, head, body tags
-        $newContent = preg_replace('/^<!DOCTYPE[^>]*>/i', '', $newContent);
-        $newContent = preg_replace('/<\/?html[^>]*>/i', '', $newContent);
-        $newContent = preg_replace('/<\/?head[^>]*>/i', '', $newContent);
-        $newContent = preg_replace('/<\/?body[^>]*>/i', '', $newContent);
-
-        // Restore the "<" characters
-        $newContent = str_replace($placeholder, '<', $newContent);
-
-        return trim($newContent);
-    }
 
     /**
      * @Route("/tag/{slug}",
@@ -658,14 +515,7 @@ class NewsController extends Controller
         // Get the list post related to tag
         $posts = $this->getDoctrine()
             ->getRepository(News::class)
-            ->createQueryBuilder('n')
-            ->innerJoin('n.tags', 't')
-            ->where('t.id = :tags_id')
-            ->andWhere('n.enable = :enable')
-            ->setParameter('tags_id', $tag->getId())
-            ->setParameter('enable', 1)
-            ->orderBy('n.createdAt', 'DESC')
-            ->getQuery()->getResult();
+            ->getNewsByTag($tag->getId(), null);
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
@@ -1425,80 +1275,4 @@ class NewsController extends Controller
         }
     }
 
-    /**
-     * Increment post view count using direct SQL query for optimal performance
-     * 
-     * Avoids ORM overhead by using direct database update which:
-     * - Executes in a single database operation
-     * - Doesn't require object hydration
-     * - Doesn't lock the entity manager
-     * - Doesn't impact page rendering time
-     * 
-     * @param int $postId
-     */
-    private function incrementPostViewCount($postId, Request $request)
-    {
-        // Skip bots and crawlers to keep view counts accurate
-        $userAgent = $request->headers->get('User-Agent', '');
-        if ($this->isBot($userAgent)) {
-            return;
-        }
-
-        try {
-            $em = $this->getDoctrine()->getManager();
-            $connection = $em->getConnection();
-
-            // Direct SQL update for maximum performance
-            $connection->executeUpdate(
-                'UPDATE news SET viewCounts = viewCounts + 1 WHERE id = ?',
-                [$postId]
-            );
-        } catch (\Exception $e) {
-            // Silently fail if view count update fails - don't break page rendering
-            // You can log this error if needed: $this->get('logger')->error($e->getMessage());
-        }
-    }
-
-    /**
-     * Detect if the request is from a bot/crawler based on User-Agent
-     */
-    private function isBot($userAgent)
-    {
-        $bots = [
-            'googlebot',
-            'bingbot',
-            'yandexbot',
-            'baiduspider',
-            'slurp',
-            'duckduckbot',
-            'facebookexternalhit',
-            'twitterbot',
-            'linkedinbot',
-            'whatsapp',
-            'telegrambot',
-            'zalobot',
-            'semrushbot',
-            'ahrefsbot',
-            'mj12bot',
-            'dotbot',
-            'rogerbot',
-            'screaming frog',
-            'bytespider',
-            'petalbot',
-            'crawl',
-            'spider',
-            'bot/',
-            'bot;',
-        ];
-
-        $userAgent = strtolower($userAgent);
-        foreach ($bots as $bot) {
-            if (strpos($userAgent, $bot) !== false) {
-                return true;
-            }
-        }
-
-        // Empty User-Agent is also likely a bot
-        return empty($userAgent);
-    }
 }

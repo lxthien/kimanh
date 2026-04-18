@@ -88,4 +88,66 @@ class NewsRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function getNewsByCategories($categoryIds, $orderBy, $orderDir, $limit = null) {
+        $qb = $this->createQueryBuilder('n')
+            ->innerJoin('n.category', 't')
+            ->where('t.id IN (:categoryIds)')
+            ->andWhere('n.enable = :enable')
+            ->setParameter('categoryIds', $categoryIds)
+            ->setParameter('enable', 1)
+            ->orderBy('n.' . $orderBy, $orderDir);
+            
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getNewsByCategory($categoryId, $orderBy, $orderDir, $limit = null) {
+        $qb = $this->createQueryBuilder('n')
+            ->innerJoin('n.category', 't')
+            ->where('t.id = :categoryId')
+            ->andWhere('n.enable = :enable')
+            ->setParameter('categoryId', $categoryId)
+            ->setParameter('enable', 1)
+            ->orderBy('n.' . $orderBy, $orderDir);
+            
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getRelatedNews($categoryId, $excludeId, $postType, $orderBy, $orderDir, $limit = 12) {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.category', 't')
+            ->where('t.id = :categoryId')
+            ->andWhere('r.id <> :id')
+            ->andWhere('r.postType = :postType')
+            ->andWhere('r.enable = :enable')
+            ->setParameter('categoryId', $categoryId)
+            ->setParameter('id', $excludeId)
+            ->setParameter('postType', $postType)
+            ->setParameter('enable', 1)
+            ->setMaxResults($limit)
+            ->orderBy('r.' . $orderBy, $orderDir)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getNewsByTag($tagId, $limit = 40) {
+        $qb = $this->createQueryBuilder('n')
+            ->innerJoin('n.tags', 't')
+            ->where('t.id = :tagId')
+            ->andWhere('n.enable = :enable')
+            ->setParameter('tagId', $tagId)
+            ->setParameter('enable', 1)
+            ->orderBy('n.createdAt', 'DESC');
+            
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+        return $qb->getQuery()->getResult();
+    }
 }

@@ -10,5 +10,15 @@ namespace AppBundle\Repository;
  */
 class RatingRepository extends \Doctrine\ORM\EntityRepository
 {
-
+    public function getAverageRatingForNews($newsId)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT AVG(r.rating) as ratingValue, COUNT(r) as ratingCount
+                FROM AppBundle:Rating r
+                WHERE r.news_id = :news_id'
+            )->setParameter('news_id', $newsId)
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+    }
 }
