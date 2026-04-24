@@ -13,13 +13,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Service\ActivityLogService;
-use Dmishh\SettingsBundle\Manager\SettingsManagerInterface;
+use App\Service\SettingsManager;
 
 class HomepageController extends AbstractController
 {
     private $settingsManager;
 
-    public function __construct(SettingsManagerInterface $settingsManager)
+    public function __construct(SettingsManager $settingsManager)
     {
         $this->settingsManager = $settingsManager;
     }

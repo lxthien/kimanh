@@ -15,7 +15,6 @@ return [
     Liip\ImagineBundle\LiipImagineBundle::class => ['all' => true],
     Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
     Knp\Bundle\MenuBundle\KnpMenuBundle::class => ['all' => true],
-    Dmishh\SettingsBundle\DmishhSettingsBundle::class => ['all' => true],
     EWZ\Bundle\RecaptchaBundle\EWZRecaptchaBundle::class => ['all' => true],
     FOS\UserBundle\FOSUserBundle::class => ['all' => true],
     blackknight467\StarRatingBundle\StarRatingBundle::class => ['all' => true],

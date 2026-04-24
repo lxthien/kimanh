@@ -1,7 +1,0 @@
-# This file is auto-generated during the composer install
-parameters:
-    locale: vi
-    env(SYMFONY_SECRET): sfdsfewr2423325345b345b34b5345wq35
-    env(LOG_URL): '%kernel.logs_dir%/%kernel.environment%.log'
-    env(DATABASE_URL): 'mysql://root:@localhost:3306/kimanh_v4?charset=utf8mb4'
-    env(MAILER_URL): 'smtp://localhost:25?encryption=&auth_mode='

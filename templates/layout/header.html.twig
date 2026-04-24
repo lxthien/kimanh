@@ -14,7 +14,7 @@
 						</span>
 						<span>
 							<img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/email.png'), '')) }}" alt="Email" width="14" height="14">
-							<a href="mailto:xaydungkimanh@gmail.com">xaydungkimanh@gmail.com</a>
+							<a href="mailto:{{ get_setting('emailContact') }}">{{ get_setting('emailContact') }}</a>
 						</span>
 						<a target="_blank" href="{{ get_setting('linkToFacebook') }}" rel="noopener"><img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/facebook.png'), '')) }}" alt="Facebook" width="20" height="20"></a>
 						<a target="_blank" href="{{ get_setting('linkToInstagram') }}" rel="noopener"><img src="{{ asset(convert_images.webpConvert2(asset('/assets/images/instagram.png'), '')) }}" alt="Instagram" width="20" height="20"></a>
