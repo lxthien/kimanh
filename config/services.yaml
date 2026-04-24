@@ -1,9 +1,6 @@
 parameters:
     google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
     locale: vi
-    env(SYMFONY_SECRET): sfdsfewr2423325345b345b34b5345wq35
-    env(DATABASE_URL): 'mysql://root:@localhost:3306/kimanh_v4?charset=utf8mb4'
-    env(MAILER_URL): 'smtp://localhost:25?encryption=&auth_mode='
 
 services:
     _defaults:
@@ -59,13 +56,9 @@ services:
         public: true
 
     settings_manager:
-        alias: Dmishh\SettingsBundle\Manager\SettingsManager
+        alias: App\Service\SettingsManager
         public: true
 
-    Dmishh\SettingsBundle\Controller\SettingsController:
-        public: true
-        autowire: false
-        tags: ['controller.service_arguments']
 
     app.menu_service:
         class: App\Service\MenuService

@@ -42,3 +42,8 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+###> symfony/dotenv ###
+.env.local
+.env.*.local
+###< symfony/dotenv ###
