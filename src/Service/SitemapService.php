@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\News;
 use App\Entity\NewsCategory;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class SitemapService
 {
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $em;
 
@@ -22,10 +22,10 @@ class SitemapService
     /**
      * Constructor
      *
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      * @param UrlGeneratorInterface $router
      */
-    public function __construct(EntityManager $em, UrlGeneratorInterface $router)
+    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $router)
     {
         $this->em = $em;
         $this->router = $router;

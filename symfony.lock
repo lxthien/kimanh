@@ -115,18 +115,6 @@
             "./config/packages/stof_doctrine_extensions.yaml"
         ]
     },
-    "suncat/mobile-detect-bundle": {
-        "version": "1.1",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "1.0",
-            "ref": "d503392fa26af3e3a343d4890ca3a3b74faef75a"
-        },
-        "files": [
-            "./config/packages/mobile_detect.yaml"
-        ]
-    },
     "symfony/flex": {
         "version": "1.22",
         "recipe": {
@@ -178,18 +166,6 @@
             "./config/packages/dev/swiftmailer.yaml",
             "./config/packages/swiftmailer.yaml",
             "./config/packages/test/swiftmailer.yaml"
-        ]
-    },
-    "twig/extensions": {
-        "version": "1.5",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "1.0",
-            "ref": "a86723ee8d8b2f9437c8ce60a5546a1c267da5ed"
-        },
-        "files": [
-            "./config/packages/twig_extensions.yaml"
         ]
     },
     "vich/uploader-bundle": {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9eadf1ed8a0c120ef659c9e12656dade",
+    "content-hash": "6882cc2d690a4aa1835f8dff81ea87d0",
     "packages": [
         {
             "name": "babdev/pagerfanta-bundle",
@@ -2199,61 +2199,6 @@
             "time": "2026-01-09T10:45:12+00:00"
         },
         {
-            "name": "incenteev/composer-parameter-handler",
-            "version": "v2.1.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Incenteev/ParameterHandler.git",
-                "reference": "e1dd118763503f7fd766f907013e1d76d525fcc4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Incenteev/ParameterHandler/zipball/e1dd118763503f7fd766f907013e1d76d525fcc4",
-                "reference": "e1dd118763503f7fd766f907013e1d76d525fcc4",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3",
-                "symfony/yaml": "^2.3 || ^3.0 || ^4.0 || ^5.0 || ^6.0"
-            },
-            "require-dev": {
-                "composer/composer": "^1.0@dev",
-                "symfony/filesystem": "^2.3 || ^3 || ^4 || ^5 || ^6.0",
-                "symfony/phpunit-bridge": "^3.4.47 || ^4.4.41 || ^5.4.8 || ^6.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Incenteev\\ParameterHandler\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Christophe Coevoet",
-                    "email": "stof@notk.org"
-                }
-            ],
-            "description": "Composer script handling your ignored parameter file",
-            "homepage": "https://github.com/Incenteev/ParameterHandler",
-            "keywords": [
-                "parameters management"
-            ],
-            "support": {
-                "issues": "https://github.com/Incenteev/ParameterHandler/issues",
-                "source": "https://github.com/Incenteev/ParameterHandler/tree/v2.1.5"
-            },
-            "time": "2022-05-25T10:57:22+00:00"
-        },
-        {
             "name": "jms/metadata",
             "version": "2.9.0",
             "source": {
@@ -2952,68 +2897,6 @@
             "time": "2019-11-23T22:34:24+00:00"
         },
         {
-            "name": "mobiledetect/mobiledetectlib",
-            "version": "2.8.47",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "28e9045958dcaf771f9b56564549d5b174e38b0e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/28e9045958dcaf771f9b56564549d5b174e38b0e",
-                "reference": "28e9045958dcaf771f9b56564549d5b174e38b0e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.0.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.8.36"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Detection": "namespaced/"
-                },
-                "classmap": [
-                    "Mobile_Detect.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Serban Ghita",
-                    "email": "serbanghita@gmail.com",
-                    "homepage": "http://mobiledetect.net",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Mobile_Detect is a lightweight PHP class for detecting mobile devices. It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.",
-            "homepage": "https://github.com/serbanghita/Mobile-Detect",
-            "keywords": [
-                "detect mobile devices",
-                "mobile",
-                "mobile detect",
-                "mobile detector",
-                "php mobile detect"
-            ],
-            "support": {
-                "issues": "https://github.com/serbanghita/Mobile-Detect/issues",
-                "source": "https://github.com/serbanghita/Mobile-Detect/tree/2.8.47"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/serbanghita",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-04-14T12:32:34+00:00"
-        },
-        {
             "name": "monolog/monolog",
             "version": "1.27.1",
             "source": {
@@ -3197,33 +3080,29 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.0",
+            "version": "v9.99.100",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "321a59fed499a5624b0e40cb5c824ae6116e0c18"
+                "reference": "996434e5492cb4c3edcb9168db6fbb1359ef965a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/321a59fed499a5624b0e40cb5c824ae6116e0c18",
-                "reference": "321a59fed499a5624b0e40cb5c824ae6116e0c18",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/996434e5492cb4c3edcb9168db6fbb1359ef965a",
+                "reference": "996434e5492cb4c3edcb9168db6fbb1359ef965a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2.0"
+                "php": ">= 7"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.*|5.*"
+                "phpunit/phpunit": "4.*|5.*",
+                "vimeo/psalm": "^1"
             },
             "suggest": {
                 "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
             },
             "type": "library",
-            "autoload": {
-                "files": [
-                    "lib/random.php"
-                ]
-            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
@@ -3238,6 +3117,7 @@
             "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
             "keywords": [
                 "csprng",
+                "polyfill",
                 "pseudorandom",
                 "random"
             ],
@@ -3246,7 +3126,7 @@
                 "issues": "https://github.com/paragonie/random_compat/issues",
                 "source": "https://github.com/paragonie/random_compat"
             },
-            "time": "2016-03-18T17:17:33+00:00"
+            "time": "2020-10-15T08:29:30+00:00"
         },
         {
             "name": "psr/cache",
@@ -3601,71 +3481,6 @@
                 "source": "https://github.com/stof/StofDoctrineExtensionsBundle/tree/v1.7.2"
             },
             "time": "2023-05-22T18:25:15+00:00"
-        },
-        {
-            "name": "suncat/mobile-detect-bundle",
-            "version": "v1.1.1",
-            "target-dir": "SunCat/MobileDetectBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/suncat2000/MobileDetectBundle.git",
-                "reference": "06007fec624587fd90e8963b796fc84fff64d4d8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/suncat2000/MobileDetectBundle/zipball/06007fec624587fd90e8963b796fc84fff64d4d8",
-                "reference": "06007fec624587fd90e8963b796fc84fff64d4d8",
-                "shasum": ""
-            },
-            "require": {
-                "mobiledetect/mobiledetectlib": "~2.8",
-                "php": ">=5.5.9",
-                "symfony/framework-bundle": "~2.7|~3.3|~4.0",
-                "twig/twig": "~1.26|~2.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8.35|^5.4.3|^6.0",
-                "satooshi/php-coveralls": "^2.0.0",
-                "symfony/phpunit-bridge": "~2.7|~3.3|~4.0"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-0": {
-                    "SunCat\\MobileDetectBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nikolay Ivlev",
-                    "email": "nikolay.kotovsky@gmail.com"
-                },
-                {
-                    "name": "Henri Vesala",
-                    "email": "henri.vesala@gmail.com"
-                },
-                {
-                    "name": "netmikey",
-                    "homepage": "https://github.com/netmikey"
-                }
-            ],
-            "description": "Symfony2/3/4 bundle for detect mobile devices, managing mobile view types, redirect to mobile version.",
-            "homepage": "https://github.com/suncat2000/MobileDetectBundle",
-            "keywords": [
-                "mobile",
-                "mobile detect",
-                "mobile redirect",
-                "mobile view managing",
-                "symfony mobile"
-            ],
-            "support": {
-                "issues": "https://github.com/suncat2000/MobileDetectBundle/issues",
-                "source": "https://github.com/suncat2000/MobileDetectBundle/tree/master"
-            },
-            "time": "2018-05-02T10:20:57+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -5407,66 +5222,6 @@
                 }
             ],
             "time": "2023-11-10T13:31:44+00:00"
-        },
-        {
-            "name": "twig/extensions",
-            "version": "v1.5.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/twigphp/Twig-extensions.git",
-                "reference": "57873c8b0c1be51caa47df2cdb824490beb16202"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig-extensions/zipball/57873c8b0c1be51caa47df2cdb824490beb16202",
-                "reference": "57873c8b0c1be51caa47df2cdb824490beb16202",
-                "shasum": ""
-            },
-            "require": {
-                "twig/twig": "^1.27|^2.0"
-            },
-            "require-dev": {
-                "symfony/phpunit-bridge": "^3.4",
-                "symfony/translation": "^2.7|^3.4"
-            },
-            "suggest": {
-                "symfony/translation": "Allow the time_diff output to be translated"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.5-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Twig_Extensions_": "lib/"
-                },
-                "psr-4": {
-                    "Twig\\Extensions\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                }
-            ],
-            "description": "Common additional features for Twig that do not directly belong in core",
-            "keywords": [
-                "i18n",
-                "text"
-            ],
-            "support": {
-                "issues": "https://github.com/twigphp/Twig-extensions/issues",
-                "source": "https://github.com/twigphp/Twig-extensions/tree/master"
-            },
-            "abandoned": true,
-            "time": "2018-12-05T18:34:18+00:00"
         },
         {
             "name": "twig/twig",

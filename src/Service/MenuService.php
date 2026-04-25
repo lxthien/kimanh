@@ -4,13 +4,13 @@ namespace App\Service;
 
 use App\Entity\Menu;
 use App\Entity\MenuItem;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class MenuService
 {
     private $em;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }

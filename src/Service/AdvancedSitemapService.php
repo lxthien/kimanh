@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\News;
 use App\Entity\NewsCategory;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -40,7 +40,7 @@ class AdvancedSitemapService
      * @param UrlGeneratorInterface $router
      * @param CacheItemPoolInterface|null $cache Optional cache service
      */
-    public function __construct(EntityManager $em, UrlGeneratorInterface $router, CacheItemPoolInterface $cache = null)
+    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $router, CacheItemPoolInterface $cache = null)
     {
         $this->em = $em;
         $this->router = $router;
