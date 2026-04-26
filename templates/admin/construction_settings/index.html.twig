@@ -1,0 +1,169 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Cài đặt giá vốn thi công{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <div class="col-sm-4">
+            <div class="page-header float-left">
+                <div class="page-title">
+                    <h1>Cài đặt giá vốn</h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="page-header float-right">
+                <div class="page-title">
+                    <ol class="breadcrumb text-right">
+                        <li><a href="{{ path('admin_dashboard_index') }}">Dashboard</a></li>
+                        <li><a href="{{ path('admin_project_costing_index') }}">Quản lý giá vốn</a></li>
+                        <li class="active">Cài đặt tham số</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block main %}
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>Cấu hình hệ số và đơn giá thi công</strong>
+                        </div>
+                        <div class="card-body card-block">
+                            {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4 class="mb-3">Hệ số Móng</h4>
+                                    <div class="row form-group">
+                                        <div class="col col-md-4">{{ form_label(form.foundation_c_1, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                        <div class="col-12 col-md-8">{{ form_widget(form.foundation_c_1, {'attr': {'class': 'form-control', 'step': '0.01'}}) }}</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col col-md-4">{{ form_label(form.foundation_c_2, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                        <div class="col-12 col-md-8">{{ form_widget(form.foundation_c_2, {'attr': {'class': 'form-control', 'step': '0.01'}}) }}</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col col-md-4">{{ form_label(form.foundation_c_3, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                        <div class="col-12 col-md-8">{{ form_widget(form.foundation_c_3, {'attr': {'class': 'form-control', 'step': '0.01'}}) }}</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col col-md-4">{{ form_label(form.foundation_c_4, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                        <div class="col-12 col-md-8">{{ form_widget(form.foundation_c_4, {'attr': {'class': 'form-control', 'step': '0.01'}}) }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <h4 class="mb-3">Hệ số Mái</h4>
+                                    <div class="row form-group">
+                                        <div class="col col-md-4">{{ form_label(form.roof_c_1, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                        <div class="col-12 col-md-8">{{ form_widget(form.roof_c_1, {'attr': {'class': 'form-control', 'step': '0.01'}}) }}</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col col-md-4">{{ form_label(form.roof_c_2, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                        <div class="col-12 col-md-8">{{ form_widget(form.roof_c_2, {'attr': {'class': 'form-control', 'step': '0.01'}}) }}</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col col-md-4">{{ form_label(form.roof_c_3, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                        <div class="col-12 col-md-8">{{ form_widget(form.roof_c_3, {'attr': {'class': 'form-control', 'step': '0.01'}}) }}</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col col-md-4">{{ form_label(form.roof_c_4, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                        <div class="col-12 col-md-8">{{ form_widget(form.roof_c_4, {'attr': {'class': 'form-control', 'step': '0.01'}}) }}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4 class="mb-3">Hệ số Tầng hầm</h4>
+                                    <div class="row form-group">
+                                        <div class="col col-md-4">{{ form_label(form.basement_c_0, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                        <div class="col-12 col-md-8">{{ form_widget(form.basement_c_0, {'attr': {'class': 'form-control', 'step': '0.01'}}) }}</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col col-md-4">{{ form_label(form.basement_c_1, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                        <div class="col-12 col-md-8">{{ form_widget(form.basement_c_1, {'attr': {'class': 'form-control', 'step': '0.01'}}) }}</div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col col-md-4">{{ form_label(form.basement_c_2, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                        <div class="col-12 col-md-8">{{ form_widget(form.basement_c_2, {'attr': {'class': 'form-control', 'step': '0.01'}}) }}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <h4 class="mb-3">Đơn giá tham chiếu (Benchmark) theo gói hoàn thiện</h4>
+                            
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h5 class="mb-2 text-primary">Nhà phố</h5>
+                                    <div class="form-group">
+                                        {{ form_label(form.sale_rate_1_1) }}
+                                        {{ form_widget(form.sale_rate_1_1, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_label(form.sale_rate_1_2) }}
+                                        {{ form_widget(form.sale_rate_1_2, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_label(form.sale_rate_1_3) }}
+                                        {{ form_widget(form.sale_rate_1_3, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <h5 class="mb-2 text-primary">Biệt thự</h5>
+                                    <div class="form-group">
+                                        {{ form_label(form.sale_rate_2_1) }}
+                                        {{ form_widget(form.sale_rate_2_1, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_label(form.sale_rate_2_2) }}
+                                        {{ form_widget(form.sale_rate_2_2, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_label(form.sale_rate_2_3) }}
+                                        {{ form_widget(form.sale_rate_2_3, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <h5 class="mb-2 text-primary">Nhà cấp 4</h5>
+                                    <div class="form-group">
+                                        {{ form_label(form.sale_rate_3_1) }}
+                                        {{ form_widget(form.sale_rate_3_1, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_label(form.sale_rate_3_2) }}
+                                        {{ form_widget(form.sale_rate_3_2, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_label(form.sale_rate_3_3) }}
+                                        {{ form_widget(form.sale_rate_3_3, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-footer text-right">
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-dot-circle-o"></i> Lưu cấu hình
+                                </button>
+                                <a href="{{ path('admin_project_costing_index') }}" class="btn btn-secondary btn-sm">Quay lại</a>
+                            </div>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

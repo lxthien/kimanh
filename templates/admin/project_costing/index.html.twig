@@ -1,0 +1,80 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block main %}
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card add">
+                        <div class="card-body">
+                            <div class="stat-widget-one">
+                                <a href="{{ path('admin_project_costing_new') }}">
+                                    <div class="stat-icon dib">
+                                        <i class="ti-plus text-success border-success"></i>
+                                    </div>
+                                    <div class="stat-content dib">
+                                        <div class="stat-text text-success">Tạo dự án mới</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong class="card-title">Dự án giá vốn đã lưu</strong>
+                        </div>
+                        <div class="card-body">
+                            <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Tên công trình</th>
+                                        <th>Trạng thái</th>
+                                        <th>Loại</th>
+                                        <th>Hợp đồng</th>
+                                        <th>Kích thước</th>
+                                        <th>Cập nhật</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in projects %}
+                                        <tr>
+                                            <td><strong>{{ row.projectName }}</strong></td>
+                                            <td>{{ row.status }}</td>
+                                            <td>{{ row.type == 1 ? 'Nhà phố' : (row.type == 2 ? 'Biệt thự' : 'Nhà cấp 4') }}</td>
+                                            <td>{{ row.contractValue|number_format(0, '.', ',') }}</td>
+                                            <td>{{ row.wide|number_format(2, '.', ',') }} x {{ row.long|number_format(2, '.', ',') }} m</td>
+                                            <td>{{ row.updatedAt|localizeddate('medium', 'none', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
+                                            <td>
+                                                <div class="item-actions">
+                                                    <a href="{{ path('admin_project_costing_edit', {id: row.id}) }}" class="btn-sm">
+                                                        <i class="fa fa-edit" aria-hidden="true"></i>
+                                                    </a>
+                                                    <form action="{{ path('admin_project_costing_delete', {id: row.id}) }}" method="post" style="display:inline-block;">
+                                                        <input type="hidden" name="token" value="{{ csrf_token('delete') }}" />
+                                                        <button type="submit">
+                                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted">Chưa có dự án nào được lưu.</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

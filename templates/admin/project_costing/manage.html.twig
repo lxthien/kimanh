@@ -1,0 +1,658 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block main %}
+    <div class="content mt-3 project-costing">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body project-shell">
+                            <div class="project-shell__header">
+                                <div class="project-shell__heading">
+                                    <span class="project-shell__eyebrow">Noi bo cong ty</span>
+                                    <h1 class="project-shell__title">{{ is_new ? 'Tao du an gia von' : 'Cap nhat du an gia von' }}</h1>
+                                    <p class="project-shell__desc">Thong tin du an duoc luu de theo doi lau dai. Phan phan tich ben duoi uu tien hien thi day du cac chi so quan trong va tu dong lay bang gia vat tu hien hanh.</p>
+                                </div>
+                                <div class="project-shell__summary">
+                                    <div class="project-shell__summary-item">
+                                        <span class="label">Du an</span>
+                                        <strong>{{ scenario.projectName }}</strong>
+                                    </div>
+                                    <div class="project-shell__summary-item">
+                                        <span class="label">Trang thai</span>
+                                        <strong>{{ scenario.projectStatus }}</strong>
+                                    </div>
+                                    <div class="project-shell__summary-item">
+                                        <span class="label">Bien forecast</span>
+                                        <strong>{{ scenario.projectedMargin }}%</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <details class="project-form-panel" {{ is_new ? 'open' : '' }}>
+                                <summary class="project-form-panel__summary">
+                                    <div class="project-form-panel__summary-text">
+                                        <strong>Thong tin du an</strong>
+                                        <span>Cac truong nay it thay doi, co the thu gon sau khi luu.</span>
+                                    </div>
+                                    <div class="project-form-panel__summary-meta">
+                                        <span>{{ scenario.typeLabel }}</span>
+                                        <span>{{ scenario.finishLabel }}</span>
+                                        <span>{{ scenario.constructedArea }} m2</span>
+                                    </div>
+                                </summary>
+
+                                <div class="project-form-panel__body">
+                                    {% if errorMessage %}
+                                        <div class="alert alert-danger">{{ errorMessage }}</div>
+                                    {% endif %}
+
+                                    {{ form_start(form, {'attr': {'class': 'project-form-grid'}}) }}
+                                        <div class="project-form-grid__row project-form-grid__row--primary">
+                                            <div class="project-form-grid__field project-form-grid__field--wide">
+                                                {{ form_label(form.projectName) }}
+                                                {{ form_widget(form.projectName, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                            <div class="project-form-grid__field">
+                                                {{ form_label(form.status) }}
+                                                {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                            <div class="project-form-grid__field">
+                                                {{ form_label(form.contractValue) }}
+                                                {{ form_widget(form.contractValue, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                            <div class="project-form-grid__field">
+                                                {{ form_label(form.targetMargin) }}
+                                                {{ form_widget(form.targetMargin, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                        </div>
+
+                                        <div class="project-form-grid__row">
+                                            <div class="project-form-grid__field">
+                                                {{ form_label(form.type) }}
+                                                {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                            <div class="project-form-grid__field">
+                                                {{ form_label(form.finishLevel) }}
+                                                {{ form_widget(form.finishLevel, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                            <div class="project-form-grid__field">
+                                                {{ form_label(form.wide) }}
+                                                {{ form_widget(form.wide, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                            <div class="project-form-grid__field">
+                                                {{ form_label(form.long) }}
+                                                {{ form_widget(form.long, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                            <div class="project-form-grid__field">
+                                                {{ form_label(form.floor) }}
+                                                {{ form_widget(form.floor, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                            <div class="project-form-grid__field">
+                                                {{ form_label(form.basement) }}
+                                                {{ form_widget(form.basement, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                        </div>
+
+                                        <div class="project-form-grid__row">
+                                            <div class="project-form-grid__field">
+                                                {{ form_label(form.mong) }}
+                                                {{ form_widget(form.mong, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                            <div class="project-form-grid__field">
+                                                {{ form_label(form.mai) }}
+                                                {{ form_widget(form.mai, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                            <div class="project-form-grid__field">
+                                                {{ form_label(form.alley) }}
+                                                {{ form_widget(form.alley, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                            <div class="project-form-grid__field">
+                                                {{ form_label(form.subcontract) }}
+                                                {{ form_widget(form.subcontract, {'attr': {'class': 'form-control'}}) }}
+                                            </div>
+                                            <div class="project-form-grid__field project-form-grid__field--notes">
+                                                {{ form_label(form.notes) }}
+                                                {{ form_widget(form.notes, {'attr': {'class': 'form-control', 'rows': 3}}) }}
+                                            </div>
+                                        </div>
+
+                                        <div class="project-form-grid__actions">
+                                            {{ form_widget(form.analyze, {'attr': {'class': 'btn btn-outline-primary'}}) }}
+                                            {{ form_widget(form.saveProject, {'attr': {'class': 'btn btn-primary'}}) }}
+                                            <a href="{{ path('admin_project_costing_index') }}" class="btn btn-link">Danh sach du an</a>
+                                        </div>
+                                    {{ form_end(form) }}
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-md-6 col-xl-3">
+                            <div class="project-kpi project-kpi--blue">
+                                <span class="label">Gia tri hop dong</span>
+                                <strong>{{ scenario.contractValue|number_format(0, '.', ',') }}</strong>
+                                <small>Benchmark {{ scenario.benchmarkContractValue|number_format(0, '.', ',') }} VND</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xl-3">
+                            <div class="project-kpi project-kpi--slate">
+                                <span class="label">Budget goc</span>
+                                <strong>{{ scenario.targetBudget|number_format(0, '.', ',') }}</strong>
+                                <small>Muc tieu loi nhuan {{ scenario.targetMargin }}%</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xl-3">
+                            <div class="project-kpi project-kpi--amber">
+                                <span class="label">Forecast chi phi</span>
+                                <strong>{{ scenario.forecastCost|number_format(0, '.', ',') }}</strong>
+                                <small>Committed {{ scenario.committedCost|number_format(0, '.', ',') }}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xl-3">
+                            <div class="project-kpi project-kpi--green">
+                                <span class="label">Loi nhuan du kien</span>
+                                <strong>{{ scenario.projectedProfit|number_format(0, '.', ',') }}</strong>
+                                <small>Bien {{ scenario.projectedMargin }}%</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body project-topline">
+                            <div class="project-topline__tags">
+                                <span>{{ scenario.typeLabel }}</span>
+                                <span>{{ scenario.finishLabel }}</span>
+                                <span>{{ scenario.foundationLabel }}</span>
+                                <span>{{ scenario.roofLabel }}</span>
+                                <span>{{ scenario.basementLabel }}</span>
+                                <span>{{ scenario.alleyLabel }}</span>
+                                <span>{{ scenario.subcontractLabel }}</span>
+                            </div>
+                            <div class="project-topline__metrics">
+                                <div><span>Dien tich dat</span><strong>{{ scenario.footprintArea }} m2</strong></div>
+                                <div><span>Dien tich tinh gia von</span><strong>{{ scenario.constructedArea }} m2</strong></div>
+                                <div><span>He so rui ro</span><strong>{{ scenario.riskFactor }}</strong></div>
+                                <div><span>Actual mo phong</span><strong>{{ scenario.actualCost|number_format(0, '.', ',') }} VND</strong></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-alert project-alert--warning">
+                        <strong>Pham vi cua bang baseline</strong>
+                        <p>{{ scenario.baselineDisclaimer }}</p>
+                        {% if scenario.linkedMaterials is not empty %}
+                            <div class="project-linked-materials">
+                                <span class="project-linked-materials__label">Dang lay gia tu du lieu quan ly:</span>
+                                {% for item in scenario.linkedMaterials %}
+                                    <span class="project-linked-materials__item">{{ item.name }} ({{ item.code }})</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        {% for alert in scenario.alerts %}
+                            <div class="col-lg-6">
+                                <div class="project-alert project-alert--{{ alert.tone }}">
+                                    <strong>{{ alert.title }}</strong>
+                                    <p>{{ alert.text }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                            <strong class="card-title mb-0">Budget vs Forecast theo hang muc</strong>
+                            <small class="text-muted">Thong tin uu tien nhat de theo doi vuot budget va bien loi nhuan</small>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Ma</th>
+                                            <th>Hang muc</th>
+                                            <th>Ty trong</th>
+                                            <th>Budget</th>
+                                            <th>Committed</th>
+                                            <th>Actual</th>
+                                            <th>Forecast</th>
+                                            <th>Lech</th>
+                                            <th>Trang thai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in scenario.costGroups %}
+                                            <tr>
+                                                <td>{{ item.code }}</td>
+                                                <td>{{ item.label }}</td>
+                                                <td>{{ item.share }}%</td>
+                                                <td>{{ item.budget|number_format(0, '.', ',') }}</td>
+                                                <td>{{ item.committed|number_format(0, '.', ',') }}</td>
+                                                <td>{{ item.actual|number_format(0, '.', ',') }}</td>
+                                                <td><strong>{{ item.forecast|number_format(0, '.', ',') }}</strong></td>
+                                                <td class="{{ item.variance < 0 ? 'text-danger' : 'text-success' }}">{{ item.variance|number_format(0, '.', ',') }}</td>
+                                                <td><span class="badge badge-{{ item.status == 'Trong tầm kiểm soát' ? 'success' : 'warning' }}">{{ item.status }}</span></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                            <strong class="card-title mb-0">Boc tach vat tu baseline</strong>
+                            <small class="text-muted">Bang nay lay gia tu menu Gia vat tu neu ma da duoc map dung</small>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-striped table-hover mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Ma</th>
+                                            <th>Nhom</th>
+                                            <th>Vat tu</th>
+                                            <th>SL</th>
+                                            <th>Hao hut</th>
+                                            <th>Don gia</th>
+                                            <th>Thanh tien</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in scenario.materials %}
+                                            <tr>
+                                                <td><strong>{{ item.code }}</strong></td>
+                                                <td>{{ item.group }}</td>
+                                                <td class="project-material-cell">
+                                                    <strong>{{ item.name }}</strong>
+                                                    <div class="text-muted small">{{ item.note }}</div>
+                                                    <div class="text-muted small">{{ item.formulaNote }}</div>
+                                                    {% if item.isFallback %}
+                                                        <div class="text-warning small">Dang dung don gia mac dinh vi chua co du lieu trong menu Gia vat tu.</div>
+                                                    {% else %}
+                                                        <div class="text-success small">Da lien ket voi bang gia vat tu quan ly.</div>
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ item.quantity|number_format(0, '.', ',') }} {{ item.unit }}</td>
+                                                <td>{{ item.wastagePercent|number_format(2, '.', ',') }}%</td>
+                                                <td>{{ item.rate|number_format(0, '.', ',') }}</td>
+                                                <td><strong>{{ item.cost|number_format(0, '.', ',') }}</strong></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xl-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <strong class="card-title">Dong tien de xuat</strong>
+                                </div>
+                                <div class="card-body">
+                                    <div class="cashflow-grid">
+                                        {% for item in scenario.cashFlow %}
+                                            <div class="cashflow-item">
+                                                <div class="d-flex justify-content-between">
+                                                    <strong>{{ item.label }}</strong>
+                                                    <span>{{ item.percent }}%</span>
+                                                </div>
+                                                <div class="progress mt-2 mb-2">
+                                                    <div class="progress-bar bg-info" role="progressbar" style="width: {{ item.percent }}%"></div>
+                                                </div>
+                                                <small>{{ item.value|number_format(0, '.', ',') }} VND</small>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <strong class="card-title">Du an gan day</strong>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table class="table table-sm mb-0">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Cong trinh</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in projects %}
+                                                <tr>
+                                                    <td>
+                                                        <strong>{{ item.projectName }}</strong>
+                                                        <div class="text-muted small">{{ item.status }}</div>
+                                                    </td>
+                                                    <td class="text-right align-middle">
+                                                        <a href="{{ path('admin_project_costing_edit', {id: item.id}) }}"><i class="fa fa-arrow-right"></i></a>
+                                                    </td>
+                                                </tr>
+                                            {% else %}
+                                                <tr>
+                                                    <td colspan="2" class="text-center text-muted py-3">Chua co du an da luu.</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .project-shell {
+            padding: 24px;
+        }
+        .project-shell__header {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+        .project-shell__heading {
+            max-width: 780px;
+        }
+        .project-shell__eyebrow {
+            display: inline-block;
+            margin-bottom: 10px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: #e6f4ea;
+            color: #1b5e20;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .project-shell__title {
+            margin-bottom: 10px;
+            font-size: 30px;
+            font-weight: 700;
+            color: #16213e;
+        }
+        .project-shell__desc {
+            margin: 0;
+            color: #52606d;
+            line-height: 1.7;
+        }
+        .project-shell__summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(120px, 1fr));
+            gap: 12px;
+            min-width: 360px;
+        }
+        .project-shell__summary-item {
+            padding: 14px;
+            border-radius: 12px;
+            background: #f5f8fc;
+        }
+        .project-shell__summary-item .label {
+            display: block;
+            margin-bottom: 6px;
+            color: #7b8794;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        .project-form-panel {
+            border: 1px solid #e6ecf3;
+            border-radius: 14px;
+            background: #fbfcfe;
+            overflow: hidden;
+        }
+        .project-form-panel__summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 18px;
+            cursor: pointer;
+            list-style: none;
+        }
+        .project-form-panel__summary::-webkit-details-marker {
+            display: none;
+        }
+        .project-form-panel__summary-text strong {
+            display: block;
+            color: #102a43;
+        }
+        .project-form-panel__summary-text span {
+            color: #7b8794;
+            font-size: 13px;
+        }
+        .project-form-panel__summary-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        .project-form-panel__summary-meta span {
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #edf2f7;
+            color: #243b53;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .project-form-panel__body {
+            padding: 0 18px 18px;
+            border-top: 1px solid #e6ecf3;
+        }
+        .project-form-grid__row {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 14px;
+        }
+        .project-form-grid__row--primary {
+            grid-template-columns: 2fr 1fr 1.2fr 0.8fr;
+        }
+        .project-form-grid__field--wide {
+            grid-column: auto;
+        }
+        .project-form-grid__field--notes {
+            grid-column: span 2;
+        }
+        .project-form-grid__field label {
+            margin-bottom: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #486581;
+            text-transform: uppercase;
+        }
+        .project-form-grid__field .form-control {
+            height: 40px;
+        }
+        .project-form-grid__field textarea.form-control {
+            height: auto;
+            min-height: 92px;
+        }
+        .project-form-grid__actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+        .project-kpi {
+            min-height: 128px;
+            margin-bottom: 16px;
+            padding: 18px;
+            border-radius: 12px;
+            color: #fff;
+        }
+        .project-kpi .label {
+            display: block;
+            margin-bottom: 8px;
+            opacity: 0.8;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        .project-kpi strong {
+            display: block;
+            font-size: 24px;
+            line-height: 1.3;
+        }
+        .project-kpi small {
+            display: block;
+            margin-top: 10px;
+            opacity: 0.85;
+        }
+        .project-kpi--blue { background: linear-gradient(135deg, #0f4c81, #1f6aa5); }
+        .project-kpi--slate { background: linear-gradient(135deg, #34495e, #5d6d7e); }
+        .project-kpi--amber { background: linear-gradient(135deg, #b9770e, #d68910); }
+        .project-kpi--green { background: linear-gradient(135deg, #1e8449, #28b463); }
+        .project-topline {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .project-topline__tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .project-topline__tags span {
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: #edf2f7;
+            color: #243b53;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .project-topline__metrics {
+            min-width: 340px;
+        }
+        .project-topline__metrics div {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e6ecf3;
+        }
+        .project-topline__metrics span {
+            color: #7b8794;
+        }
+        .project-alert {
+            margin-bottom: 16px;
+            padding: 16px 18px;
+            border-radius: 12px;
+        }
+        .project-alert strong {
+            display: block;
+            margin-bottom: 8px;
+        }
+        .project-alert p {
+            margin: 0;
+            line-height: 1.6;
+        }
+        .project-linked-materials {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .project-linked-materials__label {
+            font-weight: 700;
+        }
+        .project-linked-materials__item {
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.65);
+            color: inherit;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .project-alert--success { background: #eaf7ee; color: #1b5e20; }
+        .project-alert--warning { background: #fff4e5; color: #8a5b00; }
+        .project-alert--danger { background: #fdecea; color: #a61b1b; }
+        .project-material-cell {
+            min-width: 320px;
+        }
+        .cashflow-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+        .cashflow-item {
+            padding: 14px;
+            border-radius: 12px;
+            background: #f8fbff;
+        }
+        @media (max-width: 1399px) {
+            .project-form-grid__row {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+            .project-form-grid__row--primary {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .project-form-grid__field--notes {
+                grid-column: span 3;
+            }
+        }
+        @media (max-width: 1199px) {
+            .project-shell__header,
+            .project-topline {
+                flex-direction: column;
+            }
+            .project-shell__summary {
+                width: 100%;
+                min-width: 0;
+            }
+            .project-topline__metrics {
+                min-width: 0;
+                width: 100%;
+            }
+            .cashflow-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 767px) {
+            .project-shell {
+                padding: 18px;
+            }
+            .project-shell__title {
+                font-size: 24px;
+            }
+            .project-shell__summary {
+                grid-template-columns: 1fr;
+            }
+            .project-form-panel__summary {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .project-form-panel__summary-meta {
+                justify-content: flex-start;
+            }
+            .project-form-grid__row,
+            .project-form-grid__row--primary {
+                grid-template-columns: 1fr;
+            }
+            .project-form-grid__field--notes {
+                grid-column: auto;
+            }
+            .project-form-grid__actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+{% endblock %}

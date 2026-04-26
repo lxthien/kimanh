@@ -123,6 +123,23 @@
                     </a>
                 </li>
 
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="menu-icon fa fa-line-chart"></i>
+                        Quản lý giá vốn
+                    </a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li>
+                            <i class="fa fa-area-chart"></i>
+                            <a href="{{ path('admin_project_costing_index') }}">Phân tích công trình</a>
+                        </li>
+                        <li>
+                            <i class="fa fa-cubes"></i>
+                            <a href="{{ path('admin_construction_material_index') }}">Giá vật tư</a>
+                        </li>
+                    </ul>
+                </li>
+
                 <li>
                     <a href="{{ path('admin_settings_global') }}">
                         <i class="menu-icon fa fa-cogs"></i>

@@ -38,6 +38,8 @@ class ActivityLog
     const ENTITY_MENU_ITEM = 'menu_item';
     const ENTITY_TAG = 'tag';
     const ENTITY_SETTINGS = 'settings';
+    const ENTITY_CONSTRUCTION_MATERIAL = 'construction_material';
+    const ENTITY_CONSTRUCTION_PROJECT = 'construction_project';
 
     /**
      * @var int
@@ -273,6 +275,8 @@ class ActivityLog
             self::ENTITY_MENU_ITEM => 'Menu item',
             self::ENTITY_TAG => 'Tag',
             self::ENTITY_SETTINGS => 'Cài đặt',
+            self::ENTITY_CONSTRUCTION_MATERIAL => 'Giá vật tư',
+            self::ENTITY_CONSTRUCTION_PROJECT => 'Dự án giá vốn',
         ];
 
         return isset($labels[$this->entityType]) ? $labels[$this->entityType] : $this->entityType;
