@@ -215,6 +215,7 @@ knp_menu:
 # BreadcrumbsBundle
 white_october_breadcrumbs:
     separator:          ''
+    viewTemplate:       '@WhiteOctoberBreadcrumbs/breadcrumbs.html.twig'
 
 # EWZRecaptchaBundle
 ewz_recaptcha:
