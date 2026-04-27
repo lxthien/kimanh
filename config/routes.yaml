@@ -41,6 +41,9 @@ dynamic_post_page:
     path: /{slug}/
     defaults:
         _controller: App\Controller\NewsController::dynamicRouteAction
+        level1: null
+        level2: null
+        level3: null
     requirements:
         slug: '[-\w]+'
 
@@ -50,6 +53,8 @@ dynamic_category_post:
     path: /{level1}/{level2}/
     defaults:
         _controller: App\Controller\NewsController::dynamicRouteAction
+        slug: null
+        level3: null
         page: 1
     requirements:
         level1: '[-\w]+'
@@ -61,6 +66,7 @@ dynamic_category_level2_post:
     path: /{level1}/{level2}/{level3}/
     defaults:
         _controller: App\Controller\NewsController::dynamicRouteAction
+        slug: null
         page: 1
     requirements:
         level1: '[-\w]+'
@@ -92,5 +98,8 @@ news_show:
     path: /{slug}/
     defaults:
         _controller: App\Controller\NewsController::dynamicRouteAction
+        level1: null
+        level2: null
+        level3: null
     requirements:
         slug: '[^\n]++'

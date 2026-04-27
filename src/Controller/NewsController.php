@@ -297,7 +297,7 @@ class NewsController extends Controller
         }
 
         // Init breadcrum for category page
-        $breadcrumbs = $this->buildBreadcrums(!empty($level2) ? $subCategory : $category, null, null);
+        $this->buildBreadcrums(!empty($level2) ? $subCategory : $category, null, null);
 
         $ordering = $category->getSortBy() == null ? '{"createdAt":"DESC"}' : $category->getSortBy();
         $orderingData = (array) (json_decode($ordering));
@@ -438,6 +438,9 @@ class NewsController extends Controller
         $formRating = $this->createForm(\App\Form\PostRatingType::class, null, [
             'action' => $this->generateUrl('rating')
         ]);
+
+        // Build breadcrumbs
+        $this->buildBreadcrums(null, $post->isPage() ? null : $post, $post->isPage() ? $post : null);
 
         // Dữ liệu chung cho View
         $viewData = [
