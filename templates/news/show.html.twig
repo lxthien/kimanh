@@ -113,8 +113,9 @@
                 "url": "{{ authorUrl }}",
                 "image": {
                     "@type": "ImageObject",
-                    "@id": "{{ absolute_url(convert_images.webpConvert(userPath, '', true)) }}",
-                    "url": "{{ absolute_url(convert_images.webpConvert(userPath, '', true)) }}",
+                    {% set webpUserPath = convert_images.webpConvert(userPath, '', true) %}
+                    "@id": "{{ absolute_url(webpUserPath ?: userPath) }}",
+                    "url": "{{ absolute_url(webpUserPath ?: userPath) }}",
                     "height": "65",
                     "width": "65"
                 }

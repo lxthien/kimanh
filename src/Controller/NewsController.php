@@ -297,7 +297,7 @@ class NewsController extends Controller
         }
 
         // Init breadcrum for category page
-        $breadcrumbs = $this->buildBreadcrums(!empty($level2) ? $subCategory : $category, null, null);
+        $this->buildBreadcrums(!empty($level2) ? $subCategory : $category, null, null);
 
         $ordering = $category->getSortBy() == null ? '{"createdAt":"DESC"}' : $category->getSortBy();
         $orderingData = (array) (json_decode($ordering));
@@ -362,133 +362,116 @@ class NewsController extends Controller
      */
     public function showAction($slug, Request $request)
     {
-        if ($request->query->get('preview') === false || $request->query->get('preview_id') === null) {
-            $post = $this->getDoctrine()
-                ->getRepository(News::class)
-                ->findOneBy(
-                    array('url' => $slug, 'enable' => 1)
-                );
+        $isPreview = $request->query->has('preview') && $request->query->has('preview_id');
+        
+        // 1. Bảo mật: Chỉ ADMIN mới được xem bản nháp/preview
+        if ($isPreview) {
+            if (!$this->isGranted('ROLE_ADMIN')) {
+                throw $this->createAccessDeniedException("Bạn không có quyền xem bản nháp.");
+            }
+            $post = $this->getDoctrine()->getRepository(News::class)->find($request->query->get('preview_id'));
         } else {
-            $post = $this->getDoctrine()
-                ->getRepository(News::class)
-                ->find($request->query->get('preview_id'));
+            $post = $this->getDoctrine()->getRepository(News::class)->findOneBy(['url' => $slug, 'enable' => 1]);
         }
 
         if (!$post) {
-            throw $this->createNotFoundException("The item does not exist");
+            throw $this->createNotFoundException("Nội dung không tồn tại.");
         }
 
-        // Async log viewCount for batch update via cron to prevent database locking
+        // 2. HTTP Caching: Tăng tốc cho người dùng quay lại và giảm tải Server
+        $response = new Response();
+        $response->setEtag(md5($post->getId() . $post->getUpdatedAt()->getTimestamp()));
+        $response->setPublic();
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
+        // 3. SEO Canonical Redirect (301)
+        if ($request->query->has('danh-muc')) {
+            return $this->redirectToRoute('news_show', ['slug' => $slug], 301);
+        }
+
+        // Async log viewCount
         $this->viewCountLogger->logView($post->getId(), $request);
 
-        $categoryPrimary = $request->query->get('danh-muc');
+        // 4. Xử lý Category & Related News
+        $category = null;
+        $relatedNews = [];
+        $categoryUrl = null;
+        
+        // Determine primary category
+        $categoryPrimaryId = $post->getCategoryPrimary() ?: (!$post->getCategory()->isEmpty() ? $post->getCategory()[0]->getId() : null);
 
-        if (!$categoryPrimary) {
-            if ($post->getCategoryPrimary() > 0) {
-                $categoryPrimary = $post->getCategoryPrimary();
-            } else {
-                if (!$post->getCategory()->isEmpty()) {
-                    $categoryPrimary = $post->getCategory()[0]->getId();
+        if ($categoryPrimaryId) {
+            $category = $this->getDoctrine()->getRepository(NewsCategory::class)->find($categoryPrimaryId);
+            if ($category) {
+                // Optimize sorting logic
+                $ordering = json_decode($category->getSortBy() ?: '{"createdAt":"DESC"}', true);
+                $sortKey = key($ordering);
+                
+                $relatedNews = $this->getDoctrine()->getRepository(News::class)
+                    ->getRelatedNews($categoryPrimaryId, $post->getId(), $post->getPostType(), $sortKey, $ordering[$sortKey], 12);
+                
+                // Build category URL
+                if ($category->getParentcat() === 'root') {
+                    $categoryUrl = $this->generateUrl("dynamic_post_page", ['slug' => $category->getUrl()], UrlGeneratorInterface::ABSOLUTE_URL);
+                } else {
+                    $categoryUrl = $this->generateUrl("dynamic_category_post", [
+                        'level1' => $category->getParentcat()->getUrl(), 
+                        'level2' => $category->getUrl()
+                    ], UrlGeneratorInterface::ABSOLUTE_URL);
                 }
             }
-        } else {
-            // Remove all the URLs from google
-            return $this->redirectToRoute('news_show', array('slug' => $slug), 301);
-
-            $catPrimary = $this->getDoctrine()
-                ->getRepository(NewsCategory::class)
-                ->findOneByUrl($categoryPrimary);
-
-            $categoryPrimary = $catPrimary->getId();
         }
 
-        if ($categoryPrimary > 0) {
-            $category = $this->getDoctrine()
-                ->getRepository(NewsCategory::class)
-                ->find($categoryPrimary);
-
-            $ordering = $category->getSortBy() == null ? '{"createdAt":"DESC"}' : $category->getSortBy();
-            $orderingData = (array) (json_decode($ordering));
-            $orderingKey = array_keys($orderingData);
-
-            // Get news related
-            $relatedNews = $this->getDoctrine()
-                ->getRepository(News::class)
-                ->getRelatedNews($categoryPrimary, $post->getId(), $post->getPostType(), $orderingKey[0], $orderingData[$orderingKey[0]], 12);
-
-            if ($category->getParentcat() === 'root') {
-                $categoryUrl = $this->generateUrl("dynamic_post_page", array('slug' => $category->getUrl()), UrlGeneratorInterface::ABSOLUTE_URL);
-            } else {
-                $categoryUrl = $this->generateUrl("dynamic_category_post", array('level1' => $category->getParentcat()->getUrl(), 'level2' => $category->getUrl()), UrlGeneratorInterface::ABSOLUTE_URL);
-            }
-        }
-
-        // Get the list comment for post
-        $comments = $this->getDoctrine()
-            ->getRepository(Comment::class)
-            ->getApprovedCommentsForNews($post->getId());
-
-        // Render form comment for post.
-        $form = $this->renderFormComment($post);
-
-        // Render form rating for post.
-        $formRating = $this->createForm(\App\Form\PostRatingType::class, null, array(
-            'action' => $this->generateUrl('rating'),
-        ));
-
-
-        // Get rating of the post
-        $rating = $this->getDoctrine()
-            ->getRepository(\App\Entity\Rating::class)
-            ->getAverageRatingForNews($post->getId());
-
-        // Init breadcrum for the post
-        $breadcrumbs = $this->buildBreadcrums(null, $post->isPage() ? null : $post, $post->isPage() ? $post : null, $categoryPrimary);
-
-        // Filter content to support Lazy Loading
+        // 5. Thu thập dữ liệu khác
+        $comments = $this->getDoctrine()->getRepository(Comment::class)->getApprovedCommentsForNews($post->getId());
+        $rating = $this->getDoctrine()->getRepository(Rating::class)->getAverageRatingForNews($post->getId());
         $contentsLazy = $this->contentFormatter->lazyloadContent($post);
+        
+        // Tối ưu Image Size (Vẫn dùng filesystem nhưng ltrim cho an toàn)
+        $imagePath = $this->helper->asset($post, 'imageFile');
+        $imageSize = $imagePath ? @getimagesize(ltrim($imagePath, '/')) : null;
+
+        // Form Comment & Rating
+        $form = $this->renderFormComment($post);
+        $formRating = $this->createForm(\App\Form\PostRatingType::class, null, [
+            'action' => $this->generateUrl('rating')
+        ]);
+
+        // Build breadcrumbs
+        $this->buildBreadcrums(null, $post->isPage() ? null : $post, $post->isPage() ? $post : null);
+
+        // Dữ liệu chung cho View
+        $viewData = [
+            'post' => $post,
+            'contentsLazy' => $contentsLazy,
+            'form' => $form->createView(),
+            'formRating' => $formRating->createView(),
+            'rating' => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
+            'ratingPercent' => !empty($rating['ratingValue']) ? str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)) : 0,
+            'ratingValue' => round($rating['ratingValue'] ?? 0),
+            'ratingCount' => round($rating['ratingCount'] ?? 0),
+            'comments' => $comments,
+            'imageSize' => $imageSize,
+        ];
 
         if ($post->isPage()) {
-            $imagePath = $this->helper->asset($post, 'imageFile');
-            $imagePath = substr($imagePath, 1);
-            $imageSize = @getimagesize($imagePath);
-
-            return $this->render('news/page.html.twig', [
-                'post' => $post,
-                'contentsLazy' => $contentsLazy,
-                'form' => $form->createView(),
-                'formRating' => $formRating->createView(),
-                'rating' => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
-                'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),
-                'ratingValue' => round($rating['ratingValue']),
-                'ratingCount' => round($rating['ratingCount']),
-                'comments' => $comments,
-                'imageSize' => $imageSize
-            ]);
-        } else {
-            $imagePath = $this->helper->asset($post, 'imageFile');
-            $imagePath = substr($imagePath, 1);
-            $imageSize = @getimagesize($imagePath);
-
-            return $this->render('news/show.html.twig', [
-                'post' => $post,
-                'contentsLazy' => $contentsLazy,
-                'articleBody' => $this->contentFormatter->stripTagsContent($contentsLazy),
-                'wordCount' => str_word_count($this->contentFormatter->stripTagsContent($contentsLazy)),
-                'relatedNews' => !empty($relatedNews) ? $relatedNews : NULL,
-                'form' => $form->createView(),
-                'formRating' => $formRating->createView(),
-                'rating' => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
-                'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),
-                'ratingValue' => round($rating['ratingValue']),
-                'ratingCount' => round($rating['ratingCount']),
-                'comments' => $comments,
-                'imageSize' => $imageSize,
-                'category' => !empty($category) ? $category : NULL,
-                'categoryUrl' => $categoryUrl,
-                'urlParameters' => !empty($request->query->get('danh-muc')) ? $request->query->get('danh-muc') : NULL
-            ]);
+            return $this->render('news/page.html.twig', $viewData, $response);
         }
+
+        // Dữ liệu đặc thù cho Post/News
+        $plainContent = $this->contentFormatter->stripTagsContent($contentsLazy);
+        $viewData += [
+            'articleBody' => $plainContent,
+            'wordCount' => str_word_count($plainContent),
+            'relatedNews' => !empty($relatedNews) ? $relatedNews : null,
+            'category' => $category,
+            'categoryUrl' => $categoryUrl,
+            'urlParameters' => null
+        ];
+
+        return $this->render('news/show.html.twig', $viewData, $response);
     }
 
 

@@ -6,6 +6,10 @@ class ConvertImages
 {
     public function webpConvert2($file, $prifexPath, $filter = false, $compression_quality = 75)
     {
+        if (!$file) {
+            return false;
+        }
+
         if ($filter) {
             $strpos = strpos($file, 'media/cache');
             $file = mb_substr($file, $strpos, strlen($file), 'UTF-8');
@@ -89,6 +93,10 @@ class ConvertImages
 
     public function webpConvert($file, $prifexPath, $filter = false, $compression_quality = 75)
     {
+        if (!$file) {
+            return false;
+        }
+
         if ($filter) {
             $strpos = strpos($file, 'media/cache');
             $file = str_replace('/resolve' ,'', mb_substr($file, $strpos, strlen($file), 'UTF-8'));
@@ -174,6 +182,10 @@ class ConvertImages
 
     public function fileExists($file)
     {
+        if (!$file) {
+            return false;
+        }
+
         $file = substr($file, 1);
         
         if (@file_exists($file)) {
