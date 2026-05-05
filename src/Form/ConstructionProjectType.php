@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\ConstructionProject;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -19,6 +20,18 @@ class ConstructionProjectType extends AbstractType
         $builder
             ->add('projectName', TextType::class, array(
                 'label' => 'Tên công trình'
+            ))
+            ->add('address', TextType::class, array(
+                'label' => 'Địa chỉ',
+                'required' => false
+            ))
+            ->add('customerName', TextType::class, array(
+                'label' => 'Tên chủ đầu tư',
+                'required' => false
+            ))
+            ->add('customerPhone', TextType::class, array(
+                'label' => 'Số điện thoại',
+                'required' => false
             ))
             ->add('status', ChoiceType::class, array(
                 'label' => 'Trạng thái',
@@ -125,6 +138,21 @@ class ConstructionProjectType extends AbstractType
             ))
             ->add('notes', TextareaType::class, array(
                 'label' => 'Ghi chú nội bộ',
+                'required' => false
+            ))
+            ->add('startDate', DateType::class, array(
+                'label' => 'Ngày khởi công',
+                'required' => false,
+                'widget' => 'single_text',
+            ))
+            ->add('endDate', DateType::class, array(
+                'label' => 'Ngày kết thúc (dự kiến)',
+                'required' => false,
+                'widget' => 'single_text',
+            ))
+            ->add('realProgress', NumberType::class, array(
+                'label' => 'Tiến độ thực tế (%)',
+                'scale' => 2,
                 'required' => false
             ))
             ->add('analyze', SubmitType::class, array(

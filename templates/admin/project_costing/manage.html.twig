@@ -1,5 +1,10 @@
 {% extends 'admin/layout.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/admin/project-manage.js') }}"></script>
+{% endblock %}
+
 {% block main %}
     <div class="content mt-3 project-costing">
         <div class="animated fadeIn">
@@ -23,636 +28,805 @@
                                         <strong>{{ scenario.projectStatus }}</strong>
                                     </div>
                                     <div class="project-shell__summary-item">
-                                        <span class="label">Bien forecast</span>
-                                        <strong>{{ scenario.projectedMargin }}%</strong>
+                                        <span class="label">Tien do</span>
+                                        <strong>{{ object.realProgress|number_format(0) }}%</strong>
                                     </div>
                                 </div>
+                            </div> <!-- Close project-shell__header -->
+
+                            <div class="project-tabs-nav mt-4">
+                                <a href="#overview" class="tab-link active" data-tab="overview">Tong quan</a>
+                                <a href="#parameters" class="tab-link" data-tab="parameters">Thong so & Du toan</a>
+                                <a href="#tasks" class="tab-link" data-tab="tasks">CÔNG VIỆC</a>
+                                <a href="#costs" class="tab-link" data-tab="costs">CHI PHÍ THỰC TẾ</a>
+                                <a href="#journal" class="tab-link" data-tab="journal">NHẬT KÝ THI CÔNG</a>
+                                <a href="#attendance" class="tab-link" data-tab="attendance">CHẤM CÔNG</a>
+                                <a href="#docs" class="tab-link" data-tab="docs">HỒ SƠ HỢP ĐỒNG</a>
                             </div>
 
-                            <details class="project-form-panel" {{ is_new ? 'open' : '' }}>
-                                <summary class="project-form-panel__summary">
-                                    <div class="project-form-panel__summary-text">
-                                        <strong>Thong tin du an</strong>
-                                        <span>Cac truong nay it thay doi, co the thu gon sau khi luu.</span>
+                            <div class="project-tabs-content mt-4">
+                                <!-- TAB OVERVIEW -->
+                                <div id="overview" class="tab-pane active">
+                                    <div class="row">
+                                        <div class="col-md-6 col-xl-3">
+                                            <div class="project-kpi project-kpi--blue">
+                                                <span class="label">Gia tri hop dong</span>
+                                                <strong>{{ scenario.contractValue|number_format(0, '.', ',') }}</strong>
+                                                <small>Benchmark {{ scenario.benchmarkContractValue|number_format(0, '.', ',') }} VND</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-xl-3">
+                                            <div class="project-kpi project-kpi--slate">
+                                                <span class="label">Budget goc</span>
+                                                <strong>{{ scenario.targetBudget|number_format(0, '.', ',') }}</strong>
+                                                <small>Muc tieu loi nhuan {{ scenario.targetMargin }}%</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-xl-3">
+                                            <div class="project-kpi project-kpi--amber">
+                                                <span class="label">Forecast chi phi</span>
+                                                <strong>{{ scenario.forecastCost|number_format(0, '.', ',') }}</strong>
+                                                <small>Committed {{ scenario.committedCost|number_format(0, '.', ',') }}</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-xl-3">
+                                            <div class="project-kpi project-kpi--green">
+                                                <span class="label">Loi nhuan du kien</span>
+                                                <strong>{{ scenario.projectedProfit|number_format(0, '.', ',') }}</strong>
+                                                <small>Bien {{ scenario.projectedMargin }}%</small>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="project-form-panel__summary-meta">
-                                        <span>{{ scenario.typeLabel }}</span>
-                                        <span>{{ scenario.finishLabel }}</span>
-                                        <span>{{ scenario.constructedArea }} m2</span>
+
+                                    <div class="row">
+                                        {% for alert in scenario.alerts %}
+                                            <div class="col-lg-6">
+                                                <div class="project-alert project-alert--{{ alert.tone }}">
+                                                    <strong>{{ alert.title }}</strong>
+                                                    <p>{{ alert.text }}</p>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
                                     </div>
-                                </summary>
 
-                                <div class="project-form-panel__body">
-                                    {% if errorMessage %}
-                                        <div class="alert alert-danger">{{ errorMessage }}</div>
-                                    {% endif %}
-
-                                    {{ form_start(form, {'attr': {'class': 'project-form-grid'}}) }}
-                                        <div class="project-form-grid__row project-form-grid__row--primary">
-                                            <div class="project-form-grid__field project-form-grid__field--wide">
-                                                {{ form_label(form.projectName) }}
-                                                {{ form_widget(form.projectName, {'attr': {'class': 'form-control'}}) }}
-                                            </div>
-                                            <div class="project-form-grid__field">
-                                                {{ form_label(form.status) }}
-                                                {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
-                                            </div>
-                                            <div class="project-form-grid__field">
-                                                {{ form_label(form.contractValue) }}
-                                                {{ form_widget(form.contractValue, {'attr': {'class': 'form-control'}}) }}
-                                            </div>
-                                            <div class="project-form-grid__field">
-                                                {{ form_label(form.targetMargin) }}
-                                                {{ form_widget(form.targetMargin, {'attr': {'class': 'form-control'}}) }}
+                                    <div class="card">
+                                        <div class="card-header"><strong class="card-title">Cac moc thanh toan de xuat</strong></div>
+                                        <div class="card-body">
+                                            <div class="cashflow-grid">
+                                                {% for item in scenario.cashFlow %}
+                                                    <div class="cashflow-item">
+                                                        <div class="d-flex justify-content-between">
+                                                            <strong>{{ item.label }}</strong>
+                                                            <span>{{ item.percent }}%</span>
+                                                        </div>
+                                                        <div class="progress mt-2 mb-2" style="height: 6px;">
+                                                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ item.percent }}%"></div>
+                                                        </div>
+                                                        <small>{{ item.value|number_format(0, '.', ',') }} VND</small>
+                                                    </div>
+                                                {% endfor %}
                                             </div>
                                         </div>
-
-                                        <div class="project-form-grid__row">
-                                            <div class="project-form-grid__field">
-                                                {{ form_label(form.type) }}
-                                                {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
-                                            </div>
-                                            <div class="project-form-grid__field">
-                                                {{ form_label(form.finishLevel) }}
-                                                {{ form_widget(form.finishLevel, {'attr': {'class': 'form-control'}}) }}
-                                            </div>
-                                            <div class="project-form-grid__field">
-                                                {{ form_label(form.wide) }}
-                                                {{ form_widget(form.wide, {'attr': {'class': 'form-control'}}) }}
-                                            </div>
-                                            <div class="project-form-grid__field">
-                                                {{ form_label(form.long) }}
-                                                {{ form_widget(form.long, {'attr': {'class': 'form-control'}}) }}
-                                            </div>
-                                            <div class="project-form-grid__field">
-                                                {{ form_label(form.floor) }}
-                                                {{ form_widget(form.floor, {'attr': {'class': 'form-control'}}) }}
-                                            </div>
-                                            <div class="project-form-grid__field">
-                                                {{ form_label(form.basement) }}
-                                                {{ form_widget(form.basement, {'attr': {'class': 'form-control'}}) }}
-                                            </div>
-                                        </div>
-
-                                        <div class="project-form-grid__row">
-                                            <div class="project-form-grid__field">
-                                                {{ form_label(form.mong) }}
-                                                {{ form_widget(form.mong, {'attr': {'class': 'form-control'}}) }}
-                                            </div>
-                                            <div class="project-form-grid__field">
-                                                {{ form_label(form.mai) }}
-                                                {{ form_widget(form.mai, {'attr': {'class': 'form-control'}}) }}
-                                            </div>
-                                            <div class="project-form-grid__field">
-                                                {{ form_label(form.alley) }}
-                                                {{ form_widget(form.alley, {'attr': {'class': 'form-control'}}) }}
-                                            </div>
-                                            <div class="project-form-grid__field">
-                                                {{ form_label(form.subcontract) }}
-                                                {{ form_widget(form.subcontract, {'attr': {'class': 'form-control'}}) }}
-                                            </div>
-                                            <div class="project-form-grid__field project-form-grid__field--notes">
-                                                {{ form_label(form.notes) }}
-                                                {{ form_widget(form.notes, {'attr': {'class': 'form-control', 'rows': 3}}) }}
-                                            </div>
-                                        </div>
-
-                                        <div class="project-form-grid__actions">
-                                            {{ form_widget(form.analyze, {'attr': {'class': 'btn btn-outline-primary'}}) }}
-                                            {{ form_widget(form.saveProject, {'attr': {'class': 'btn btn-primary'}}) }}
-                                            <a href="{{ path('admin_project_costing_index') }}" class="btn btn-link">Danh sach du an</a>
-                                        </div>
-                                    {{ form_end(form) }}
+                                    </div>
                                 </div>
-                            </details>
-                        </div>
-                    </div>
+
+                                <!-- TAB PARAMETERS -->
+                                <div id="parameters" class="tab-pane">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="mb-3">Thong số kỹ thuật & Bo khung gia von</h4>
+                                            {% if errorMessage %}
+                                                <div class="alert alert-danger">{{ errorMessage }}</div>
+                                            {% endif %}
+
+                                            {{ form_start(form, {'attr': {'class': 'project-form-grid'}}) }}
+                                                <div class="project-form-grid__row project-form-grid__row--primary">
+                                                    <div class="project-form-grid__field project-form-grid__field--wide">
+                                                        {{ form_label(form.projectName) }}
+                                                        {{ form_widget(form.projectName, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.status) }}
+                                                        {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.contractValue) }}
+                                                        {{ form_widget(form.contractValue, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.targetMargin) }}
+                                                        {{ form_widget(form.targetMargin, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                </div>
+
+                                                <div class="project-form-grid__row">
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.customerName) }}
+                                                        {{ form_widget(form.customerName, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.customerPhone) }}
+                                                        {{ form_widget(form.customerPhone, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field project-form-grid__field--notes">
+                                                        {{ form_label(form.address) }}
+                                                        {{ form_widget(form.address, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.startDate) }}
+                                                        {{ form_widget(form.startDate, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.endDate) }}
+                                                        {{ form_widget(form.endDate, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                </div>
+
+                                                <div class="project-form-grid__row">
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.type) }}
+                                                        {{ form_widget(form.type, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.finishLevel) }}
+                                                        {{ form_widget(form.finishLevel, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.wide) }}
+                                                        {{ form_widget(form.wide, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.long) }}
+                                                        {{ form_widget(form.long, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.floor) }}
+                                                        {{ form_widget(form.floor, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.basement) }}
+                                                        {{ form_widget(form.basement, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                </div>
+
+                                                <div class="project-form-grid__row">
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.mong) }}
+                                                        {{ form_widget(form.mong, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.mai) }}
+                                                        {{ form_widget(form.mai, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.alley) }}
+                                                        {{ form_widget(form.alley, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.subcontract) }}
+                                                        {{ form_widget(form.subcontract, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field">
+                                                        {{ form_label(form.realProgress) }}
+                                                        {{ form_widget(form.realProgress, {'attr': {'class': 'form-control'}}) }}
+                                                    </div>
+                                                    <div class="project-form-grid__field project-form-grid__field--notes">
+                                                        {{ form_label(form.notes) }}
+                                                        {{ form_widget(form.notes, {'attr': {'class': 'form-control', 'rows': 2}}) }}
+                                                    </div>
+                                                </div>
+
+                                                <div class="project-form-grid__actions">
+                                                    {{ form_widget(form.analyze, {'attr': {'class': 'btn btn-outline-primary'}}) }}
+                                                    {{ form_widget(form.saveProject, {'attr': {'class': 'btn btn-primary'}}) }}
+                                                    <a href="{{ path('admin_project_costing_index') }}" class="btn btn-link">Danh sach du an</a>
+                                                </div>
+                                            {{ form_end(form) }}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card mt-4">
+                                        <div class="card-header"><strong>Chi phi du toan (Baseline)</strong></div>
+                                        <div class="card-body p-0">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-bordered mb-0">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>Ma</th>
+                                                            <th>Hang muc</th>
+                                                            <th>Ty trong</th>
+                                                            <th>Budget</th>
+                                                            <th>Forecast</th>
+                                                            <th>Trang thai</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for item in scenario.costGroups %}
+                                                            <tr>
+                                                                <td>{{ item.code }}</td>
+                                                                <td>{{ item.label }}</td>
+                                                                <td>{{ item.share }}%</td>
+                                                                <td>{{ item.budget|number_format(0, '.', ',') }}</td>
+                                                                <td><strong>{{ item.forecast|number_format(0, '.', ',') }}</strong></td>
+                                                                <td><span class="badge badge-{{ item.status == 'Trong tầm kiểm soát' ? 'success' : 'warning' }}">{{ item.status }}</span></td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- TAB TASKS -->
+                                <div id="tasks" class="tab-pane">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="card">
+                                                <div class="card-header"><strong>Thêm đầu việc mới</strong></div>
+                                                <div class="card-body">
+                                                    {{ form_start(taskForm, {'action': path('admin_project_task_add', {id: object.id})}) }}
+                                                        <div class="form-group">
+                                                            {{ form_label(taskForm.name) }}
+                                                            {{ form_widget(taskForm.name, {'attr': {'class': 'form-control'}}) }}
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {{ form_label(taskForm.stage) }}
+                                                            {{ form_widget(taskForm.stage, {'attr': {'class': 'form-control'}}) }}
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {{ form_label(taskForm.dueDate) }}
+                                                            {{ form_widget(taskForm.dueDate, {'attr': {'class': 'form-control'}}) }}
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {{ form_label(taskForm.status) }}
+                                                            {{ form_widget(taskForm.status, {'attr': {'class': 'form-control'}}) }}
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {{ form_label(taskForm.assignedTo) }}
+                                                            {{ form_widget(taskForm.assignedTo, {'attr': {'class': 'form-control'}}) }}
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary btn-block">Thêm vào danh sách</button>
+                                                    {{ form_end(taskForm) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card">
+                                                <div class="card-header"><strong>Danh sách công việc</strong></div>
+                                                <div class="card-body p-0">
+                                                    <table class="table table-hover mb-0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="50"></th>
+                                                                <th>Công việc</th>
+                                                                <th>Giai đoạn</th>
+                                                                <th>Hạn chót</th>
+                                                                <th>Phụ trách</th>
+                                                                <th width="90"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for task in tasks %}
+                                                                <tr class="{{ task.status == 'completed' ? 'table-success task-done' : '' }}" id="task-row-{{ task.id }}" data-task-id="{{ task.id }}" data-toggle-url="{{ path('admin_project_task_toggle', {id: task.id}) }}">
+                                                                    <td>
+                                                                        <input type="checkbox"
+                                                                               class="task-toggle-checkbox"
+                                                                               {{ task.status == 'completed' ? 'checked' : '' }}
+                                                                               onchange="toggleTask(this, {{ task.id }}, '{{ path('admin_project_task_toggle', {id: task.id}) }}')">
+                                                                    </td>
+                                                                    <td>
+                                                                        <span class="task-name-label" style="{{ task.status == 'completed' ? 'text-decoration: line-through; color: #aaa;' : '' }}">{{ task.name }}</span>
+                                                                    </td>
+                                                                    <td><span class="badge badge-secondary">{{ task.stage }}</span></td>
+                                                                    <td>{{ task.dueDate ? task.dueDate|date('d/m/Y') : '-' }}</td>
+                                                                    <td>{{ task.assignedTo ? task.assignedTo.name : '-' }}</td>
+                                                                    <td class="text-right" style="white-space:nowrap;">
+                                                                        <button type="button" class="btn btn-sm btn-outline-secondary btn-edit-task"
+                                                                            data-toggle="modal"
+                                                                            data-target="#sharedEditTaskModal"
+                                                                            data-edit-url="{{ path('admin_project_task_edit', {id: task.id}) }}"
+                                                                            data-name="{{ task.name|e('html_attr') }}"
+                                                                            data-stage="{{ task.stage }}"
+                                                                            data-status="{{ task.status }}"
+                                                                            data-due-date="{{ task.dueDate ? task.dueDate|date('Y-m-d') : '' }}"
+                                                                            title="Sửa"><i class="fa fa-pencil"></i></button>
+                                                                        <form action="{{ path('admin_project_task_delete', {id: task.id}) }}" method="POST" onsubmit="return confirm('Xóa công việc này?')" style="display:inline;">
+                                                                            <input type="hidden" name="token" value="{{ csrf_token('delete-task') }}">
+                                                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa"><i class="fa fa-trash"></i></button>
+                                                                        </form>
+                                                                    </td>
+                                                                </tr>
+                                                            {% else %}
+                                                                <tr><td colspan="5" class="text-center py-4">Chưa có đầu việc nào.</td></tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- TAB COSTS -->
+                                <div id="costs" class="tab-pane">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4">
+                                            <div class="card bg-light">
+                                                <div class="card-body d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h5 class="mb-0">Tổng chi phí thực tế đã chi:</h5>
+                                                        {% set totalActual = 0 %}
+                                                        {% for c in costs %}{% if c.type == 'actual' %}{% set totalActual = totalActual + c.amount %}{% endif %}{% endfor %}
+                                                        <h2 class="text-primary font-weight-bold">{{ totalActual|number_format(0, '.', ',') }} VND</h2>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <span class="text-muted">So với dự toán forecast:</span>
+                                                        <h4 class="{{ totalActual > scenario.forecastCost ? 'text-danger' : 'text-success' }}">
+                                                            {{ (totalActual / scenario.forecastCost * 100)|number_format(1) }}%
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="card">
+                                                <div class="card-header"><strong>Ghi nhận chi phí</strong></div>
+                                                <div class="card-body">
+                                                    {{ form_start(costForm, {'action': path('admin_project_cost_add', {id: object.id})}) }}
+                                                        <div class="form-group">
+                                                            {{ form_label(costForm.category) }}
+                                                            {{ form_widget(costForm.category, {'attr': {'class': 'form-control'}}) }}
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {{ form_label(costForm.description) }}
+                                                            {{ form_widget(costForm.description, {'attr': {'class': 'form-control'}}) }}
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {{ form_label(costForm.amount) }}
+                                                            {{ form_widget(costForm.amount, {'attr': {'class': 'form-control'}}) }}
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {{ form_label(costForm.costDate) }}
+                                                            {{ form_widget(costForm.costDate, {'attr': {'class': 'form-control'}}) }}
+                                                        </div>
+                                                        {{ form_widget(costForm.type, {'attr': {'style': 'display:none;'}, 'value': 'actual'}) }}
+                                                        <button type="submit" class="btn btn-success btn-block">Luu chi phi</button>
+                                                    {{ form_end(costForm) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card">
+                                                <div class="card-header"><strong>Nhật ký chi phí</strong></div>
+                                                <div class="card-body p-0">
+                                                    <table class="table table-sm mb-0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Ngày</th>
+                                                                <th>Danh mục</th>
+                                                                <th>Diễn giải</th>
+                                                                <th class="text-right">Số tiền</th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for cost in costs %}
+                                                                <tr>
+                                                                    <td>{{ cost.costDate|date('d/m/Y') }}</td>
+                                                                    <td><span class="badge badge-info">{{ cost.category }}</span></td>
+                                                                    <td>{{ cost.description }}</td>
+                                                                    <td class="text-right"><strong>{{ cost.amount|number_format(0, '.', ',') }}</strong></td>
+                                                                    <td class="text-right" style="white-space:nowrap;">
+                                                                        <button type="button" class="btn btn-sm btn-outline-secondary btn-edit-cost"
+                                                                            data-toggle="modal"
+                                                                            data-target="#sharedEditCostModal"
+                                                                            data-edit-url="{{ path('admin_project_cost_edit', {id: cost.id}) }}"
+                                                                            data-category="{{ cost.category }}"
+                                                                            data-description="{{ cost.description|e('html_attr') }}"
+                                                                            data-amount="{{ cost.amount }}"
+                                                                            data-cost-date="{{ cost.costDate|date('Y-m-d') }}"
+                                                                            data-type="{{ cost.type }}"
+                                                                            title="Sửa"><i class="fa fa-pencil"></i></button>
+                                                                        <form action="{{ path('admin_project_cost_delete', {id: cost.id}) }}" method="POST" onsubmit="return confirm('Xóa chi phí này?')" style="display:inline;">
+                                                                            <input type="hidden" name="token" value="{{ csrf_token('delete-cost') }}">
+                                                                            <button type="submit" class="btn btn-sm text-danger" title="Xóa"><i class="fa fa-times"></i></button>
+                                                                        </form>
+                                                                    </td>
+                                                                </tr>
+                                                            {% else %}
+                                                                <tr><td colspan="5" class="text-center py-4">Chua co du lieu chi phi thuc te.</td></tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- TAB JOURNAL -->
+                                <div id="journal" class="tab-pane">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="card">
+                                                <div class="card-header"><strong>Ghi nhật ký hôm nay</strong></div>
+                                                <div class="card-body">
+                                                    {{ form_start(journalForm, {'action': path('admin_project_journal_add', {id: object.id})}) }}
+                                                        <div class="form-group">
+                                                            {{ form_label(journalForm.logDate) }}
+                                                            {{ form_widget(journalForm.logDate, {'attr': {'class': 'form-control'}}) }}
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {{ form_label(journalForm.weather) }}
+                                                            {{ form_widget(journalForm.weather, {'attr': {'class': 'form-control', 'placeholder': 'Nắng, mưa, âm u...'}}) }}
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {{ form_label(journalForm.workerCount) }}
+                                                            {{ form_widget(journalForm.workerCount, {'attr': {'class': 'form-control'}}) }}
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {{ form_label(journalForm.content) }}
+                                                            {{ form_widget(journalForm.content, {'attr': {'class': 'form-control'}}) }}
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary btn-block">Lưu nhật ký</button>
+                                                    {{ form_end(journalForm) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card">
+                                                <div class="card-header"><strong>Lịch sử nhật ký</strong></div>
+                                                <div class="card-body p-0">
+                                                    <div class="timeline p-3">
+                                                        {% for journal in journals %}
+                                                            <div class="timeline-item mb-4 pb-3 border-bottom">
+                                                                <div class="d-flex justify-content-between align-items-start">
+                                                                    <div>
+                                                                        <h6 class="font-weight-bold text-primary mb-0">{{ journal.logDate|date('d/m/Y') }}</h6>
+                                                                        <span class="badge badge-warning">{{ journal.weather }}</span>
+                                                                    </div>
+                                                                    <div class="d-flex gap-1">
+                                                                        <button type="button" class="btn btn-sm btn-outline-secondary btn-edit-journal"
+                                                                            data-toggle="modal"
+                                                                            data-target="#sharedEditJournalModal"
+                                                                            data-edit-url="{{ path('admin_project_journal_edit', {id: journal.id}) }}"
+                                                                            data-log-date="{{ journal.logDate|date('Y-m-d') }}"
+                                                                            data-weather="{{ journal.weather|e('html_attr') }}"
+                                                                            data-worker-count="{{ journal.workerCount }}"
+                                                                            data-content="{{ journal.content|e('html_attr') }}"
+                                                                            title="Sửa"><i class="fa fa-pencil"></i></button>
+                                                                        <form action="{{ path('admin_project_journal_delete', {id: journal.id}) }}" method="POST" onsubmit="return confirm('Xóa nhật ký này?')" style="display:inline;">
+                                                                            <input type="hidden" name="token" value="{{ csrf_token('delete-journal') }}">
+                                                                            <button type="submit" class="btn btn-sm text-danger" title="Xóa"><i class="fa fa-trash"></i></button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="text-muted small mb-2 mt-1">Quân số: {{ journal.workerCount }} người</div>
+                                                                <p class="mb-2">{{ journal.content|nl2br }}</p>
+                                                            </div>
+                                                        {% else %}
+                                                            <div class="text-center py-4">Chưa có nhật ký nào.</div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- TAB ATTENDANCE -->
+                                <div id="attendance" class="tab-pane">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="card">
+                                                <div class="card-header"><strong>Chấm công nhanh</strong></div>
+                                                <div class="card-body">
+                                                    {{ form_start(attendanceForm, {'action': path('admin_project_attendance_add', {id: object.id})}) }}
+                                                        <div class="form-group">
+                                                            {{ form_label(attendanceForm.date) }}
+                                                            {{ form_widget(attendanceForm.date, {'attr': {'class': 'form-control'}}) }}
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {{ form_label(attendanceForm.workerName) }}
+                                                            {{ form_widget(attendanceForm.workerName, {'attr': {'class': 'form-control', 'placeholder': 'Tên công nhân/tổ đội'}}) }}
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {{ form_label(attendanceForm.hours) }}
+                                                            {{ form_widget(attendanceForm.hours, {'attr': {'class': 'form-control'}}) }}
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {{ form_label(attendanceForm.note) }}
+                                                            {{ form_widget(attendanceForm.note, {'attr': {'class': 'form-control'}}) }}
+                                                        </div>
+                                                        <button type="submit" class="btn btn-info btn-block">Ghi nhận</button>
+                                                    {{ form_end(attendanceForm) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card">
+                                                <div class="card-header"><strong>Bảng chấm công công trình</strong></div>
+                                                <div class="card-body p-0">
+                                                    <table class="table table-striped mb-0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Ngày</th>
+                                                                <th>Họ tên</th>
+                                                                <th>Số giờ</th>
+                                                                <th>Ghi chú</th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for att in attendances %}
+                                                                <tr>
+                                                                    <td>{{ att.date|date('d/m/Y') }}</td>
+                                                                    <td><strong>{{ att.workerName }}</strong></td>
+                                                                    <td>{{ att.hours }}h</td>
+                                                                    <td>{{ att.note }}</td>
+                                                                    <td class="text-right">
+                                                                        <form action="{{ path('admin_project_attendance_delete', {id: att.id}) }}" method="POST" onsubmit="return confirm('Xóa dòng này?')">
+                                                                            <input type="hidden" name="token" value="{{ csrf_token('delete-attendance') }}">
+                                                                            <button type="submit" class="btn btn-sm text-danger"><i class="fa fa-times"></i></button>
+                                                                        </form>
+                                                                    </td>
+                                                                </tr>
+                                                            {% else %}
+                                                                <tr><td colspan="5" class="text-center py-4">Chưa có dữ liệu chấm công.</td></tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- TAB DOCUMENTS -->
+                                <div id="docs" class="tab-pane">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4 text-right">
+                                            <button class="btn btn-primary" onclick="document.getElementById('upload-doc-form').style.display='block'">+ Tai ho so moi</button>
+                                            
+                                            <div id="upload-doc-form" class="card text-left mt-3" style="display:none;">
+                                                <div class="card-body">
+                                                    {{ form_start(docForm, {'action': path('admin_project_doc_upload', {id: object.id})}) }}
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    {{ form_label(docForm.name) }}
+                                                                    {{ form_widget(docForm.name, {'attr': {'class': 'form-control'}}) }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="form-group">
+                                                                    {{ form_label(docForm.type) }}
+                                                                    {{ form_widget(docForm.type, {'attr': {'class': 'form-control'}}) }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="form-group">
+                                                                    {{ form_label(docForm.file) }}
+                                                                    {{ form_widget(docForm.file, {'attr': {'class': 'form-control-file'}}) }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <label>&nbsp;</label>
+                                                                <button type="submit" class="btn btn-primary btn-block">Tai len</button>
+                                                            </div>
+                                                        </div>
+                                                    {{ form_end(docForm) }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                {% for doc in docs %}
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="card h-100">
+                                                            <div class="card-body">
+                                                                <div class="text-center mb-3">
+                                                                    {% if doc.type == 'photo' %}
+                                                                        <img src="{{ asset(doc.filePath) }}" class="img-fluid rounded" style="max-height: 120px;">
+                                                                    {% else %}
+                                                                        <i class="fa fa-file-text-o fa-4x text-muted"></i>
+                                                                    {% endif %}
+                                                                </div>
+                                                                <h6 class="text-center mb-1">{{ doc.name }}</h6>
+                                                                <p class="text-center small text-muted mb-3">{{ doc.type|capitalize }} • {{ doc.createdAt|date('d/m/Y') }}</p>
+                                                                <div class="d-flex justify-content-center gap-2">
+                                                                    <a href="{{ asset(doc.filePath) }}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fa fa-download"></i></a>
+                                                                    <form action="{{ path('admin_project_doc_delete', {id: doc.id}) }}" method="POST" onsubmit="return confirm('Xoa ho so nay?')">
+                                                                        <input type="hidden" name="token" value="{{ csrf_token('delete-doc') }}">
+                                                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="col-12 text-center py-5 text-muted">Chua co ho so tai lieu nao duoc tai len.</div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                        </div> <!-- Close tab-pane costs -->
+                    </div> <!-- Close project-tabs-content -->
+                </div> <!-- Close project-shell -->
+            </div> <!-- Close card -->
+        </div> <!-- Close col-lg-12 -->
+    </div> <!-- Close row (line 6) -->
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <strong class="card-title">Du an gan day</strong>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="row">
-                        <div class="col-md-6 col-xl-3">
-                            <div class="project-kpi project-kpi--blue">
-                                <span class="label">Gia tri hop dong</span>
-                                <strong>{{ scenario.contractValue|number_format(0, '.', ',') }}</strong>
-                                <small>Benchmark {{ scenario.benchmarkContractValue|number_format(0, '.', ',') }} VND</small>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-xl-3">
-                            <div class="project-kpi project-kpi--slate">
-                                <span class="label">Budget goc</span>
-                                <strong>{{ scenario.targetBudget|number_format(0, '.', ',') }}</strong>
-                                <small>Muc tieu loi nhuan {{ scenario.targetMargin }}%</small>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-xl-3">
-                            <div class="project-kpi project-kpi--amber">
-                                <span class="label">Forecast chi phi</span>
-                                <strong>{{ scenario.forecastCost|number_format(0, '.', ',') }}</strong>
-                                <small>Committed {{ scenario.committedCost|number_format(0, '.', ',') }}</small>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-xl-3">
-                            <div class="project-kpi project-kpi--green">
-                                <span class="label">Loi nhuan du kien</span>
-                                <strong>{{ scenario.projectedProfit|number_format(0, '.', ',') }}</strong>
-                                <small>Bien {{ scenario.projectedMargin }}%</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-body project-topline">
-                            <div class="project-topline__tags">
-                                <span>{{ scenario.typeLabel }}</span>
-                                <span>{{ scenario.finishLabel }}</span>
-                                <span>{{ scenario.foundationLabel }}</span>
-                                <span>{{ scenario.roofLabel }}</span>
-                                <span>{{ scenario.basementLabel }}</span>
-                                <span>{{ scenario.alleyLabel }}</span>
-                                <span>{{ scenario.subcontractLabel }}</span>
-                            </div>
-                            <div class="project-topline__metrics">
-                                <div><span>Dien tich dat</span><strong>{{ scenario.footprintArea }} m2</strong></div>
-                                <div><span>Dien tich tinh gia von</span><strong>{{ scenario.constructedArea }} m2</strong></div>
-                                <div><span>He so rui ro</span><strong>{{ scenario.riskFactor }}</strong></div>
-                                <div><span>Actual mo phong</span><strong>{{ scenario.actualCost|number_format(0, '.', ',') }} VND</strong></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="project-alert project-alert--warning">
-                        <strong>Pham vi cua bang baseline</strong>
-                        <p>{{ scenario.baselineDisclaimer }}</p>
-                        {% if scenario.linkedMaterials is not empty %}
-                            <div class="project-linked-materials">
-                                <span class="project-linked-materials__label">Dang lay gia tu du lieu quan ly:</span>
-                                {% for item in scenario.linkedMaterials %}
-                                    <span class="project-linked-materials__item">{{ item.name }} ({{ item.code }})</span>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="row">
-                        {% for alert in scenario.alerts %}
-                            <div class="col-lg-6">
-                                <div class="project-alert project-alert--{{ alert.tone }}">
-                                    <strong>{{ alert.title }}</strong>
-                                    <p>{{ alert.text }}</p>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                            <strong class="card-title mb-0">Budget vs Forecast theo hang muc</strong>
-                            <small class="text-muted">Thong tin uu tien nhat de theo doi vuot budget va bien loi nhuan</small>
-                        </div>
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover mb-0">
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th>Ma</th>
-                                            <th>Hang muc</th>
-                                            <th>Ty trong</th>
-                                            <th>Budget</th>
-                                            <th>Committed</th>
-                                            <th>Actual</th>
-                                            <th>Forecast</th>
-                                            <th>Lech</th>
-                                            <th>Trang thai</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for item in scenario.costGroups %}
-                                            <tr>
-                                                <td>{{ item.code }}</td>
-                                                <td>{{ item.label }}</td>
-                                                <td>{{ item.share }}%</td>
-                                                <td>{{ item.budget|number_format(0, '.', ',') }}</td>
-                                                <td>{{ item.committed|number_format(0, '.', ',') }}</td>
-                                                <td>{{ item.actual|number_format(0, '.', ',') }}</td>
-                                                <td><strong>{{ item.forecast|number_format(0, '.', ',') }}</strong></td>
-                                                <td class="{{ item.variance < 0 ? 'text-danger' : 'text-success' }}">{{ item.variance|number_format(0, '.', ',') }}</td>
-                                                <td><span class="badge badge-{{ item.status == 'Trong tầm kiểm soát' ? 'success' : 'warning' }}">{{ item.status }}</span></td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                            <strong class="card-title mb-0">Boc tach vat tu baseline</strong>
-                            <small class="text-muted">Bang nay lay gia tu menu Gia vat tu neu ma da duoc map dung</small>
-                        </div>
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-sm table-striped table-hover mb-0">
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th>Ma</th>
-                                            <th>Nhom</th>
-                                            <th>Vat tu</th>
-                                            <th>SL</th>
-                                            <th>Hao hut</th>
-                                            <th>Don gia</th>
-                                            <th>Thanh tien</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for item in scenario.materials %}
-                                            <tr>
-                                                <td><strong>{{ item.code }}</strong></td>
-                                                <td>{{ item.group }}</td>
-                                                <td class="project-material-cell">
-                                                    <strong>{{ item.name }}</strong>
-                                                    <div class="text-muted small">{{ item.note }}</div>
-                                                    <div class="text-muted small">{{ item.formulaNote }}</div>
-                                                    {% if item.isFallback %}
-                                                        <div class="text-warning small">Dang dung don gia mac dinh vi chua co du lieu trong menu Gia vat tu.</div>
-                                                    {% else %}
-                                                        <div class="text-success small">Da lien ket voi bang gia vat tu quan ly.</div>
-                                                    {% endif %}
-                                                </td>
-                                                <td>{{ item.quantity|number_format(0, '.', ',') }} {{ item.unit }}</td>
-                                                <td>{{ item.wastagePercent|number_format(2, '.', ',') }}%</td>
-                                                <td>{{ item.rate|number_format(0, '.', ',') }}</td>
-                                                <td><strong>{{ item.cost|number_format(0, '.', ',') }}</strong></td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xl-8">
-                            <div class="card">
-                                <div class="card-header">
-                                    <strong class="card-title">Dong tien de xuat</strong>
-                                </div>
-                                <div class="card-body">
-                                    <div class="cashflow-grid">
-                                        {% for item in scenario.cashFlow %}
-                                            <div class="cashflow-item">
-                                                <div class="d-flex justify-content-between">
-                                                    <strong>{{ item.label }}</strong>
-                                                    <span>{{ item.percent }}%</span>
-                                                </div>
-                                                <div class="progress mt-2 mb-2">
-                                                    <div class="progress-bar bg-info" role="progressbar" style="width: {{ item.percent }}%"></div>
-                                                </div>
-                                                <small>{{ item.value|number_format(0, '.', ',') }} VND</small>
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <strong class="card-title">Du an gan day</strong>
-                                </div>
-                                <div class="card-body p-0">
-                                    <table class="table table-sm mb-0">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th>Cong trinh</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for item in projects %}
-                                                <tr>
-                                                    <td>
-                                                        <strong>{{ item.projectName }}</strong>
-                                                        <div class="text-muted small">{{ item.status }}</div>
-                                                    </td>
-                                                    <td class="text-right align-middle">
-                                                        <a href="{{ path('admin_project_costing_edit', {id: item.id}) }}"><i class="fa fa-arrow-right"></i></a>
-                                                    </td>
-                                                </tr>
-                                            {% else %}
-                                                <tr>
-                                                    <td colspan="2" class="text-center text-muted py-3">Chua co du an da luu.</td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="card-body p-0">
+                    <table class="table table-sm mb-0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Cong trinh</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in projects %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ item.projectName }}</strong>
+                                        <div class="text-muted small">{{ item.status }}</div>
+                                    </td>
+                                    <td class="text-right align-middle">
+                                        <a href="{{ path('admin_project_costing_edit', {id: item.id}) }}"><i class="fa fa-arrow-right"></i></a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted py-3">Chua co du an da luu.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</div> <!-- Close animated fadeIn -->
+</div> <!-- Close content -->
 
-    <style>
-        .project-shell {
-            padding: 24px;
-        }
-        .project-shell__header {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            align-items: flex-start;
-            margin-bottom: 18px;
-        }
-        .project-shell__heading {
-            max-width: 780px;
-        }
-        .project-shell__eyebrow {
-            display: inline-block;
-            margin-bottom: 10px;
-            padding: 4px 10px;
-            border-radius: 999px;
-            background: #e6f4ea;
-            color: #1b5e20;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        .project-shell__title {
-            margin-bottom: 10px;
-            font-size: 30px;
-            font-weight: 700;
-            color: #16213e;
-        }
-        .project-shell__desc {
-            margin: 0;
-            color: #52606d;
-            line-height: 1.7;
-        }
-        .project-shell__summary {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(120px, 1fr));
-            gap: 12px;
-            min-width: 360px;
-        }
-        .project-shell__summary-item {
-            padding: 14px;
-            border-radius: 12px;
-            background: #f5f8fc;
-        }
-        .project-shell__summary-item .label {
-            display: block;
-            margin-bottom: 6px;
-            color: #7b8794;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-        .project-form-panel {
-            border: 1px solid #e6ecf3;
-            border-radius: 14px;
-            background: #fbfcfe;
-            overflow: hidden;
-        }
-        .project-form-panel__summary {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            padding: 16px 18px;
-            cursor: pointer;
-            list-style: none;
-        }
-        .project-form-panel__summary::-webkit-details-marker {
-            display: none;
-        }
-        .project-form-panel__summary-text strong {
-            display: block;
-            color: #102a43;
-        }
-        .project-form-panel__summary-text span {
-            color: #7b8794;
-            font-size: 13px;
-        }
-        .project-form-panel__summary-meta {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            gap: 8px;
-        }
-        .project-form-panel__summary-meta span {
-            padding: 6px 10px;
-            border-radius: 999px;
-            background: #edf2f7;
-            color: #243b53;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .project-form-panel__body {
-            padding: 0 18px 18px;
-            border-top: 1px solid #e6ecf3;
-        }
-        .project-form-grid__row {
-            display: grid;
-            grid-template-columns: repeat(6, minmax(0, 1fr));
-            gap: 14px;
-            margin-top: 14px;
-        }
-        .project-form-grid__row--primary {
-            grid-template-columns: 2fr 1fr 1.2fr 0.8fr;
-        }
-        .project-form-grid__field--wide {
-            grid-column: auto;
-        }
-        .project-form-grid__field--notes {
-            grid-column: span 2;
-        }
-        .project-form-grid__field label {
-            margin-bottom: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            color: #486581;
-            text-transform: uppercase;
-        }
-        .project-form-grid__field .form-control {
-            height: 40px;
-        }
-        .project-form-grid__field textarea.form-control {
-            height: auto;
-            min-height: 92px;
-        }
-        .project-form-grid__actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 18px;
-        }
-        .project-kpi {
-            min-height: 128px;
-            margin-bottom: 16px;
-            padding: 18px;
-            border-radius: 12px;
-            color: #fff;
-        }
-        .project-kpi .label {
-            display: block;
-            margin-bottom: 8px;
-            opacity: 0.8;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-        .project-kpi strong {
-            display: block;
-            font-size: 24px;
-            line-height: 1.3;
-        }
-        .project-kpi small {
-            display: block;
-            margin-top: 10px;
-            opacity: 0.85;
-        }
-        .project-kpi--blue { background: linear-gradient(135deg, #0f4c81, #1f6aa5); }
-        .project-kpi--slate { background: linear-gradient(135deg, #34495e, #5d6d7e); }
-        .project-kpi--amber { background: linear-gradient(135deg, #b9770e, #d68910); }
-        .project-kpi--green { background: linear-gradient(135deg, #1e8449, #28b463); }
-        .project-topline {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            align-items: flex-start;
-        }
-        .project-topline__tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .project-topline__tags span {
-            padding: 7px 12px;
-            border-radius: 999px;
-            background: #edf2f7;
-            color: #243b53;
-            font-size: 13px;
-            font-weight: 600;
-        }
-        .project-topline__metrics {
-            min-width: 340px;
-        }
-        .project-topline__metrics div {
-            display: flex;
-            justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e6ecf3;
-        }
-        .project-topline__metrics span {
-            color: #7b8794;
-        }
-        .project-alert {
-            margin-bottom: 16px;
-            padding: 16px 18px;
-            border-radius: 12px;
-        }
-        .project-alert strong {
-            display: block;
-            margin-bottom: 8px;
-        }
-        .project-alert p {
-            margin: 0;
-            line-height: 1.6;
-        }
-        .project-linked-materials {
-            margin-top: 12px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .project-linked-materials__label {
-            font-weight: 700;
-        }
-        .project-linked-materials__item {
-            padding: 4px 10px;
-            border-radius: 999px;
-            background: rgba(255,255,255,0.65);
-            color: inherit;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .project-alert--success { background: #eaf7ee; color: #1b5e20; }
-        .project-alert--warning { background: #fff4e5; color: #8a5b00; }
-        .project-alert--danger { background: #fdecea; color: #a61b1b; }
-        .project-material-cell {
-            min-width: 320px;
-        }
-        .cashflow-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 16px;
-        }
-        .cashflow-item {
-            padding: 14px;
-            border-radius: 12px;
-            background: #f8fbff;
-        }
-        @media (max-width: 1399px) {
-            .project-form-grid__row {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
-            .project-form-grid__row--primary {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-            .project-form-grid__field--notes {
-                grid-column: span 3;
-            }
-        }
-        @media (max-width: 1199px) {
-            .project-shell__header,
-            .project-topline {
-                flex-direction: column;
-            }
-            .project-shell__summary {
-                width: 100%;
-                min-width: 0;
-            }
-            .project-topline__metrics {
-                min-width: 0;
-                width: 100%;
-            }
-            .cashflow-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        @media (max-width: 767px) {
-            .project-shell {
-                padding: 18px;
-            }
-            .project-shell__title {
-                font-size: 24px;
-            }
-            .project-shell__summary {
-                grid-template-columns: 1fr;
-            }
-            .project-form-panel__summary {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .project-form-panel__summary-meta {
-                justify-content: flex-start;
-            }
-            .project-form-grid__row,
-            .project-form-grid__row--primary {
-                grid-template-columns: 1fr;
-            }
-            .project-form-grid__field--notes {
-                grid-column: auto;
-            }
-            .project-form-grid__actions {
-                flex-direction: column;
-            }
-        }
-    </style>
+{# ===================== SHARED EDIT MODALS (outside all loops/tables) ===================== #}
+
+{# Modal: Edit Task #}
+<div class="modal fade" id="sharedEditTaskModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sửa công việc</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <form id="editTaskForm" method="POST" action="">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Tên công việc</label>
+                    <input type="text" id="editTaskName" name="project_task[name]" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Giai đoạn</label>
+                    <select id="editTaskStage" name="project_task[stage]" class="form-control">
+                        <option value="design">Thiết kế</option>
+                        <option value="permit">Xin phép</option>
+                        <option value="construction">Thi công</option>
+                        <option value="acceptance">Nghiệm thu</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Trạng thái</label>
+                    <select id="editTaskStatus" name="project_task[status]" class="form-control">
+                        <option value="pending">Chờ</option>
+                        <option value="in_progress">Đang làm</option>
+                        <option value="completed">Hoàn thành</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Hạn chót</label>
+                    <input type="date" id="editTaskDueDate" name="project_task[dueDate]" class="form-control">
+                </div>
+                <input type="hidden" name="project_task[_token]" value="{{ csrf_token('project_task') }}">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{# Modal: Edit Cost #}
+<div class="modal fade" id="sharedEditCostModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sửa chi phí</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <form id="editCostForm" method="POST" action="">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Danh mục</label>
+                    <select id="editCostCategory" name="project_cost_item[category]" class="form-control">
+                        <option value="material">Vật tư</option>
+                        <option value="labor">Nhân công</option>
+                        <option value="subcontract">Thầu phụ</option>
+                        <option value="machinery">Máy móc</option>
+                        <option value="other">Khác</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Diễn giải</label>
+                    <input type="text" id="editCostDescription" name="project_cost_item[description]" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Số tiền</label>
+                    <input type="number" id="editCostAmount" name="project_cost_item[amount]" class="form-control" step="1000" required>
+                </div>
+                <div class="form-group">
+                    <label>Ngày chi</label>
+                    <input type="date" id="editCostDate" name="project_cost_item[costDate]" class="form-control" required>
+                </div>
+                <input type="hidden" id="editCostType" name="project_cost_item[type]" value="actual">
+                <input type="hidden" name="project_cost_item[_token]" value="{{ csrf_token('project_cost_item') }}">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{# Modal: Edit Journal #}
+<div class="modal fade" id="sharedEditJournalModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sửa nhật ký thi công</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <form id="editJournalForm" method="POST" action="">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Ngày ghi nhật ký</label>
+                    <input type="date" id="editJournalLogDate" name="project_journal[logDate]" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Thời tiết</label>
+                    <input type="text" id="editJournalWeather" name="project_journal[weather]" class="form-control" placeholder="Nắng, mưa, âm u...">
+                </div>
+                <div class="form-group">
+                    <label>Số lượng nhân công</label>
+                    <input type="number" id="editJournalWorkerCount" name="project_journal[workerCount]" class="form-control" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Nội dung thi công</label>
+                    <textarea id="editJournalContent" name="project_journal[content]" class="form-control" rows="4" required></textarea>
+                </div>
+                <input type="hidden" name="project_journal[_token]" value="{{ csrf_token('project_journal') }}">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 {% endblock %}

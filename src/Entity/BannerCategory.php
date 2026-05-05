@@ -3,7 +3,8 @@
 namespace App\Entity;
 
 use App\Utils\Slugger;
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -57,6 +58,11 @@ class BannerCategory
      */
     private $updatedAt;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Banner", mappedBy="bannercategory")
+     */
+    private $banners;
+
     public function __toString()
     {
         return $this->name;
@@ -66,6 +72,7 @@ class BannerCategory
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->banners = new ArrayCollection();
     }
 
     /**
@@ -168,5 +175,13 @@ class BannerCategory
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return Collection|Banner[]
+     */
+    public function getBanners()
+    {
+        return $this->banners;
     }
 }

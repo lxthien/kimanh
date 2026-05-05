@@ -29,6 +29,16 @@
     </head>
 
     <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}">
+        <script>
+            (function() {
+                var state = localStorage.getItem('sidebar-open');
+                if (state === 'true') {
+                    document.body.classList.add('open');
+                } else if (state === 'false') {
+                    document.body.classList.remove('open');
+                }
+            })();
+        </script>
 
         {% block sidebar %}
             {{ include('admin/layout/sidebar.html.twig') }}

@@ -94,6 +94,42 @@ class ConstructionProject
     private $notes;
 
     /**
+     * @ORM\Column(name="address", type="string", length=255, nullable=true)
+     */
+    private $address;
+
+    /**
+     * @ORM\Column(name="customer_name", type="string", length=255, nullable=true)
+     */
+    private $customerName;
+
+    /**
+     * @ORM\Column(name="customer_phone", type="string", length=20, nullable=true)
+     */
+    private $customerPhone;
+
+    /**
+     * @ORM\Column(name="start_date", type="datetime", nullable=true)
+     */
+    private $startDate;
+
+    /**
+     * @ORM\Column(name="end_date", type="datetime", nullable=true)
+     */
+    private $endDate;
+
+    /**
+     * @ORM\Column(name="real_progress", type="decimal", precision=5, scale=2, options={"default"=0})
+     */
+    private $realProgress = 0;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(name="manager_id", referencedColumnName="id", nullable=true)
+     */
+    private $manager;
+
+    /**
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="created_at", type="datetime")
      */
@@ -283,6 +319,83 @@ class ConstructionProject
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    public function setAddress($address)
+    {
+        $this->address = $address;
+        return $this;
+    }
+
+    public function getCustomerName()
+    {
+        return $this->customerName;
+    }
+
+    public function setCustomerName($customerName)
+    {
+        $this->customerName = $customerName;
+        return $this;
+    }
+
+    public function getCustomerPhone()
+    {
+        return $this->customerPhone;
+    }
+
+    public function setCustomerPhone($customerPhone)
+    {
+        $this->customerPhone = $customerPhone;
+        return $this;
+    }
+
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+        return $this;
+    }
+
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+        return $this;
+    }
+
+    public function getRealProgress()
+    {
+        return $this->realProgress;
+    }
+
+    public function setRealProgress($realProgress)
+    {
+        $this->realProgress = $realProgress;
+        return $this;
+    }
+
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    public function setManager($manager)
+    {
+        $this->manager = $manager;
+        return $this;
     }
 
     public function __toString()

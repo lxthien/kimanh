@@ -32,7 +32,7 @@ class Banner
     /**
      * @var App\Entity\BannerCategory;
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\BannerCategory", inversedBy="bannercategory")
+     * @ORM\ManyToOne(targetEntity="App\Entity\BannerCategory", inversedBy="banners")
      * @ORM\JoinColumn(name="bannercategory_id", referencedColumnName="id")
      */
     private $bannercategory;

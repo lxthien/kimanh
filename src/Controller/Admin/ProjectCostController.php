@@ -5,7 +5,17 @@ namespace App\Controller\Admin;
 use App\Entity\ActivityLog;
 use App\Entity\ConstructionMaterial;
 use App\Entity\ConstructionProject;
+use App\Entity\ProjectCostItem;
+use App\Entity\ProjectDocument;
+use App\Entity\ProjectTask;
 use App\Form\ConstructionProjectType;
+use App\Form\ProjectCostItemType;
+use App\Form\ProjectDocumentType;
+use App\Entity\ProjectJournal;
+use App\Entity\ProjectAttendance;
+use App\Form\ProjectJournalType;
+use App\Form\ProjectAttendanceType;
+use App\Form\ProjectTaskType;
 use App\Service\ActivityLogService;
 use App\Service\SettingsManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -13,10 +23,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/admin/project-costing")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_PM') or has_role('ROLE_ACCOUNTANT') or has_role('ROLE_SUPERVISOR')")
  */
 class ProjectCostController extends Controller
 {
@@ -139,14 +150,328 @@ class ProjectCostController extends Controller
 
         $projects = $this->getDoctrine()->getRepository(ConstructionProject::class)->findRecentProjects();
 
+        // New data for MVP tabs
+        $tasks = $this->getDoctrine()->getRepository(ProjectTask::class)->findBy(['project' => $project], ['createdAt' => 'ASC']);
+        $costs = $this->getDoctrine()->getRepository(ProjectCostItem::class)->findBy(['project' => $project], ['costDate' => 'DESC']);
+        $docs = $this->getDoctrine()->getRepository(ProjectDocument::class)->findBy(['project' => $project], ['createdAt' => 'DESC']);
+        $journals = $this->getDoctrine()->getRepository(ProjectJournal::class)->findBy(['project' => $project], ['logDate' => 'DESC']);
+        $attendances = $this->getDoctrine()->getRepository(ProjectAttendance::class)->findBy(['project' => $project], ['date' => 'DESC']);
+
+        // Create empty forms for the dashboard tabs
+        $taskForm = $this->createForm(ProjectTaskType::class, new ProjectTask());
+        $costForm = $this->createForm(ProjectCostItemType::class, new ProjectCostItem());
+        $docForm = $this->createForm(ProjectDocumentType::class, new ProjectDocument());
+        $journalForm = $this->createForm(ProjectJournalType::class, new ProjectJournal());
+        $attendanceForm = $this->createForm(ProjectAttendanceType::class, new ProjectAttendance());
+
         return $this->render('admin/project_costing/manage.html.twig', array(
             'form' => $form->createView(),
+            'taskForm' => $taskForm->createView(),
+            'costForm' => $costForm->createView(),
+            'docForm' => $docForm->createView(),
+            'journalForm' => $journalForm->createView(),
+            'attendanceForm' => $attendanceForm->createView(),
             'scenario' => $scenario,
             'projects' => $projects,
             'object' => $project,
             'errorMessage' => $errorMessage,
             'is_new' => $isNew,
+            'tasks' => $tasks,
+            'costs' => $costs,
+            'docs' => $docs,
+            'journals' => $journals,
+            'attendances' => $attendances,
         ));
+    }
+
+    /**
+     * @Route("/{id}/add-task", name="admin_project_task_add")
+     * @Method("POST")
+     */
+    public function addTaskAction(Request $request, ConstructionProject $project)
+    {
+        $task = new ProjectTask();
+        $task->setProject($project);
+        
+        $form = $this->createForm(ProjectTaskType::class, $task);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($task);
+            $em->flush();
+
+            $this->addFlash('success', 'Đã thêm công việc mới.');
+        }
+
+        return $this->redirectToRoute('admin_project_costing_edit', ['id' => $project->getId(), '_fragment' => 'tasks']);
+    }
+
+    /**
+     * @Route("/task/{id}/toggle", name="admin_project_task_toggle")
+     * @Method("POST")
+     */
+    public function toggleTaskAction(ProjectTask $task)
+    {
+        $newStatus = $task->getStatus() === 'completed' ? 'in_progress' : 'completed';
+        $task->setStatus($newStatus);
+        
+        if ($newStatus === 'completed') {
+            $task->setCompletedAt(new \DateTime());
+        } else {
+            $task->setCompletedAt(null);
+        }
+
+        $this->getDoctrine()->getManager()->flush();
+
+        return new JsonResponse(['status' => 'success', 'newStatus' => $newStatus]);
+    }
+
+    /**
+     * @Route("/{id}/add-cost", name="admin_project_cost_add")
+     * @Method("POST")
+     */
+    public function addCostAction(Request $request, ConstructionProject $project)
+    {
+        $cost = new ProjectCostItem();
+        $cost->setProject($project);
+        
+        $form = $this->createForm(ProjectCostItemType::class, $cost);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($cost);
+            $em->flush();
+
+            $this->addFlash('success', 'Đã ghi nhận chi phí mới.');
+        }
+
+        return $this->redirectToRoute('admin_project_costing_edit', ['id' => $project->getId(), '_fragment' => 'costs']);
+    }
+
+    /**
+     * @Route("/{id}/upload-doc", name="admin_project_doc_upload")
+     * @Method("POST")
+     */
+    public function uploadDocAction(Request $request, ConstructionProject $project)
+    {
+        $doc = new ProjectDocument();
+        $doc->setProject($project);
+        $doc->setUploadedBy($this->getUser());
+        
+        $form = $this->createForm(ProjectDocumentType::class, $doc);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('file')->getData();
+            if ($file) {
+                $uploadDir = $this->getParameter('kernel.project_dir') . '/web/uploads/project_docs/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                $filename = uniqid() . '.' . $file->guessExtension();
+                $file->move($uploadDir, $filename);
+                $doc->setFilePath('uploads/project_docs/' . $filename);
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($doc);
+                $em->flush();
+
+                $this->addFlash('success', 'Đã tải hồ sơ lên thành công.');
+            }
+        }
+
+        return $this->redirectToRoute('admin_project_costing_edit', ['id' => $project->getId(), '_fragment' => 'docs']);
+    }
+
+    /**
+     * @Route("/{id}/add-journal", name="admin_project_journal_add")
+     * @Method("POST")
+     */
+    public function addJournalAction(Request $request, ConstructionProject $project)
+    {
+        $journal = new ProjectJournal();
+        $journal->setProject($project);
+        
+        $form = $this->createForm(ProjectJournalType::class, $journal);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($journal);
+            $em->flush();
+            $this->addFlash('success', 'Đã thêm nhật ký thi công mới.');
+        }
+
+        return $this->redirectToRoute('admin_project_costing_edit', ['id' => $project->getId(), '_fragment' => 'journal']);
+    }
+
+    /**
+     * @Route("/{id}/add-attendance", name="admin_project_attendance_add")
+     * @Method("POST")
+     */
+    public function addAttendanceAction(Request $request, ConstructionProject $project)
+    {
+        $attendance = new ProjectAttendance();
+        $attendance->setProject($project);
+        
+        $form = $this->createForm(ProjectAttendanceType::class, $attendance);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($attendance);
+            $em->flush();
+            $this->addFlash('success', 'Đã ghi nhận chấm công.');
+        }
+
+        return $this->redirectToRoute('admin_project_costing_edit', ['id' => $project->getId(), '_fragment' => 'attendance']);
+    }
+
+    /**
+     * @Route("/journal/{id}/delete", name="admin_project_journal_delete")
+     * @Method("POST")
+     */
+    public function deleteJournalAction(Request $request, ProjectJournal $journal)
+    {
+        $projectId = $journal->getProject()->getId();
+        if ($this->isCsrfTokenValid('delete-journal', $request->request->get('token'))) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($journal);
+            $em->flush();
+            $this->addFlash('success', 'Đã xóa nhật ký.');
+        }
+        return $this->redirectToRoute('admin_project_costing_edit', ['id' => $projectId, '_fragment' => 'journal']);
+    }
+
+    /**
+     * @Route("/attendance/{id}/delete", name="admin_project_attendance_delete")
+     * @Method("POST")
+     */
+    public function deleteAttendanceAction(Request $request, ProjectAttendance $attendance)
+    {
+        $projectId = $attendance->getProject()->getId();
+        if ($this->isCsrfTokenValid('delete-attendance', $request->request->get('token'))) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($attendance);
+            $em->flush();
+            $this->addFlash('success', 'Đã xóa chấm công.');
+        }
+        return $this->redirectToRoute('admin_project_costing_edit', ['id' => $projectId, '_fragment' => 'attendance']);
+    }
+
+    /**
+     * @Route("/task/{id}/edit", name="admin_project_task_edit")
+     * @Method("POST")
+     */
+    public function editTaskAction(Request $request, ProjectTask $task)
+    {
+        $projectId = $task->getProject()->getId();
+
+        $form = $this->createForm(ProjectTaskType::class, $task);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', 'Đã cập nhật công việc.');
+        }
+
+        return $this->redirectToRoute('admin_project_costing_edit', ['id' => $projectId, '_fragment' => 'tasks']);
+    }
+
+    /**
+     * @Route("/task/{id}/delete", name="admin_project_task_delete")
+     * @Method("POST")
+     */
+    public function deleteTaskAction(Request $request, ProjectTask $task)
+    {
+        $projectId = $task->getProject()->getId();
+        if ($this->isCsrfTokenValid('delete-task', $request->request->get('token'))) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($task);
+            $em->flush();
+            $this->addFlash('success', 'Đã xóa công việc.');
+        }
+        return $this->redirectToRoute('admin_project_costing_edit', ['id' => $projectId, '_fragment' => 'tasks']);
+    }
+
+    /**
+     * @Route("/cost/{id}/edit", name="admin_project_cost_edit")
+     * @Method("POST")
+     */
+    public function editCostAction(Request $request, ProjectCostItem $cost)
+    {
+        $projectId = $cost->getProject()->getId();
+
+        $form = $this->createForm(ProjectCostItemType::class, $cost);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', 'Đã cập nhật chi phí.');
+        }
+
+        return $this->redirectToRoute('admin_project_costing_edit', ['id' => $projectId, '_fragment' => 'costs']);
+    }
+
+    /**
+     * @Route("/cost/{id}/delete", name="admin_project_cost_delete")
+     * @Method("POST")
+     */
+    public function deleteCostAction(Request $request, ProjectCostItem $cost)
+    {
+        $projectId = $cost->getProject()->getId();
+        if ($this->isCsrfTokenValid('delete-cost', $request->request->get('token'))) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($cost);
+            $em->flush();
+            $this->addFlash('success', 'Đã xóa chi phí.');
+        }
+        return $this->redirectToRoute('admin_project_costing_edit', ['id' => $projectId, '_fragment' => 'costs']);
+    }
+
+    /**
+     * @Route("/journal/{id}/edit", name="admin_project_journal_edit")
+     * @Method("POST")
+     */
+    public function editJournalAction(Request $request, ProjectJournal $journal)
+    {
+        $projectId = $journal->getProject()->getId();
+
+        $form = $this->createForm(ProjectJournalType::class, $journal);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', 'Đã cập nhật nhật ký.');
+        }
+
+        return $this->redirectToRoute('admin_project_costing_edit', ['id' => $projectId, '_fragment' => 'journal']);
+    }
+
+    /**
+     * @Route("/doc/{id}/delete", name="admin_project_doc_delete")
+     * @Method("POST")
+     */
+    public function deleteDocAction(Request $request, ProjectDocument $doc)
+    {
+        $projectId = $doc->getProject()->getId();
+        if ($this->isCsrfTokenValid('delete-doc', $request->request->get('token'))) {
+            $uploadDir = $this->getParameter('kernel.project_dir') . '/web/';
+            $filePath = $uploadDir . $doc->getFilePath();
+            
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($doc);
+            $em->flush();
+            $this->addFlash('success', 'Đã xóa hồ sơ.');
+        }
+        return $this->redirectToRoute('admin_project_costing_edit', ['id' => $projectId, '_fragment' => 'docs']);
     }
 
     private function buildCostScenario(ConstructionProject $project, array $materialPriceMap = array(), SettingsManager $settingsManager = null)

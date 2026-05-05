@@ -13,7 +13,15 @@ jQuery(document).ready(function($) {
 
 	$('#menuToggle').on('click', function(event) {
 		$('body').toggleClass('open');
+		localStorage.setItem('sidebar-open', $('body').hasClass('open'));
 	});
+
+	// Recover sidebar state
+	if (localStorage.getItem('sidebar-open') === 'true') {
+		$('body').addClass('open');
+	} else if (localStorage.getItem('sidebar-open') === 'false') {
+		$('body').removeClass('open');
+	}
 
 	$('.search-trigger').on('click', function(event) {
 		event.preventDefault();

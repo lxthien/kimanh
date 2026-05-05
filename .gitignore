@@ -17,8 +17,6 @@
 !var/SymfonyRequirements.php
 /vendor/
 /public/bundles/
-/public/build/fonts/glyphicons-*
-/public/build/images/glyphicons-*
 /public/uploads/ckfinder/
 /public/media/
 /public/build/
