@@ -245,6 +245,20 @@ class News
      */
     private $template = null;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="pageBuilderEnabled", type="boolean", options={"default" : 0})
+     */
+    private $pageBuilderEnabled = false;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pageBuilderData", type="text", nullable=true, columnDefinition="LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL")
+     */
+    private $pageBuilderData = null;
+
     public function __toString()
     {
         return (string)$this->getTitle();
@@ -734,5 +748,34 @@ class News
     public function getTemplate()
     {
         return $this->template;
+    }
+
+    public function setPageBuilderEnabled($pageBuilderEnabled)
+    {
+        $this->pageBuilderEnabled = (bool) $pageBuilderEnabled;
+
+        return $this;
+    }
+
+    public function getPageBuilderEnabled()
+    {
+        return $this->pageBuilderEnabled;
+    }
+
+    public function isPageBuilderEnabled()
+    {
+        return (bool) $this->pageBuilderEnabled;
+    }
+
+    public function setPageBuilderData($pageBuilderData)
+    {
+        $this->pageBuilderData = $pageBuilderData;
+
+        return $this;
+    }
+
+    public function getPageBuilderData()
+    {
+        return $this->pageBuilderData;
     }
 }

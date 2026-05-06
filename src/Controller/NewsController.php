@@ -15,13 +15,16 @@ use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 use App\Entity\NewsCategory;
 use App\Entity\News;
 use App\Entity\Comment;
+use App\Entity\Contact;
 use App\Entity\Tag;
 use App\Entity\Rating;
+use App\Service\PageBuilderService;
 
 use blackknight467\StarRatingBundle\Form\RatingType as RatingType;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
@@ -38,18 +41,20 @@ class NewsController extends Controller
     private $convertImages;
     private $contentFormatter;
     private $viewCountLogger;
+    private $pageBuilderService;
 
     /**
      * Constructs a new instance of UploaderExtension.
      *
      * @param UploaderHelper $helper
      */
-    public function __construct(UploaderHelper $helper, ConvertImages $convertImages, \App\Service\ContentFormatter $contentFormatter, \App\Service\ViewCountLogger $viewCountLogger)
+    public function __construct(UploaderHelper $helper, ConvertImages $convertImages, \App\Service\ContentFormatter $contentFormatter, \App\Service\ViewCountLogger $viewCountLogger, PageBuilderService $pageBuilderService)
     {
         $this->helper = $helper;
         $this->convertImages = $convertImages;
         $this->contentFormatter = $contentFormatter;
         $this->viewCountLogger = $viewCountLogger;
+        $this->pageBuilderService = $pageBuilderService;
     }
 
     /**
@@ -427,7 +432,16 @@ class NewsController extends Controller
         // 5. Thu thập dữ liệu khác
         $comments = $this->getDoctrine()->getRepository(Comment::class)->getApprovedCommentsForNews($post->getId());
         $rating = $this->getDoctrine()->getRepository(Rating::class)->getAverageRatingForNews($post->getId());
+        $pageBuilderBlocks = [];
         $contentsLazy = $this->contentFormatter->lazyloadContent($post);
+
+        if ($post->isPage() && $post->isPageBuilderEnabled()) {
+            $pageBuilderBlocks = $this->pageBuilderService->parseBlocks($post->getPageBuilderData());
+
+            if (!empty($pageBuilderBlocks)) {
+                $contentsLazy = null;
+            }
+        }
         
         // Tối ưu Image Size (Vẫn dùng filesystem nhưng ltrim cho an toàn)
         $imagePath = $this->helper->asset($post, 'imageFile');
@@ -446,6 +460,10 @@ class NewsController extends Controller
         $viewData = [
             'post' => $post,
             'contentsLazy' => $contentsLazy,
+            'pageBuilderBlocks' => $pageBuilderBlocks,
+            'contactBlockForm' => $post->isPage() && $this->pageBuilderService->hasBlockType($pageBuilderBlocks, 'contact_form')
+                ? $this->renderPageBuilderContactForm()->createView()
+                : null,
             'form' => $form->createView(),
             'formRating' => $formRating->createView(),
             'rating' => !empty($rating['ratingValue']) ? str_replace('.0', '', number_format($rating['ratingValue'], 1)) : 0,
@@ -1041,6 +1059,28 @@ class NewsController extends Controller
         }
 
         return $breadcrumbs;
+    }
+
+    private function renderPageBuilderContactForm()
+    {
+        $contact = new Contact();
+
+        return $this->get('form.factory')->createNamedBuilder('page_builder_contact', FormType::class, $contact, [
+            'action' => $this->generateUrl('page_builder_contact_submit'),
+            'method' => 'POST',
+        ])
+            ->add('name', TextType::class, ['label' => 'Họ và tên *'])
+            ->add('phone', TextType::class, ['label' => 'Số điện thoại *'])
+            ->add('email', EmailType::class, ['label' => 'Email (không bắt buộc)', 'required' => false])
+            ->add('contents', TextareaType::class, [
+                'label' => 'Nội dung yêu cầu tư vấn *',
+                'attr' => ['rows' => '5'],
+            ])
+            ->add('send', SubmitType::class, [
+                'label' => 'Gửi yêu cầu tư vấn',
+                'attr' => ['class' => 'btn btn-primary'],
+            ])
+            ->getForm();
     }
 
     /**

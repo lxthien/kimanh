@@ -11,8 +11,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 
-use Symfony\Component\HttpFoundation\JsonResponse;use App\Entity\Contact;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Entity\Contact;
 use App\Entity\News;
 
 class ContactController extends Controller
@@ -154,5 +156,70 @@ class ContactController extends Controller
         }
 
         return new JsonResponse(['success' => false, 'message' => implode(', ', $errors) ?: 'Form không hợp lệ. Vui lòng kiểm tra lại.']);
+    }
+
+    /**
+     * @Route("page-builder-contact/", name="page_builder_contact_submit", methods={"POST"})
+     */
+    public function pageBuilderSubmitAction(Request $request, \Swift_Mailer $mailer)
+    {
+        $contact = new Contact();
+
+        $form = $this->get('form.factory')->createNamedBuilder('page_builder_contact', FormType::class, $contact, [
+                'action' => $this->generateUrl('page_builder_contact_submit'),
+                'method' => 'POST',
+            ])
+            ->add('name', TextType::class, array('label' => 'Họ và tên *'))
+            ->add('phone', TextType::class, array('label' => 'Số điện thoại *'))
+            ->add('email', EmailType::class, array('label' => 'Email (không bắt buộc)', 'required' => false))
+            ->add('contents', TextareaType::class, array(
+                'label' => 'Nội dung yêu cầu tư vấn *',
+                'attr' => array('rows' => '5')
+            ))
+            ->add('send', SubmitType::class, array('label' => 'Gửi yêu cầu tư vấn', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        $redirectUrl = $request->headers->get('referer') ?: $this->generateUrl('contact');
+
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            $this->addFlash('error', 'Form liên hệ chưa hợp lệ. Vui lòng kiểm tra lại.');
+
+            return new RedirectResponse($redirectUrl);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($contact);
+        $em->flush();
+
+        if (null === $contact->getId()) {
+            $this->addFlash('error', $this->get('translator')->trans('contact.message.error'));
+
+            return new RedirectResponse($redirectUrl);
+        }
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($this->get('translator')->trans('contact.email.title', ['%siteName%' => $this->get('settings_manager')->get('siteName')]))
+            ->setFrom(['hotro.xaydungminhduy@gmail.com' => $this->get('settings_manager')->get('siteName')])
+            ->setTo($this->get('settings_manager')->get('emailContact'))
+            ->setBody(
+                $this->renderView(
+                    'Emails/contact.html.twig',
+                    array(
+                        'name' => $form->get('name')->getData(),
+                        'phone' => $form->get('phone')->getData(),
+                        'email' => $form->get('email')->getData(),
+                        'body' => $form->get('contents')->getData()
+                    )
+                ),
+                'text/html'
+            );
+
+        $mailer->send($message);
+
+        $this->addFlash('notice', $this->get('translator')->trans('contact.message.success'));
+
+        return new RedirectResponse($redirectUrl);
     }
 }
