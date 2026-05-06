@@ -14,7 +14,7 @@ CKEDITOR.editorConfig = function( config ) {
     config.tabSpaces = 0;
     config.fillEmptyBlocks = false;
     config.extraPlugins = "toc";
-    config.extraAllowedContent = 'img[data-fancybox,data-caption]; a[data-fancybox,data-caption]';
+    config.extraAllowedContent = 'img[data-fancybox,data-caption]; a[data-fancybox,data-caption]; blockquote(expert-quote); div(stat-box); span(stat-number,stat-label,stat-source); p(author-byline,author-review); div(key-takeaways,definition,table-of-contents,note,table(summary-table))';
     config.toolbar_MyEditor =
     [
         { name: 'document', items : [ 'Source','-','Save','NewPage','DocProps','Preview','Print','-','Templates' ] },

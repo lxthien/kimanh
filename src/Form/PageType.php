@@ -18,19 +18,23 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Vich\UploaderBundle\Form\Type\VichFileType;
+use App\Service\PageBuilderService;
 
 class PageType extends AbstractType
 {
     private $authorizationChecker;
     private $doctrine;
+    private $pageBuilderService;
 
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
-        ManagerRegistry $doctrine
+        ManagerRegistry $doctrine,
+        PageBuilderService $pageBuilderService
     )
     {
         $this->authorizationChecker = $authorizationChecker;
         $this->doctrine = $doctrine;
+        $this->pageBuilderService = $pageBuilderService;
     }
 
     /**
@@ -61,7 +65,18 @@ class PageType extends AbstractType
                 'required' => false,
                 'label' => 'label.description',
             ])
+            ->add('pageBuilderEnabled', CheckboxType::class, [
+                'required' => false,
+                'label' => 'Bật Page Builder',
+            ])
+            ->add('pageBuilderData', HiddenType::class, [
+                'required' => false,
+                'attr' => [
+                    'class' => 'page-builder-data-input',
+                ],
+            ])
             ->add('contents', TextareaType::class, [
+                'required' => false,
                 'attr' => ['class' => 'txt-ckeditor', 'data-height' => '500'],
                 'label' => 'label.contents',
             ])
@@ -112,6 +127,22 @@ class PageType extends AbstractType
                 // Remove postType field for non-admin users
                 if (!$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
                     $form->remove('postType');
+                }
+            })
+            ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+                $data = $event->getData();
+
+                if (!is_array($data)) {
+                    return;
+                }
+
+                $builderEnabled = !empty($data['pageBuilderEnabled']);
+                $builderData = isset($data['pageBuilderData']) ? $data['pageBuilderData'] : null;
+                $contents = isset($data['contents']) ? trim((string) $data['contents']) : '';
+
+                if ($builderEnabled && !empty($builderData) && $contents === '') {
+                    $data['contents'] = $this->pageBuilderService->buildLegacyHtmlFromJson($builderData);
+                    $event->setData($data);
                 }
             });
     }

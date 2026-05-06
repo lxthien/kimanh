@@ -5,7 +5,34 @@
     {{ form_row(form.enable) }}
     {{ form_row(form.imageFile) }}
     {{ form_row(form.description) }}
-    {{ form_row(form.contents) }}
+    <div class="page-builder-admin" data-page-builder>
+        <div class="page-builder-admin__toggle">
+            {{ form_row(form.pageBuilderEnabled) }}
+            {{ form_widget(form.pageBuilderData) }}
+        </div>
+
+        <div class="page-builder-admin__workspace" data-page-builder-workspace>
+            <div class="page-builder-admin__header">
+                <div>
+                    <h4>Page Builder</h4>
+                    <p>Tạo nội dung theo block và vẫn giữ HTML fallback cho hệ thống cũ.</p>
+                </div>
+                <button type="button" class="btn btn-outline-primary btn-sm" data-page-builder-add>
+                    <i class="fa fa-plus" aria-hidden="true"></i> Thêm block
+                </button>
+            </div>
+
+            <div class="page-builder-admin__empty alert alert-light" data-page-builder-empty>
+                Chưa có block nào. Bấm "Thêm block" để bắt đầu.
+            </div>
+
+            <div class="page-builder-admin__list" data-page-builder-list></div>
+        </div>
+    </div>
+
+    <div class="page-builder-legacy-field" data-page-builder-legacy>
+        {{ form_row(form.contents) }}
+    </div>
 
     {{ form_row(form.pageTitle) }}
     {{ form_row(form.pageDescription) }}

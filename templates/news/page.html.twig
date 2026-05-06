@@ -38,7 +38,24 @@
                         <a href="{{ path('dynamic_post_page', {'slug': 'nguyenduytuan'}) }}" target="_blank" class="last-modified-author">Nguyễn Duy Tuấn</a>
                     </p>
 
-                    <div class="ka-article-body">{{ contentsLazy|raw }}</div>
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('notice') %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    <div class="ka-article-body">
+                        {% if pageBuilderBlocks is defined and pageBuilderBlocks is not empty %}
+                            {{ include('page_builder/_blocks.html.twig', {blocks: pageBuilderBlocks, contactBlockForm: contactBlockForm|default(null)}) }}
+                        {% else %}
+                            {{ contentsLazy|raw }}
+                        {% endif %}
+                    </div>
 
                     <div class="ka-article-interactions">
                         {{ include('news/rating/rating.html.twig') }}
