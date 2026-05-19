@@ -1,0 +1,63 @@
+{{ form_start(form, {attr: {class: 'form-horizontal'}}) }}
+    
+    {{ form_errors(form) }}
+
+    <div class="row form-group">
+        <div class="col col-md-3">
+            {{ form_label(form.oldUrl, null, {label_attr: {class: 'form-control-label'}}) }}
+        </div>
+        <div class="col-12 col-md-9">
+            {{ form_widget(form.oldUrl, {attr: {class: 'form-control'}}) }}
+            {{ form_errors(form.oldUrl) }}
+            <small class="form-text text-muted">Ex: /old-page.html or old-page.html</small>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col col-md-3">
+            {{ form_label(form.newUrl, null, {label_attr: {class: 'form-control-label'}}) }}
+        </div>
+        <div class="col-12 col-md-9">
+            {{ form_widget(form.newUrl, {attr: {class: 'form-control'}}) }}
+            {{ form_errors(form.newUrl) }}
+            <small class="form-text text-muted">Ex: /new-page.html or https://example.com/other-site</small>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col col-md-3">
+            {{ form_label(form.statusCode, null, {label_attr: {class: 'form-control-label'}}) }}
+        </div>
+        <div class="col-12 col-md-9">
+            {{ form_widget(form.statusCode, {attr: {class: 'form-control'}}) }}
+            {{ form_errors(form.statusCode) }}
+            <small class="form-text text-muted">SEO chuyển hướng: 301 là chuyển hướng vĩnh viễn, 302/307 là chuyển hướng tạm thời.</small>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col col-md-3">
+            {{ form_label(form.enable, null, {label_attr: {class: 'form-control-label'}}) }}
+        </div>
+        <div class="col-12 col-md-9">
+            <div class="checkbox">
+                <label>
+                    {{ form_widget(form.enable) }} Có
+                </label>
+            </div>
+            {{ form_errors(form.enable) }}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-9 offset-md-3">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-save"></i> {{ 'action.save'|trans }}
+            </button>
+            <a href="{{ path('admin_redirect_index') }}" class="btn btn-secondary">
+                <i class="fa fa-ban"></i> {{ 'label.cancel'|trans }}
+            </a>
+        </div>
+    </div>
+
+{{ form_end(form) }}
