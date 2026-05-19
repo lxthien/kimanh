@@ -16,6 +16,9 @@ use App\Entity\News;
 use App\Entity\Comment;
 use App\Entity\User;
 use App\Entity\Contact;
+use App\Entity\Banner;
+use App\Entity\Tag;
+use App\Entity\DailyStats;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -105,6 +108,38 @@ class DashboardController extends Controller
             ->getQuery()
             ->getResult();
 
+        // New Stats for widgets
+        $totalBanners = $em->getRepository(Banner::class)->createQueryBuilder('b')
+            ->select('COUNT(b.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $totalTags = $em->getRepository(Tag::class)->createQueryBuilder('t')
+            ->select('COUNT(t.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $unreadContacts = $em->getRepository(Contact::class)->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.isRead = :isRead')
+            ->setParameter('isRead', false)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $recentContacts = $em->getRepository(Contact::class)->createQueryBuilder('c')
+            ->orderBy('c.createdAt', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+
+        // System Information
+        $systemInfo = [
+            'php_version' => PHP_VERSION,
+            'symfony_version' => \Symfony\Component\HttpKernel\Kernel::VERSION,
+            'server_os' => PHP_OS,
+            'db_driver' => $em->getConnection()->getDriver()->getName(),
+        ];
+
         // Recent activity logs
         $recentActivities = $em->getRepository(ActivityLog::class)->findRecentLogs(10);
         
@@ -113,6 +148,11 @@ class DashboardController extends Controller
             'totalComments' => $totalComments,
             'totalUsers' => $totalUsers,
             'totalViews' => $totalViews,
+            'totalBanners' => $totalBanners,
+            'totalTags' => $totalTags,
+            'unreadContacts' => $unreadContacts,
+            'recentContacts' => $recentContacts,
+            'systemInfo' => $systemInfo,
             'approvedComments' => $approvedComments,
             'pendingComments' => $pendingComments,
             'recentPosts' => $recentPosts,
@@ -145,31 +185,7 @@ class DashboardController extends Controller
     private function getViewTrendsByDate()
     {
         $em = $this->getDoctrine()->getManager();
-        $trends = [];
-        
-        for ($i = 29; $i >= 0; $i--) {
-            $date = new \DateTime("-$i days");
-            $dateStr = $date->format('Y-m-d');
-            
-            // Set start and end of day
-            $startOfDay = clone $date;
-            $startOfDay->setTime(0, 0, 0);
-            
-            $endOfDay = clone $date;
-            $endOfDay->setTime(23, 59, 59);
-            
-            $result = $em->getRepository(News::class)->createQueryBuilder('n')
-                ->select('SUM(n.viewCounts) as views')
-                ->where('n.updatedAt >= :startDate AND n.updatedAt <= :endDate')
-                ->setParameter('startDate', $startOfDay)
-                ->setParameter('endDate', $endOfDay)
-                ->getQuery()
-                ->getOneOrNullResult();
-            
-            $trends[$dateStr] = (int)($result['views'] ?? 0);
-        }
-        
-        return $trends;
+        return $em->getRepository(DailyStats::class)->getTrends(30);
     }
 
     private function buildAdminNotifications()

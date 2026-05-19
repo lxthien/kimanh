@@ -58,8 +58,27 @@ class SyncViewCountsCommand extends ContainerAwareCommand
                     $statement->execute([$count, $postId]);
                 }
 
+                // Update DailyStats
+                $today = new \DateTime();
+                $today->setTime(0, 0, 0);
+                
+                $dailyStatsRepo = $em->getRepository(\App\Entity\DailyStats::class);
+                $dailyStats = $dailyStatsRepo->findOneBy(['date' => $today]);
+                
+                $totalToday = array_sum($viewCounts);
+                
+                if (!$dailyStats) {
+                    $dailyStats = new \App\Entity\DailyStats($today);
+                    $dailyStats->setViewCount($totalToday);
+                    $em->persist($dailyStats);
+                } else {
+                    $dailyStats->incrementViewCount($totalToday);
+                }
+                
+                $em->flush();
+
                 $connection->commit();
-                $output->writeln("Da dong bo update view thanh cong cho " . count($viewCounts) . " bai viet.");
+                $output->writeln("Da dong bo update view thanh cong cho " . count($viewCounts) . " bai viet (Tong: $totalToday views).");
             } catch (\Exception $e) {
                 $connection->rollBack();
                 $output->writeln("Loi khi cap nhat view: " . $e->getMessage());
