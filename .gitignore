@@ -28,6 +28,7 @@
 /public/list-non-index.txt
 /public/ads.txt
 /public/freessl/
+/scratch/
 *.sql
 *.webp
 *.md
