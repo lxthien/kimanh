@@ -34,30 +34,30 @@
                 {{ include('news/components/breadcrumbs.html.twig') }}
 
                 <div class="ka-contact-info-block">
-                    <h1 class="text-uppercase">Công ty TNHH Tư Vấn Thiết Kế Xây Dựng Kim Anh</h1>
+                    <h1 class="text-uppercase">{{ get_setting('contens_ten_day_du') }}</h1>
                     <ul>
                         <li>
                             <i class="fa fa-map-marker"></i>
                             <span>
-                                <strong>VPGD: 98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, TP.HCM</strong>
+                                <strong>VPGD: {{ get_setting('contens_dia_chi') }}</strong>
                             </span>
                         </li>
                         <li>
                             <i class="fas fa-address-card"></i>
                             <span>
-                                <strong>MST: 0314264130</strong>
+                                <strong>MST: {{ get_setting('contens_mst') }}</strong>
                             </span>
                         </li>
                         <li>
                             <i class="fa fa-phone"></i>
                             <span>
-                                <strong>0974 776 305 – 0966 289 559 – 0987 244 305 - A Tuấn</strong>
+                                <strong>{{ get_setting('contens_hotline_1') }} – {{ get_setting('contens_hotline_2') }} – {{ get_setting('contens_hotline_3') }} - A Tuấn</strong>
                             </span>
                         </li>
                         <li>
                             <i class="fas fa-envelope"></i>
                             <span>
-                                <strong>xaydungkimanh@gmail.com</strong>
+                                <strong>{{ get_setting('contens_email') }}</strong>
                             </span>
                         </li>
                         <li>

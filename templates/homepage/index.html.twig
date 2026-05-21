@@ -24,9 +24,9 @@
                         <div class="ka-hero-cta-text">BẠN ĐANG MUỐN THI CÔNG DỰ ÁN XÂY DỰNG? HÃY LIÊN HỆ NGAY ĐẾN CHÚNG TÔI ĐỂ ĐƯỢC TƯ VẤN MIỄN PHÍ!</div>
                     </div>
                     <div class="col-md-2 text-right">
-                        <a href="tel:0974776305">
+                        <a href="tel:{{ get_setting('contens_hotline_1')|replace({' ': '', '.': ''}) }}">
                             <i class="fas fa-mobile-alt"></i>
-                            0974776305</a>
+                            {{ get_setting('contens_hotline_1') }}</a>
                     </div>
                 </div>
             </div>

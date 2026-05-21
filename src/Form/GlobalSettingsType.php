@@ -46,6 +46,16 @@ class GlobalSettingsType extends AbstractType
             ->add('linkToYoutube', TextType::class, ['required' => false, 'label' => 'Link Youtube'])
             ->add('linkToLinkedin', TextType::class, ['required' => false, 'label' => 'Link Linkedin'])
             ->add('linkToInstagram', TextType::class, ['required' => false, 'label' => 'Link Instagram'])
+            
+            // Content variables (Placeholders)
+            ->add('contens_ten_cong_ty', TextType::class, ['required' => false, 'label' => 'Tên công ty'])
+            ->add('contens_ten_day_du', TextType::class, ['required' => false, 'label' => 'Tên đầy đủ'])
+            ->add('contens_dia_chi', TextareaType::class, ['required' => false, 'attr' => ['rows' => 3], 'label' => 'Địa chỉ'])
+            ->add('contens_hotline_1', TextType::class, ['required' => false, 'label' => 'Hotline 1'])
+            ->add('contens_hotline_2', TextType::class, ['required' => false, 'label' => 'Hotline 2'])
+            ->add('contens_hotline_3', TextType::class, ['required' => false, 'label' => 'Hotline 3'])
+            ->add('contens_email', TextType::class, ['required' => false, 'label' => 'Email'])
+            ->add('contens_mst', TextType::class, ['required' => false, 'label' => 'Mã số thuế'])
         ;
     }
 

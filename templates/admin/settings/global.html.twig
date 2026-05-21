@@ -119,6 +119,65 @@
                                 <div class="col col-md-3">{{ form_label(form.hotLine2, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
                                 <div class="col-12 col-md-9">{{ form_widget(form.hotLine2, {'attr': {'class': 'form-control'}}) }}</div>
                             </div>
+
+                            <hr>
+                            <h4 class="mb-3">Biến Nội Dung (Placeholders)</h4>
+                            <div class="row form-group">
+                                <div class="col col-md-3">{{ form_label(form.contens_ten_cong_ty, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                <div class="col-12 col-md-9">
+                                    {{ form_widget(form.contens_ten_cong_ty, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">Sử dụng trong bài viết: <code>[ten_cong_ty]</code></small>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3">{{ form_label(form.contens_ten_day_du, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                <div class="col-12 col-md-9">
+                                    {{ form_widget(form.contens_ten_day_du, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">Sử dụng trong bài viết: <code>[ten_day_du]</code></small>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3">{{ form_label(form.contens_dia_chi, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                <div class="col-12 col-md-9">
+                                    {{ form_widget(form.contens_dia_chi, {'attr': {'class': 'form-control', 'rows': 2}}) }}
+                                    <small class="form-text text-muted">Sử dụng trong bài viết: <code>[dia_chi]</code></small>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3">{{ form_label(form.contens_hotline_1, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                <div class="col-12 col-md-9">
+                                    {{ form_widget(form.contens_hotline_1, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">Sử dụng trong bài viết: <code>[hotline_1]</code></small>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3">{{ form_label(form.contens_hotline_2, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                <div class="col-12 col-md-9">
+                                    {{ form_widget(form.contens_hotline_2, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">Sử dụng trong bài viết: <code>[hotline_2]</code></small>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3">{{ form_label(form.contens_hotline_3, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                <div class="col-12 col-md-9">
+                                    {{ form_widget(form.contens_hotline_3, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">Sử dụng trong bài viết: <code>[hotline_3]</code></small>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3">{{ form_label(form.contens_email, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                <div class="col-12 col-md-9">
+                                    {{ form_widget(form.contens_email, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">Sử dụng trong bài viết: <code>[email]</code></small>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col col-md-3">{{ form_label(form.contens_mst, null, {'label_attr': {'class': 'form-control-label'}}) }}</div>
+                                <div class="col-12 col-md-9">
+                                    {{ form_widget(form.contens_mst, {'attr': {'class': 'form-control'}}) }}
+                                    <small class="form-text text-muted">Sử dụng trong bài viết: <code>[mst]</code></small>
+                                </div>
+                            </div>
                             
                             <hr>
                             <h4 class="mb-3">Mạng xã hội</h4>

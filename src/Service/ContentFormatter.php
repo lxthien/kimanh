@@ -4,14 +4,17 @@ namespace App\Service;
 
 use App\Utils\ConvertImages;
 use App\Entity\News;
+use App\Service\SettingsManager;
 
 class ContentFormatter
 {
     private $convertImages;
+    private $settingsManager;
 
-    public function __construct(ConvertImages $convertImages)
+    public function __construct(ConvertImages $convertImages, SettingsManager $settingsManager)
     {
         $this->convertImages = $convertImages;
+        $this->settingsManager = $settingsManager;
     }
 
     public function stripTagsContent($string)
@@ -37,6 +40,22 @@ class ContentFormatter
         if (empty($content)) {
             return '';
         }
+
+        // Replace placeholders from settings (contens_* or contents_*)
+        $content = preg_replace_callback('/\[([a-zA-Z0-9_]+)\]/', function ($matches) {
+            $varName = $matches[1];
+            // Try contens_ prefix first
+            $value = $this->settingsManager->get('contens_' . $varName);
+            if ($value !== null) {
+                return $value;
+            }
+            // Try contents_ prefix as fallback
+            $value = $this->settingsManager->get('contents_' . $varName);
+            if ($value !== null) {
+                return $value;
+            }
+            return $matches[0];
+        }, $content);
 
         // Protect lone "<" characters that are not part of HTML tags
         // Match "<" followed by a digit, space, or other non-tag characters

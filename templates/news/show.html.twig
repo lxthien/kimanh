@@ -56,8 +56,8 @@
     {% if post.getContactHotline() is empty %}
         <div class="hotline">
             <div class="inner">
-                <a href="tel:0974776305">
-                    <div class="phonering-alo-ph-img-circle"></div>0974.776.305</a>
+                <a href="tel:{{ get_setting('contens_hotline_1')|replace({' ': '', '.': ''}) }}">
+                    <div class="phonering-alo-ph-img-circle"></div>{{ get_setting('contens_hotline_1') }}</a>
             </div>
         </div>
     {% else %}

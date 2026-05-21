@@ -61,10 +61,10 @@
         <meta name="revisit-after" content="1 days">
         <meta name="google" content="notranslate" />
         <meta http-equiv="content-language" content="vi">
-        <meta name="copyright" content="Xây Dựng Kim Anh [xaydungkimanh@gmail.com]">
+        <meta name="copyright" content="Xây Dựng Kim Anh [{{ get_setting('contens_email') }}]">
         <meta name="DC.title" content="{{ block('title') }}">
         <meta name="geo.region" content="VN" />
-        <meta name="geo.placename" content="98/5 Nguyễn Thị Đẹt, Ấp 25, Xã Đông Thạnh, Hồ Chí Minh" />
+        <meta name="geo.placename" content="{{ get_setting('contens_dia_chi') }}" />
         <meta name="geo.position" content="10.904337632211163;106.65160263701388" />
         <meta name="ICBM" content="10.904337632211163;106.65160263701388">
         
@@ -189,7 +189,7 @@
                         },
                         "contactPoint": {
                             "@type": "ContactPoint",
-                            "telephone": "0974776305",
+                            "telephone": "{{ get_setting('contens_hotline_1')|replace({' ': '', '.': ''}) }}",
                             "email": "nguyenduytuan.xaydungkimanh@gmail.com",
                             "availableLanguage": [
                                 "Vietnamese",

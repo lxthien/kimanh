@@ -2,8 +2,44 @@
 
 namespace App\Service;
 
+use App\Service\SettingsManager;
+
 class PageBuilderService
 {
+    private $settingsManager;
+
+    public function __construct(SettingsManager $settingsManager)
+    {
+        $this->settingsManager = $settingsManager;
+    }
+
+    private function replacePlaceholders($value)
+    {
+        if (is_array($value)) {
+            foreach ($value as $k => $v) {
+                $value[$k] = $this->replacePlaceholders($v);
+            }
+            return $value;
+        }
+
+        if (is_string($value)) {
+            return preg_replace_callback('/\[([a-zA-Z0-9_]+)\]/', function ($matches) {
+                $varName = $matches[1];
+                $val = $this->settingsManager->get('contens_' . $varName);
+                if ($val !== null) {
+                    return $val;
+                }
+                $val = $this->settingsManager->get('contents_' . $varName);
+                if ($val !== null) {
+                    return $val;
+                }
+                return $matches[0];
+            }, $value);
+        }
+
+        return $value;
+    }
+
     public function parseBlocks($rawValue)
     {
         if (empty($rawValue)) {
@@ -19,6 +55,9 @@ class PageBuilderService
         if (!is_array($blocks)) {
             return [];
         }
+
+        // Replace placeholders recursively in the array structure
+        $blocks = $this->replacePlaceholders($blocks);
 
         return array_values(array_filter(array_map(function ($block) {
             if (!is_array($block) || empty($block['type'])) {

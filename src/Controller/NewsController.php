@@ -1281,6 +1281,8 @@ class NewsController extends Controller
                 array('url' => 'chi-phi-xay-dung')
             );
 
+        $contentsLazy = $post ? $this->contentFormatter->lazyloadContent($post) : '';
+
         if (!empty($type) && $type === 'page') {
             return $this->render('form/caculatorcost/page.html.twig', [
                 'form' => $form->createView()
@@ -1293,7 +1295,8 @@ class NewsController extends Controller
             return $this->render('form/caculatorcost/caculator.html.twig', [
                 'form' => $form->createView(),
                 'costs' => $costs ? $costs : null,
-                'post' => $post
+                'post' => $post,
+                'contentsLazy' => $contentsLazy
             ]);
         }
     }
