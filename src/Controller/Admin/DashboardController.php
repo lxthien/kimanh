@@ -19,6 +19,7 @@ use App\Entity\Contact;
 use App\Entity\Banner;
 use App\Entity\Tag;
 use App\Entity\DailyStats;
+use App\Entity\SiteUrlClassification;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -142,6 +143,41 @@ class DashboardController extends Controller
 
         // Recent activity logs
         $recentActivities = $em->getRepository(ActivityLog::class)->findRecentLogs(10);
+
+        // SILO & URL Classification statistics
+        $urlRepo = $em->getRepository(SiteUrlClassification::class);
+        $siloMoneyCount = $urlRepo->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.type = :type')
+            ->setParameter('type', 'money')
+            ->getQuery()->getSingleScalarResult();
+
+        $siloInfoCount = $urlRepo->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.type = :type')
+            ->setParameter('type', 'info')
+            ->getQuery()->getSingleScalarResult();
+
+        $siloTrustCount = $urlRepo->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.type = :type')
+            ->setParameter('type', 'trust')
+            ->getQuery()->getSingleScalarResult();
+
+        $siloOrphanPages = $urlRepo->createQueryBuilder('u')
+            ->where('u.inboundLinks = 0')
+            ->andWhere('u.type IN (:types)')
+            ->setParameter('types', ['money', 'info'])
+            ->orderBy('u.type', 'ASC')
+            ->setMaxResults(15)
+            ->getQuery()->getResult();
+
+        $siloAllUrls = $urlRepo->createQueryBuilder('u')
+            ->orderBy('u.type', 'ASC')
+            ->addOrderBy('u.url', 'ASC')
+            ->getQuery()->getResult();
+
+        $siloRatio = $siloMoneyCount > 0 ? round($siloInfoCount / $siloMoneyCount, 1) : 0;
         
         return $this->render('admin/dashboard/index.html.twig', [
             'totalPosts' => $totalPosts,
@@ -160,6 +196,14 @@ class DashboardController extends Controller
             'topPosts' => $topPosts,
             'viewTrends' => $viewTrends,
             'recentActivities' => $recentActivities,
+            'siloStats' => [
+                'money' => $siloMoneyCount,
+                'info' => $siloInfoCount,
+                'trust' => $siloTrustCount,
+                'orphans' => $siloOrphanPages,
+                'allUrls' => $siloAllUrls,
+                'ratio' => $siloRatio
+            ]
         ]);
     }
 

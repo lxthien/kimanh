@@ -103,7 +103,7 @@ class SitemapService
      * @param NewsCategory $category
      * @return string
      */
-    private function generateCategoryUrl(NewsCategory $category)
+    public function generateCategoryUrl(NewsCategory $category)
     {
         // Check if category has a parent
         if ($category->getParentcat() !== 'root') {
@@ -121,7 +121,7 @@ class SitemapService
      * @param News $article
      * @return string
      */
-    private function generateNewsUrl(News $article)
+    public function generateNewsUrl(News $article)
     {
         // Build URL based on category structure
         $categories = $article->getCategory();

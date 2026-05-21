@@ -1,0 +1,548 @@
+{# AI Content & SEO Auditor Component #}
+<div class="ai-auditor-container" id="aiAuditorContainer" style="margin-top: 20px;">
+    <style>
+        .ai-auditor-container {
+            background: #ffffff;
+            border: 1px solid #e3e6f0;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 24px;
+            margin-bottom: 25px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .ai-header-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1.5px solid #f1f3f9;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .ai-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-ai-audit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-ai-audit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-ai-audit:disabled {
+            background: #cbd5e0;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .ai-score-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .ai-score-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 18px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .ai-score-card:hover {
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        .ai-score-val {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 10px 0;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .ai-score-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ai-progress-container {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .ai-progress-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.8s ease;
+        }
+
+        .ai-progress-bar.excellent { background-color: #10b981; }
+        .ai-progress-bar.good { background-color: #3b82f6; }
+        .ai-progress-bar.moderate { background-color: #f59e0b; }
+        .ai-progress-bar.poor { background-color: #ef4444; }
+
+        .ai-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 12px;
+            border-left: 4px solid #6366f1;
+            padding-left: 10px;
+        }
+
+        .ai-feedback-box {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .ai-feedback-header {
+            background: #f8fafc;
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .ai-feedback-body {
+            padding: 16px;
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.6;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .ai-feedback-body ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .ai-feedback-body li {
+            margin-bottom: 6px;
+        }
+
+        .triple-badge {
+            display: inline-flex;
+            align-items: center;
+            background: #eef2ff;
+            border: 1px solid #e0e7ff;
+            color: #4f46e5;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .triple-arrow {
+            color: #818cf8;
+            margin: 0 4px;
+        }
+
+        .nlp-tag {
+            display: inline-block;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        .spinner-ai {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .ai-status-msg {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 8px;
+            text-align: right;
+        }
+    </style>
+
+    <div class="ai-header-panel">
+        <div class="ai-title">
+            <span>🤖 AI Content & SEO Auditor</span>
+        </div>
+        <div>
+            <button type="button" class="btn-ai-audit" id="btnAiAudit">
+                <span class="spinner-ai" id="aiSpinner" style="display: none;"></span>
+                <span id="btnAiText">Yêu Cầu AI Đánh Giá Bài Viết</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- AI Results Display -->
+    <div id="aiAuditorResults" style="display: none;">
+        <div class="ai-score-grid">
+            <div class="ai-score-card">
+                <div class="ai-score-title">Điểm E-E-A-T</div>
+                <div class="ai-score-val" id="scoreEeat">0</div>
+                <div class="ai-progress-container">
+                    <div class="ai-progress-bar" id="barEeat" style="width: 0%;"></div>
+                </div>
+            </div>
+            <div class="ai-score-card">
+                <div class="ai-score-title">Điểm AEO (Answer Engine)</div>
+                <div class="ai-score-val" id="scoreAeo">0</div>
+                <div class="ai-progress-container">
+                    <div class="ai-progress-bar" id="barAeo" style="width: 0%;"></div>
+                </div>
+            </div>
+            <div class="ai-score-card">
+                <div class="ai-score-title">Điểm GEO (AI Search)</div>
+                <div class="ai-score-val" id="scoreGeo">0</div>
+                <div class="ai-progress-container">
+                    <div class="ai-progress-bar" id="barGeo" style="width: 0%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="ai-section-title">Phân tích E-E-A-T</div>
+                
+                <div class="ai-feedback-box">
+                    <div class="ai-feedback-header" onclick="toggleAccordion(this)">
+                        <span>Chuyên môn (Expertise)</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="ai-feedback-body" id="feedbackExpertise"></div>
+                </div>
+
+                <div class="ai-feedback-box">
+                    <div class="ai-feedback-header" onclick="toggleAccordion(this)">
+                        <span>Thẩm quyền (Authoritativeness)</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="ai-feedback-body" id="feedbackAuthoritativeness"></div>
+                </div>
+
+                <div class="ai-feedback-box">
+                    <div class="ai-feedback-header" onclick="toggleAccordion(this)">
+                        <span>Độ tin cậy (Trustworthiness)</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="ai-feedback-body" id="feedbackTrustworthiness"></div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="ai-section-title">Tối ưu AEO (Google AI Overview)</div>
+                
+                <div class="ai-feedback-box">
+                    <div class="ai-feedback-header" onclick="toggleAccordion(this)">
+                        <span>Đánh giá câu trả lời trực tiếp</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="ai-feedback-body" id="feedbackDirectAnswer"></div>
+                </div>
+
+                <div class="ai-feedback-box">
+                    <div class="ai-feedback-header" onclick="toggleAccordion(this)">
+                        <span>Định dạng FAQ</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="ai-feedback-body" id="feedbackFaqFormat"></div>
+                </div>
+
+                <div class="ai-feedback-box">
+                    <div class="ai-feedback-header" onclick="toggleAccordion(this)">
+                        <span>Gợi ý cải thiện</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="ai-feedback-body" id="feedbackSuggestions"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-md-12">
+                <div class="ai-section-title">NLP Tiếng Việt & Semantic Triples</div>
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 16px;">
+                    <div style="margin-bottom: 12px;">
+                        <strong style="font-size: 13px; color: #475569; display: block; margin-bottom: 6px;">Mật độ từ loại (POS) & Readability:</strong>
+                        <div id="nlpMetricsContainer"></div>
+                    </div>
+                    <div>
+                        <strong style="font-size: 13px; color: #475569; display: block; margin-bottom: 6px;">Khẳng định ngữ nghĩa (Semantic Triples) bóc tách:</strong>
+                        <div id="triplesContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="ai-status-msg" id="aiStatusMsg"></div>
+    </div>
+    
+    <div id="aiNoData" style="text-align: center; color: #94a3b8; padding: 20px 0; font-size: 13px;">
+        Chưa có dữ liệu đánh giá AI cho bài viết này. Hãy nhấn nút để bắt đầu phân tích.
+    </div>
+</div>
+
+{# Dữ liệu ban đầu từ DB #}
+<script>
+    {% if news.aiAudit is not null %}
+    window.INITIAL_AI_DATA = {
+        has_data: true,
+        eeat_score: {{ news.aiAudit.eeatScore|default(0) }},
+        eeat_feedback: {{ (news.aiAudit.eeatFeedback|default('{}'))|raw }},
+        aeo_score: {{ news.aiAudit.aeoScore|default(0) }},
+        aeo_feedback: {{ (news.aiAudit.aeoFeedback|default('{}'))|raw }},
+        geo_score: {{ news.aiAudit.geoScore|default(0) }},
+        nlp_metrics: {{ (news.aiAudit.nlpMetrics|default('{}'))|raw }},
+        semantic_triples: {{ (news.aiAudit.semanticTriples|default('[]'))|raw }},
+        updated_at: "{{ news.aiAudit.updatedAt ? news.aiAudit.updatedAt|date('Y-m-d H:i:s') : '' }}"
+    };
+    {% else %}
+    window.INITIAL_AI_DATA = {
+        has_data: false,
+        eeat_score: 0,
+        eeat_feedback: {},
+        aeo_score: 0,
+        aeo_feedback: {},
+        geo_score: 0,
+        nlp_metrics: {},
+        semantic_triples: [],
+        updated_at: ""
+    };
+    {% endif %}
+</script>
+
+<script>
+function toggleAccordion(header) {
+    const body = header.nextElementSibling;
+    const arrow = header.querySelector('span:last-child');
+    if (body.style.display === 'none') {
+        body.style.display = 'block';
+        arrow.textContent = '▲';
+    } else {
+        body.style.display = 'none';
+        arrow.textContent = '▼';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('btnAiAudit');
+    const spinner = document.getElementById('aiSpinner');
+    const btnText = document.getElementById('btnAiText');
+    const resultsDiv = document.getElementById('aiAuditorResults');
+    const noDataDiv = document.getElementById('aiNoData');
+
+    // UI elements to update
+    const scoreEeat = document.getElementById('scoreEeat');
+    const barEeat = document.getElementById('barEeat');
+    const scoreAeo = document.getElementById('scoreAeo');
+    const barAeo = document.getElementById('barAeo');
+    const scoreGeo = document.getElementById('scoreGeo');
+    const barGeo = document.getElementById('barGeo');
+
+    const feedbackExpertise = document.getElementById('feedbackExpertise');
+    const feedbackAuthoritativeness = document.getElementById('feedbackAuthoritativeness');
+    const feedbackTrustworthiness = document.getElementById('feedbackTrustworthiness');
+    const feedbackDirectAnswer = document.getElementById('feedbackDirectAnswer');
+    const feedbackFaqFormat = document.getElementById('feedbackFaqFormat');
+    const feedbackSuggestions = document.getElementById('feedbackSuggestions');
+
+    const nlpMetricsContainer = document.getElementById('nlpMetricsContainer');
+    const triplesContainer = document.getElementById('triplesContainer');
+    const aiStatusMsg = document.getElementById('aiStatusMsg');
+
+    function getScoreClass(score) {
+        if (score >= 80) return 'excellent';
+        if (score >= 60) return 'good';
+        if (score >= 40) return 'moderate';
+        return 'poor';
+    }
+
+    function renderData(data) {
+        noDataDiv.style.display = 'none';
+        resultsDiv.style.display = 'block';
+
+        // Điểm số & Progress Bar
+        scoreEeat.textContent = Math.round(data.eeat_score);
+        barEeat.className = `ai-progress-bar ${getScoreClass(data.eeat_score)}`;
+        barEeat.style.width = data.eeat_score + '%';
+
+        scoreAeo.textContent = Math.round(data.aeo_score);
+        barAeo.className = `ai-progress-bar ${getScoreClass(data.aeo_score)}`;
+        barAeo.style.width = data.aeo_score + '%';
+
+        scoreGeo.textContent = Math.round(data.geo_score);
+        barGeo.className = `ai-progress-bar ${getScoreClass(data.geo_score)}`;
+        barGeo.style.width = data.geo_score + '%';
+
+        // Phản hồi E-E-A-T
+        const eeat = data.eeat_feedback || {};
+        feedbackExpertise.textContent = eeat.expertise || 'Không có phản hồi';
+        feedbackAuthoritativeness.textContent = eeat.authoritativeness || 'Không có phản hồi';
+        feedbackTrustworthiness.textContent = eeat.trustworthiness || 'Không có phản hồi';
+
+        // Phản hồi AEO
+        const aeo = data.aeo_feedback || {};
+        feedbackDirectAnswer.textContent = aeo.direct_answer || 'Không có phản hồi';
+        feedbackFaqFormat.textContent = aeo.faq_format || 'Không có phản hồi';
+        
+        // Render Suggestions dạng danh sách
+        feedbackSuggestions.innerHTML = '';
+        if (aeo.suggestions && aeo.suggestions.length > 0) {
+            const ul = document.createElement('ul');
+            aeo.suggestions.forEach(s => {
+                const li = document.createElement('li');
+                li.textContent = s;
+                ul.appendChild(li);
+            });
+            feedbackSuggestions.appendChild(ul);
+        } else {
+            feedbackSuggestions.textContent = 'Không có gợi ý nào.';
+        }
+
+        // Render NLP Metrics
+        const nlp = data.nlp_metrics || {};
+        nlpMetricsContainer.innerHTML = `
+            <span class="nlp-tag">Tính từ (ADJ): ${(nlp.adjective_density * 100).toFixed(1)}%</span>
+            <span class="nlp-tag">Động từ (VERB): ${(nlp.verb_density * 100).toFixed(1)}%</span>
+            <span class="nlp-tag">Danh từ (NOUN): ${(nlp.noun_density * 100).toFixed(1)}%</span>
+            <span class="nlp-tag" style="background:#e0f2fe; color:#0369a1; font-weight:600;">Độ đọc dễ: ${nlp.readability || 'N/A'}</span>
+        `;
+
+        // Render Semantic Triples
+        const triples = data.semantic_triples || [];
+        triplesContainer.innerHTML = '';
+        if (triples.length > 0) {
+            triples.forEach(t => {
+                if (Array.isArray(t) && t.length >= 3) {
+                    const badge = document.createElement('span');
+                    badge.className = 'triple-badge';
+                    badge.innerHTML = `${t[0]} <span class="triple-arrow">➔</span> ${t[1]} <span class="triple-arrow">➔</span> ${t[2]}`;
+                    triplesContainer.appendChild(badge);
+                }
+            });
+        } else {
+            triplesContainer.innerHTML = '<span style="font-size:12px; color:#94a3b8;">Không phát hiện khẳng định cụ thể nào.</span>';
+        }
+
+        if (data.updated_at) {
+            aiStatusMsg.textContent = `Cập nhật gần nhất: ${data.updated_at}`;
+        }
+    }
+
+    // Collapse các accordion mặc định
+    document.querySelectorAll('.ai-feedback-body').forEach(body => {
+        body.style.display = 'none';
+    });
+
+    // Nạp dữ liệu mặc định ban đầu nếu có
+    if (window.INITIAL_AI_DATA && window.INITIAL_AI_DATA.has_data) {
+        renderData(window.INITIAL_AI_DATA);
+    }
+
+    // Sự kiện click nút Gọi AI Audit
+    btn.addEventListener('click', function() {
+        btn.disabled = true;
+        spinner.style.display = 'inline-block';
+        btnText.textContent = 'Đang phân tích bài viết bằng AI...';
+
+        const auditUrl = "{{ path('admin_news_ai_audit', {'id': news.id}) }}";
+
+        fetch(auditUrl, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.message || 'Lỗi hệ thống'); });
+            }
+            return response.json();
+        })
+        .then(res => {
+            if (res.status === 'success') {
+                const updatedData = {
+                    eeat_score: res.data.eeat_score,
+                    eeat_feedback: res.data.eeat_feedback,
+                    aeo_score: res.data.aeo_score,
+                    aeo_feedback: res.data.aeo_feedback,
+                    geo_score: res.data.geo_score,
+                    nlp_metrics: res.data.nlp_metrics,
+                    semantic_triples: res.data.semantic_triples,
+                    updated_at: new Date().toLocaleString('vi-VN')
+                };
+                renderData(updatedData);
+                // Mở rộng accordion đầu tiên để gây ấn tượng
+                const firstBody = document.querySelector('.ai-feedback-body');
+                if (firstBody) {
+                    firstBody.style.display = 'block';
+                    firstBody.previousElementSibling.querySelector('span:last-child').textContent = '▲';
+                }
+            } else {
+                alert('Lỗi: ' + res.message);
+            }
+        })
+        .catch(err => {
+            alert('Lỗi phân tích: ' + err.message);
+        })
+        .finally(() => {
+            btn.disabled = false;
+            spinner.style.display = 'none';
+            btnText.textContent = 'Yêu Cầu AI Đánh Giá Bài Viết';
+        });
+    });
+});
+</script>

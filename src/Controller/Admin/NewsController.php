@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\ActivityLog;
 use App\Entity\NewsCategory;
 use App\Entity\News;
+use App\Entity\AIContentAudit;
 use App\Entity\Rating;
 use App\Form\NewsCategoryType;
 use App\Form\NewsType;
@@ -309,6 +310,109 @@ class NewsController extends Controller
                     'message' => 'Thao tác thành công'
                 )
             )
+        );
+    }
+
+    /**
+     * Call local Python AI Service to audit a news article.
+     *
+     * @Route("/{id}/ai-audit", name="admin_news_ai_audit", methods={"POST"})
+     */
+    public function aiAuditAction(Request $request, News $news)
+    {
+        $title = $news->getTitle();
+        // Lấy nội dung thô (hoặc xử lý strip tags nếu cần, nhưng FastAPI có clean_html rồi)
+        $content = $news->getContents();
+
+        $postData = json_encode([
+            'title' => $title,
+            'content' => $content
+        ]);
+
+        $aiServiceUrl = getenv('AI_SERVICE_URL') ?: ($_ENV['AI_SERVICE_URL'] ?? 'http://127.0.0.1:8000/analyze');
+        $ch = curl_init($aiServiceUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($postData)
+        ]);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 90); // Tăng timeout lên 90 giây cho AI/NLP
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
+
+        if ($response === false || $httpCode !== 200) {
+            return new Response(
+                json_encode([
+                    'status' => 'error',
+                    'message' => 'Không thể kết nối tới Dịch vụ AI local. Lỗi: ' . ($curlError ?: 'HTTP Code ' . $httpCode)
+                ]),
+                500,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        $data = json_decode($response, true);
+        if (!$data) {
+            return new Response(
+                json_encode([
+                    'status' => 'error',
+                    'message' => 'Dữ liệu phản hồi từ AI không đúng định dạng.'
+                ]),
+                500,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $aiAudit = $news->getAiAudit();
+
+        if (!$aiAudit) {
+            $aiAudit = new AIContentAudit();
+            $aiAudit->setNews($news);
+            $news->setAiAudit($aiAudit);
+        }
+
+        $aiAudit->setEeatScore($data['eeat_score'] ?? null);
+        $aiAudit->setEeatFeedback(json_encode($data['eeat_feedback'] ?? [], JSON_UNESCAPED_UNICODE));
+        $aiAudit->setAeoScore($data['aeo_score'] ?? null);
+        $aiAudit->setAeoFeedback(json_encode($data['aeo_feedback'] ?? [], JSON_UNESCAPED_UNICODE));
+        $aiAudit->setGeoScore($data['geo_score'] ?? null);
+        $aiAudit->setNlpMetrics(json_encode($data['nlp_metrics'] ?? [], JSON_UNESCAPED_UNICODE));
+        $aiAudit->setSemanticTriples(json_encode($data['semantic_triples'] ?? [], JSON_UNESCAPED_UNICODE));
+        $aiAudit->setUpdatedAt(new \DateTime());
+
+        $em->persist($aiAudit);
+        $em->flush();
+
+        // Activity Log
+        $this->get(ActivityLogService::class)->log(
+            ActivityLog::ACTION_UPDATE,
+            ActivityLog::ENTITY_NEWS,
+            $news->getId(),
+            $news->getTitle(),
+            'Đánh giá chất lượng nội dung bằng AI'
+        );
+
+        return new Response(
+            json_encode([
+                'status' => 'success',
+                'data' => [
+                    'eeat_score' => $aiAudit->getEeatScore(),
+                    'eeat_feedback' => $data['eeat_feedback'] ?? [],
+                    'aeo_score' => $aiAudit->getAeoScore(),
+                    'aeo_feedback' => $data['aeo_feedback'] ?? [],
+                    'geo_score' => $aiAudit->getGeoScore(),
+                    'nlp_metrics' => $data['nlp_metrics'] ?? [],
+                    'semantic_triples' => $data['semantic_triples'] ?? []
+                ]
+            ]),
+            200,
+            ['Content-Type' => 'application/json']
         );
     }
 }

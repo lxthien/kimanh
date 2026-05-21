@@ -259,6 +259,13 @@ class News
      */
     private $pageBuilderData = null;
 
+    /**
+     * @var AIContentAudit
+     *
+     * @ORM\OneToOne(targetEntity="App\Entity\AIContentAudit", mappedBy="news", cascade={"remove"})
+     */
+    private $aiAudit;
+
     public function __toString()
     {
         return (string)$this->getTitle();
@@ -777,5 +784,26 @@ class News
     public function getPageBuilderData()
     {
         return $this->pageBuilderData;
+    }
+
+    /**
+     * @return AIContentAudit
+     */
+    public function getAiAudit()
+    {
+        return $this->aiAudit;
+    }
+
+    /**
+     * @param AIContentAudit $aiAudit
+     * @return News
+     */
+    public function setAiAudit(AIContentAudit $aiAudit = null)
+    {
+        $this->aiAudit = $aiAudit;
+        if ($aiAudit && $aiAudit->getNews() !== $this) {
+            $aiAudit->setNews($this);
+        }
+        return $this;
     }
 }
