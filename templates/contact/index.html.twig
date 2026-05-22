@@ -83,7 +83,10 @@
                     </div>
                     <script>
                         window.dataLayer = window.dataLayer || [];
-                        window.dataLayer.push({'event': 'dang-ky'});
+                        window.dataLayer.push({
+                            'event': 'form_submit_baogia',
+                            'form_location': window.location.pathname
+                        });
                     </script>
                 {% endfor %}
 

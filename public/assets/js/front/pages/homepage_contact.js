@@ -7,20 +7,20 @@ var homepageContact = {
     init: function () {
         var $form = $('#ka-homepage-contact-form');
         var $msg = $('#ka-contact-form-message');
-        
+
         if ($form.length === 0) {
             return;
         }
 
         $form.on('submit', function (e) {
             e.preventDefault();
-            
+
             var $submitBtn = $form.find('button[type="submit"]');
             var originalBtnText = $submitBtn.text();
-            
+
             $submitBtn.prop('disabled', true).text('Đang gửi...');
             if ($msg.length > 0) {
-                 $msg.hide().removeClass('alert alert-success alert-danger').empty();
+                $msg.hide().removeClass('alert alert-success alert-danger').empty();
             }
 
             $.ajax({
@@ -34,11 +34,17 @@ var homepageContact = {
 
                     $.fancybox.open({
                         src: '<div style="padding: 40px; text-align: center; border-radius: 8px; max-width: 400px; width: 100%;">' +
-                             '<h3 style="color: ' + color + '; font-weight: bold; margin-top: 0; font-family: Roboto, sans-serif;">' + title + '</h3>' +
-                             '<p style="font-size: 16px; margin-bottom: 0; font-family: Roboto, sans-serif;">' + message + '</p>' +
-                             '</div>',
+                            '<h3 style="color: ' + color + '; font-weight: bold; margin-top: 0; font-family: Roboto, sans-serif;">' + title + '</h3>' +
+                            '<p style="font-size: 16px; margin-bottom: 0; font-family: Roboto, sans-serif;">' + message + '</p>' +
+                            '</div>',
                         type: 'html',
                         smallBtn: true
+                    });
+
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                        'event': 'form_submit_baogia',
+                        'form_location': window.location.pathname
                     });
 
                     if (response.success) {
@@ -48,9 +54,9 @@ var homepageContact = {
                 error: function () {
                     $.fancybox.open({
                         src: '<div style="padding: 40px; text-align: center; border-radius: 8px; max-width: 400px; width: 100%;">' +
-                             '<h3 style="color: #dc4c04; font-weight: bold; margin-top: 0; font-family: Roboto, sans-serif;">Lỗi kết nối!</h3>' +
-                             '<p style="font-size: 16px; margin-bottom: 0; font-family: Roboto, sans-serif;">Lỗi kết nối máy chủ. Vui lòng thử lại.</p>' +
-                             '</div>',
+                            '<h3 style="color: #dc4c04; font-weight: bold; margin-top: 0; font-family: Roboto, sans-serif;">Lỗi kết nối!</h3>' +
+                            '<p style="font-size: 16px; margin-bottom: 0; font-family: Roboto, sans-serif;">Lỗi kết nối máy chủ. Vui lòng thử lại.</p>' +
+                            '</div>',
                         type: 'html',
                         smallBtn: true
                     });

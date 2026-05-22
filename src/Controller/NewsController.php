@@ -864,6 +864,7 @@ class NewsController extends Controller
             ->add('ip', HiddenType::class)
             ->add('news_id', HiddenType::class)
             ->add('comment_id', HiddenType::class)
+            ->add('gclid', HiddenType::class, array('required' => false))
             ->add('send', ButtonType::class, array('label' => 'label.send'))
             ->getForm();
 
@@ -896,6 +897,7 @@ class NewsController extends Controller
                 ->add('ip', HiddenType::class)
                 ->add('news_id', HiddenType::class)
                 ->add('comment_id', HiddenType::class)
+                ->add('gclid', HiddenType::class, array('required' => false))
                 ->getForm();
 
             $form->handleRequest($request);
@@ -906,7 +908,8 @@ class NewsController extends Controller
                 $em->flush();
 
                 if (null !== $comment->getId()) {
-                    $message = \Swift_Message::newInstance()
+                    /*
+                    $message = (new \Swift_Message())
                         ->setSubject($this->get('translator')->trans('comment.email.title', ['%siteName%' => $this->get('settings_manager')->get('siteName')]))
                         ->setFrom(['hotro.xaydungkimanh@gmail.com' => $this->get('settings_manager')->get('siteName')])
                         ->setTo($this->get('settings_manager')->get('emailContact'))
@@ -915,7 +918,8 @@ class NewsController extends Controller
                                 'Emails/comment.html.twig',
                                 array(
                                     'name' => $request->request->get('form')['author'],
-                                    'body' => $request->request->get('form')['content']
+                                    'body' => $request->request->get('form')['content'],
+                                    'gclid' => $comment->getGclid()
                                 )
                             ),
                             'text/html'
@@ -923,6 +927,7 @@ class NewsController extends Controller
                     ;
 
                     $mailer->send($message);
+                    */
 
                     return new Response(
                         json_encode(
@@ -1076,6 +1081,7 @@ class NewsController extends Controller
                 'label' => 'Nội dung yêu cầu tư vấn *',
                 'attr' => ['rows' => '5'],
             ])
+            ->add('gclid', HiddenType::class, ['required' => false])
             ->add('send', SubmitType::class, [
                 'label' => 'Gửi yêu cầu tư vấn',
                 'attr' => ['class' => 'btn btn-primary'],

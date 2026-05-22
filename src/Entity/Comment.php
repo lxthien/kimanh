@@ -93,6 +93,13 @@ class Comment
     private $ip;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="gclid", type="string", length=255, nullable=true)
+     */
+    private $gclid;
+
+    /**
      * @var \DateTime
      *
      * @Gedmo\Timestampable(on="create")
@@ -281,6 +288,29 @@ class Comment
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Set gclid
+     *
+     * @param string $gclid
+     * @return Comment
+     */
+    public function setGclid($gclid)
+    {
+        $this->gclid = $gclid;
+
+        return $this;
+    }
+
+    /**
+     * Get gclid
+     *
+     * @return string
+     */
+    public function getGclid()
+    {
+        return $this->gclid;
     }
 
     /**

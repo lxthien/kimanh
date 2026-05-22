@@ -82,6 +82,13 @@ class Contact
      */
     private $isRead = false;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="gclid", type="string", length=255, nullable=true)
+     */
+    private $gclid;
+
 
     /**
      * Get id
@@ -293,6 +300,30 @@ class Contact
     public function isRead()
     {
         return $this->getIsRead();
+    }
+
+    /**
+     * Set gclid
+     *
+     * @param string $gclid
+     *
+     * @return Contact
+     */
+    public function setGclid($gclid)
+    {
+        $this->gclid = $gclid;
+
+        return $this;
+    }
+
+    /**
+     * Get gclid
+     *
+     * @return string
+     */
+    public function getGclid()
+    {
+        return $this->gclid;
     }
 }
 

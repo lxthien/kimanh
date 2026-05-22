@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Contact;
@@ -34,6 +35,7 @@ class ContactController extends Controller
                 'label' => 'Nội dung yêu cầu tư vấn *',
                 'attr' => array('rows' => '7')
             ))
+            ->add('gclid', HiddenType::class, array('required' => false))
             ->add('send', SubmitType::class, array('label' => 'Gửi yêu cầu tư vấn', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
 
@@ -60,7 +62,8 @@ class ContactController extends Controller
                     $this->get('translator')->trans('contact.message.success')
                 );
 
-                $message = \Swift_Message::newInstance()
+                /*
+                $message = (new \Swift_Message())
                         ->setSubject($this->get('translator')->trans('contact.email.title', ['%siteName%' => $this->get('settings_manager')->get('siteName')]))
                         ->setFrom(['hotro.xaydungminhduy@gmail.com' => $this->get('settings_manager')->get('siteName')])
                         ->setTo($this->get('settings_manager')->get('emailContact'))
@@ -71,7 +74,8 @@ class ContactController extends Controller
                                     'name' => $form->get('name')->getData(),
                                     'phone' => $form->get('phone')->getData(),
                                     'email' => $form->get('email')->getData(),
-                                    'body' => $form->get('contents')->getData()
+                                    'body' => $form->get('contents')->getData(),
+                                    'gclid' => $contact->getGclid()
                                 )
                             ),
                             'text/html'
@@ -79,6 +83,7 @@ class ContactController extends Controller
                     ;
 
                 $mailer->send($message);
+                */
 
                 return $this->redirectToRoute('contact');
             }
@@ -115,6 +120,7 @@ class ContactController extends Controller
                 'label' => 'label.content',
                 'attr' => array('rows' => '7')
             ))
+            ->add('gclid', HiddenType::class, array('required' => false))
             ->getForm();
 
         $form->handleRequest($request);
@@ -127,7 +133,8 @@ class ContactController extends Controller
             if (null === $contact->getId()) {
                 return new JsonResponse(['success' => false, 'message' => $this->get('translator')->trans('contact.message.error')]);
             } else {
-                $message = \Swift_Message::newInstance()
+                /*
+                $message = (new \Swift_Message())
                         ->setSubject($this->get('translator')->trans('contact.email.title', ['%siteName%' => $this->get('settings_manager')->get('siteName')]))
                         ->setFrom(['hotro.xaydungminhduy@gmail.com' => $this->get('settings_manager')->get('siteName')])
                         ->setTo($this->get('settings_manager')->get('emailContact'))
@@ -138,13 +145,15 @@ class ContactController extends Controller
                                     'name' => $form->get('name')->getData(),
                                     'phone' => $form->get('phone')->getData(),
                                     'email' => $form->get('email')->getData(),
-                                    'body' => $form->get('contents')->getData()
+                                    'body' => $form->get('contents')->getData(),
+                                    'gclid' => $contact->getGclid()
                                 )
                             ),
                             'text/html'
                         );
 
                 $mailer->send($message);
+                */
 
                 return new JsonResponse(['success' => true, 'message' => $this->get('translator')->trans('contact.message.success')]);
             }
@@ -176,6 +185,7 @@ class ContactController extends Controller
                 'label' => 'Nội dung yêu cầu tư vấn *',
                 'attr' => array('rows' => '5')
             ))
+            ->add('gclid', HiddenType::class, array('required' => false))
             ->add('send', SubmitType::class, array('label' => 'Gửi yêu cầu tư vấn', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
 
@@ -199,7 +209,7 @@ class ContactController extends Controller
             return new RedirectResponse($redirectUrl);
         }
 
-        $message = \Swift_Message::newInstance()
+        $message = (new \Swift_Message())
             ->setSubject($this->get('translator')->trans('contact.email.title', ['%siteName%' => $this->get('settings_manager')->get('siteName')]))
             ->setFrom(['hotro.xaydungminhduy@gmail.com' => $this->get('settings_manager')->get('siteName')])
             ->setTo($this->get('settings_manager')->get('emailContact'))
@@ -210,7 +220,8 @@ class ContactController extends Controller
                         'name' => $form->get('name')->getData(),
                         'phone' => $form->get('phone')->getData(),
                         'email' => $form->get('email')->getData(),
-                        'body' => $form->get('contents')->getData()
+                        'body' => $form->get('contents')->getData(),
+                        'gclid' => $contact->getGclid()
                     )
                 ),
                 'text/html'

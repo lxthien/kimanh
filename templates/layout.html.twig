@@ -254,18 +254,52 @@
                     return false;
                 }
                 window.gtmDidInit = true; // flag to ensure script does not get added to DOM more than once.
+                window.dataLayer = window.dataLayer || [];
                 const script = document.createElement('script');
                 script.type = 'text/javascript';
                 script.async = true;
                 // ensure PageViews is always tracked (on script load)
                 script.onload = () => {
-                    dataLayer.push({event: 'gtm.js', 'gtm.start': new Date().getTime(), 'gtm.uniqueEventId': 0});
+                    window.dataLayer.push({event: 'gtm.js', 'gtm.start': new Date().getTime(), 'gtm.uniqueEventId': 0});
                 };
                 script.src = 'https://www.googletagmanager.com/gtm.js?id={{ get_setting('GTM') }}';
                 document.head.appendChild(script);
             }
         </script>
         <!-- End Google Tag Manager -->
+        <!-- Google Ads Tracking (gclid) -->
+        <script>
+            (function() {
+                function getURLParam(name) {
+                    var urlParams = new URLSearchParams(window.location.search);
+                    return urlParams.get(name);
+                }
+
+                function getCookie(name) {
+                    var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                    return match ? match[2] : null;
+                }
+
+                var gclid = getURLParam('gclid');
+                if (gclid) {
+                    var expiry = new Date();
+                    expiry.setDate(expiry.getDate() + 90);
+                    document.cookie = "gclid=" + gclid + "; expires=" + expiry.toUTCString() + "; path=/; SameSite=Lax";
+                }
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    var gclidValue = getCookie('gclid');
+                    if (gclidValue) {
+                        var inputs = document.querySelectorAll('input[type="hidden"]');
+                        inputs.forEach(function(input) {
+                            if (input.name && input.name.indexOf('[gclid]') !== -1) {
+                                input.value = gclidValue;
+                            }
+                        });
+                    }
+                });
+            })();
+        </script>
         <link rel="preload" href="{{ absolute_url(asset('build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-19-7DRs5.woff2')) }}" crossorigin="anonymous" as="font" type="font/woff2">
         <link rel="preload" href="{{ absolute_url(asset('build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-19a7DRs5.woff2')) }}" crossorigin="anonymous" as="font" type="font/woff2">
         <link rel="preload" href="{{ absolute_url(asset('build/fonts/ieVl2ZhZI2eCN5jzbjEETS9weq8-19G7DRs5.woff2')) }}" crossorigin="anonymous" as="font" type="font/woff2">

@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use App\Service\ActivityLogService;
 use App\Service\SettingsManager;
 
@@ -119,6 +120,7 @@ class HomepageController extends AbstractController
                 'label' => 'label.content',
                 'attr' => array('rows' => '4', 'placeholder' => 'Nội dung yêu cầu tư vấn *')
             ))
+            ->add('gclid', HiddenType::class, array('required' => false))
             ->add('send', SubmitType::class, array('label' => 'Gửi yêu cầu', 'attr' => array('class' => 'btn btn-primary ka-btn')))
             ->getForm();
 
