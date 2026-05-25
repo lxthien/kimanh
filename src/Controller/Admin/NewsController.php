@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -83,7 +84,44 @@ class NewsController extends Controller
         ]);
     }
 
-    
+    /**
+     * Searches published posts and pages for the CKEditor content block tool.
+     *
+     * @Route("/content-block/related-search", name="admin_content_block_related_search", methods={"GET"})
+     */
+    public function relatedSearchAction(Request $request)
+    {
+        $query = trim((string) $request->query->get('q', ''));
+        $currentId = $request->query->getInt('currentId', 0);
+
+        if (mb_strlen($query) < 2) {
+            return new JsonResponse(['items' => []]);
+        }
+
+        $items = $this->getDoctrine()->getRepository(News::class)
+            ->createQueryBuilder('n')
+            ->where('n.enable = :enabled')
+            ->andWhere('n.id != :currentId')
+            ->andWhere('n.title LIKE :query OR n.url LIKE :query OR n.description LIKE :query')
+            ->setParameter('enabled', true)
+            ->setParameter('currentId', $currentId)
+            ->setParameter('query', '%' . $query . '%')
+            ->orderBy('n.createdAt', 'DESC')
+            ->setMaxResults(12)
+            ->getQuery()
+            ->getResult();
+
+        return new JsonResponse([
+            'items' => array_map(function (News $news) {
+                return [
+                    'id' => $news->getId(),
+                    'title' => $news->getTitle(),
+                    'url' => $this->generateUrl('dynamic_post_page', ['slug' => $news->getUrl()]),
+                    'description' => $news->getDescription(),
+                ];
+            }, $items),
+        ]);
+    }
 
     /**
      * Creates a new News entity.

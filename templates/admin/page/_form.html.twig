@@ -31,7 +31,15 @@
     </div>
 
     <div class="page-builder-legacy-field" data-page-builder-legacy>
-        {{ form_row(form.contents) }}
+        <div class="cms-block-editor-layout">
+            {{ include('admin/content_block/_toolbar.html.twig', {
+                target_editor: form.contents.vars.id,
+                current_id: form.vars.value.id|default(0),
+            }, with_context = false) }}
+            <div class="cms-block-editor-layout__field">
+                {{ form_row(form.contents) }}
+            </div>
+        </div>
     </div>
 
     {{ form_row(form.pageTitle) }}

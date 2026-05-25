@@ -1,6 +1,7 @@
 @import "~bootswatch/flatly/variables";
 @import "bootstrap-tagsinput.scss";
 @import "menu-editor.scss";
+@import "../shared/content-blocks";
 
 /*===========================================================================
  * Listing page
@@ -13,6 +14,7 @@
     }
 
     td .item-actions {
+
         .btn-edit,
         .btn-reply {
             padding: 5px 3px;
@@ -39,7 +41,7 @@
         .stat-widget-one .stat-content {
             margin-top: 15px;
         }
-        
+
         .stat-widget-one .stat-text {
             font-size: 20px;
         }
@@ -79,7 +81,8 @@
     }
 }
 
-#admin_news_edit, #admin_post_new {
+#admin_news_edit,
+#admin_post_new {
     .bootstrap-tagsinput {
         height: auto;
     }
@@ -344,6 +347,206 @@
             right: 15px;
             top: 70px !important;
             width: calc(100vw - 30px);
+        }
+    }
+}
+
+.cms-block-editor-layout {
+    align-items: start;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: 52px minmax(0, 1fr);
+    margin: 12px 0 12px -60px;
+
+    &__field {
+        min-width: 0;
+    }
+}
+
+.cms-block-toolbar {
+    background: #fff;
+    border: 1px solid #d5e3f1;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(31, 45, 61, 0.09);
+    margin-top: 30px;
+    padding: 6px 4px;
+    position: sticky;
+    top: 78px;
+    z-index: 20;
+
+    &__heading {
+        display: none;
+    }
+
+    &__actions {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+}
+
+.cms-block-tool {
+    align-items: center;
+    background: #f1f7fd;
+    border: 1px solid #d7e7f5;
+    border-radius: 6px;
+    color: #2474b5;
+    cursor: pointer;
+    display: flex;
+    height: 50px;
+    justify-content: center;
+    padding: 0;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    width: 100%;
+
+    i {
+        font-size: 20px;
+    }
+
+    span {
+        display: none;
+    }
+
+    &:hover,
+    &:focus {
+        background: #2474b5;
+        border-color: #2474b5;
+        color: #fff;
+        outline: none;
+    }
+}
+
+.cms-block-modal {
+    &.fade.in {
+        opacity: 1;
+    }
+
+    &.fade.in .modal-dialog {
+        transform: translate(0, 0);
+    }
+
+    .cms-block-form {
+        display: none;
+    }
+
+    textarea {
+        font-family: Consolas, Monaco, monospace;
+        font-size: 13px;
+    }
+}
+
+.modal-backdrop.fade.in {
+    opacity: 0.5;
+}
+
+.cms-related-results,
+.cms-related-selected {
+    display: grid;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.cms-related-result,
+.cms-related-item {
+    background: #fff;
+    border: 1px solid #d9e2ec;
+    border-radius: 4px;
+    display: block;
+    padding: 10px 12px;
+    position: relative;
+    text-align: left;
+    width: 100%;
+
+    strong,
+    span {
+        display: block;
+    }
+
+    span {
+        color: #6b7280;
+        font-size: 12px;
+        margin-top: 4px;
+    }
+}
+
+.cms-related-result:hover {
+    background: #f4f9ff;
+    border-color: #2c82c9;
+}
+
+.cms-related-item {
+    padding-right: 42px;
+
+    [data-cms-related-remove] {
+        color: #d9534f;
+        font-size: 20px;
+        line-height: 20px;
+        position: absolute;
+        right: 8px;
+        top: 8px;
+    }
+}
+
+.cms-block-preview {
+    background: #f8fafc;
+    border-top: 1px solid #d9e2ec;
+    display: none;
+    max-height: 400px;
+    overflow: auto;
+    padding: 16px;
+
+    .cms-block {
+        margin: 0;
+    }
+}
+
+@media (max-width: 1199px) {
+    .cms-block-editor-layout {
+        display: block;
+        margin-left: 0;
+    }
+
+    .cms-block-toolbar {
+        margin: 12px 0;
+        padding: 12px 14px;
+        top: 10px;
+
+        &__heading {
+            align-items: baseline;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+
+            strong {
+                color: #1f2d3d;
+                font-size: 16px;
+            }
+
+            span {
+                color: #6b7280;
+                font-size: 13px;
+            }
+        }
+
+        &__actions {
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+    }
+
+    .cms-block-tool {
+        gap: 7px;
+        height: auto;
+        padding: 7px 10px;
+        width: auto;
+
+        i {
+            font-size: 14px;
+        }
+
+        span {
+            display: inline;
         }
     }
 }

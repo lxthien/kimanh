@@ -28,40 +28,61 @@ class ViewCountLogger
 
     private function isBot($userAgent)
     {
-        $bots = [
-            'googlebot',
-            'bingbot',
-            'yandexbot',
-            'baiduspider',
-            'slurp',
-            'duckduckbot',
-            'facebookexternalhit',
-            'twitterbot',
-            'linkedinbot',
-            'whatsapp',
-            'telegrambot',
-            'zalobot',
-            'semrushbot',
-            'ahrefsbot',
-            'mj12bot',
-            'dotbot',
-            'rogerbot',
-            'screaming frog',
-            'bytespider',
-            'petalbot',
-            'crawl',
-            'spider',
-            'bot/',
-            'bot;',
-        ];
+        if (empty($userAgent)) {
+            return true;
+        }
 
         $userAgent = strtolower($userAgent);
-        foreach ($bots as $bot) {
-            if (strpos($userAgent, $bot) !== false) {
+
+        // 1. Check if User-Agent contains 'bot' (excluding legitimate 'cubot' mobile brand)
+        if (strpos($userAgent, 'bot') !== false && strpos($userAgent, 'cubot') === false) {
+            return true;
+        }
+
+        // 2. Check other known bot/crawler keywords and common HTTP libraries
+        $botKeywords = [
+            'crawl',
+            'spider',
+            'slurp',
+            'mediapartners',
+            'screaming frog',
+            'facebookexternalhit',
+            'whatsapp',
+            // Common HTTP client libraries / tools used for scraping/crawling
+            'curl',
+            'wget',
+            'guzzle',
+            'httpclient',
+            'http-client',
+            'http_client',
+            'python',
+            'requests',
+            'urllib',
+            'go-http',
+            'okhttp',
+            'node-fetch',
+            'axios',
+            'needle',
+            'postman',
+            'insomnia',
+            'headless',
+            'puppeteer',
+            'playwright',
+            'selenium',
+            'scrapy',
+            'scraping',
+            'rest-client',
+            'ruby',
+            'perl',
+            'java/',
+        ];
+
+        foreach ($botKeywords as $keyword) {
+            if (strpos($userAgent, $keyword) !== false) {
                 return true;
             }
         }
 
-        return empty($userAgent);
+        return false;
     }
 }

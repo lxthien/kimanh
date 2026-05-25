@@ -1,7 +1,19 @@
 {{ form_start(form, {attr: attr|default({})}) }}
     {% for child in form %}
         {% if child.vars.name not in ['save', 'saveAndCreateNew'] %}
-            {{ form_row(child) }}
+            {% if child.vars.name == 'contents' %}
+                <div class="cms-block-editor-layout">
+                    {{ include('admin/content_block/_toolbar.html.twig', {
+                        target_editor: child.vars.id,
+                        current_id: form.vars.value.id|default(0),
+                    }, with_context = false) }}
+                    <div class="cms-block-editor-layout__field">
+                        {{ form_row(child) }}
+                    </div>
+                </div>
+            {% else %}
+                {{ form_row(child) }}
+            {% endif %}
         {% endif %}
     {% endfor %}
 

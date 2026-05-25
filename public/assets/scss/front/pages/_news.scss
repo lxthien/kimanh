@@ -479,6 +479,7 @@
             &::-webkit-scrollbar {
                 height: 6px;
             }
+
             &::-webkit-scrollbar-thumb {
                 background-color: rgba($primaryColor, 0.2);
                 border-radius: 3px;
@@ -841,7 +842,7 @@
 
         .key-takeaways h3 {
             margin-top: 0;
-            font-size: 1.8rem;
+            font-size: 18px;
             color: #1a73e8;
         }
 
@@ -852,7 +853,7 @@
 
         .key-takeaways ul li {
             margin-bottom: 7px;
-            font-size: 1.5rem;
+            font-size: 15px;
             line-height: 1.6;
             color: #1e293b;
         }
@@ -868,14 +869,14 @@
         }
 
         blockquote.expert-quote p {
-            font-size: 1.6rem;
+            font-size: 16px;
             line-height: 1.7;
             color: #374151;
             margin: 0 0 8px;
         }
 
         blockquote.expert-quote cite {
-            font-size: 1.5rem;
+            font-size: 15px;
             color: #dc4c04;
             font-style: italic;
         }
@@ -895,21 +896,21 @@
         }
 
         .stat-box .stat-number {
-            font-size: 2rem;
+            font-size: 20px;
             font-weight: 700;
             color: #f97316;
             line-height: 1.2;
         }
 
         .stat-box .stat-label {
-            font-size: 1.5rem;
+            font-size: 15px;
             color: #374151;
             margin-top: 5px;
             line-height: 1.4;
         }
 
         .stat-box .stat-source {
-            font-size: 1.4rem;
+            font-size: 14px;
             color: #9ca3af;
             margin-top: 6px;
             font-style: italic;
@@ -942,7 +943,7 @@
             border-radius: 6px;
             padding: 14px 18px;
             margin: 20px 0;
-            font-size: 1.5rem;
+            font-size: 15px;
             line-height: 1.7;
             color: #334155;
         }
@@ -957,6 +958,105 @@
                 display: flex;
                 width: 100%;
                 margin: 8px 0;
+            }
+        }
+
+        // ============================================================
+        // VISUAL LINK BLOCK — card dẫn link dịch vụ
+        // ============================================================
+
+        $vlb-bg: #f8f9fa;
+        $vlb-border: #e0e0e0;
+        $vlb-card-bg: #fff;
+        $vlb-card-border: #ddd;
+        $vlb-tag-color: #888;
+        $vlb-title-color: #1a1a1a;
+        $vlb-desc-color: #555;
+        $vlb-cta-color: #e05c00;
+        $vlb-radius: 8px;
+        $vlb-card-radius: 6px;
+
+        .visual-link-block {
+            background: $vlb-bg;
+            border: 1px solid $vlb-border;
+            border-radius: $vlb-radius;
+            padding: 24px;
+            margin: 32px 0;
+
+            h3 {
+                margin: 0 0 16px;
+                font-size: 16px;
+                color: #333;
+
+                strong {
+                    font-weight: 700;
+                }
+            }
+
+            .vlb-cards {
+                display: flex;
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            .vlb-card {
+                flex: 1;
+                min-width: 220px;
+                display: block;
+                background: $vlb-card-bg;
+                border: 1px solid $vlb-card-border;
+                border-radius: $vlb-card-radius;
+                padding: 16px;
+                text-decoration: none;
+                color: inherit;
+                transition: box-shadow .2s ease, transform .2s ease;
+
+                &:hover {
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+                    transform: translateY(-2px);
+                }
+            }
+
+            .vlb-tag {
+                font-size: 11px;
+                text-transform: uppercase;
+                color: $vlb-tag-color;
+                letter-spacing: .5px;
+            }
+
+            .vlb-title {
+                display: block;
+                margin: 6px 0 8px;
+                font-size: 15px;
+                color: $vlb-title-color;
+            }
+
+            .vlb-desc {
+                font-size: 13px;
+                color: $vlb-desc-color;
+                line-height: 1.5;
+            }
+
+            .vlb-cta {
+                display: block;
+                margin-top: 12px;
+                font-size: 13px;
+                color: $vlb-cta-color;
+                font-weight: 600;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .visual-link-block {
+                padding: 16px;
+
+                .vlb-cards {
+                    flex-direction: column;
+                }
+
+                .vlb-card {
+                    min-width: 100%;
+                }
             }
         }
     }
