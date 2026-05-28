@@ -624,6 +624,14 @@
                 <source>contact.message.error</source>
                 <target>Đã có lỗi xảy ra. Vui lòng thử lại sau</target>
             </trans-unit>
+            <trans-unit id="vich_uploader.form_label.delete_confirm">
+                <source>vich_uploader.form_label.delete_confirm</source>
+                <target>Xóa hình ảnh</target>
+            </trans-unit>
+            <trans-unit id="vich_uploader.link.download">
+                <source>vich_uploader.link.download</source>
+                <target>Tải về</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

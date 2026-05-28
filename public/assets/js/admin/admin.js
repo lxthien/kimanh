@@ -13,6 +13,13 @@ $(function() {
         return String(value || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
+    // Resolve versioned CKEditor content CSS URL (set by Twig in layout.html.twig)
+    function getCkeditorContentCss() {
+        return (window.KIENTRUC_CONFIG && window.KIENTRUC_CONFIG.ckeditorContentCss)
+            ? window.KIENTRUC_CONFIG.ckeditorContentCss
+            : '/build/css/ckeditor-content.css';
+    }
+
     initAdminSidebarState();
 
     // Build the slug for object entiry from the name
@@ -92,7 +99,7 @@ $(function() {
                 filebrowserUploadUrl: '/assets/cksourceckfinder/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
                 filebrowserWindowWidth: '1000',
                 filebrowserWindowHeight: '700',
-                contentsCss: '/build/css/ckeditor-content.css',
+                contentsCss: getCkeditorContentCss(),
                 bodyClass: 'ka-article-body'
             });
         });
@@ -909,7 +916,7 @@ $(function() {
                     filebrowserUploadUrl: '/assets/cksourceckfinder/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
                     filebrowserWindowWidth: '1000',
                     filebrowserWindowHeight: '700',
-                    contentsCss: '/build/css/ckeditor-content.css',
+                    contentsCss: getCkeditorContentCss(),
                     bodyClass: 'ka-article-body'
                 });
 

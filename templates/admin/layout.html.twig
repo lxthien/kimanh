@@ -23,5 +23,10 @@
     
     <script src="{{ asset('assets/ivoryckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/cksourceckfinder/ckfinder/ckfinder.js') }}"></script>
+    <script>
+        window.KIENTRUC_CONFIG = {
+            ckeditorContentCss: '{{ asset('build/css/ckeditor-content.css') }}'
+        };
+    </script>
     <script src="{{ asset('build/js/admin.js') }}"></script>
 {% endblock %}

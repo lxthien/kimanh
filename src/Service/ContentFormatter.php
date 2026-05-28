@@ -41,6 +41,21 @@ class ContentFormatter
             return '';
         }
 
+        // Replace hardcoded phone numbers with [hotline_1]
+        // This regex catches variants with spaces, dashes, or en-dashes
+        $hardcodedPhonePattern = '/0974[\s\.]*776[\s\.]*305[\s\-\–]*0966[\s\.]*289[\s\.]*559[\s\-\–]*0987[\s\.]*244[\s\.]*305/i';
+        $content = preg_replace($hardcodedPhonePattern, '[hotline_1]', $content);
+
+        // Replace individual old phone numbers just in case they appear separately
+        $content = preg_replace('/0974[\s\.]*776[\s\.]*305/', '[hotline_1]', $content);
+        // Uncomment these if you also want to replace them with hotline_2 / hotline_3
+        // $content = preg_replace('/0966[\s\.]*289[\s\.]*559/', '[hotline_2]', $content);
+        // $content = preg_replace('/0987[\s\.]*244[\s\.]*305/', '[hotline_3]', $content);
+
+        // Replace email and ensure it is hyperlinked
+        $content = preg_replace('/<a[^>]*href=["\']mailto:xaydungkimanh@gmail\.com["\'][^>]*>.*?<\/a>/i', '<a href="mailto:[email]">[email]</a>', $content);
+        $content = preg_replace('/xaydungkimanh@gmail\.com/i', '<a href="mailto:[email]">[email]</a>', $content);
+
         // Replace placeholders from settings (contens_* or contents_*)
         $content = preg_replace_callback('/\[([a-zA-Z0-9_]+)\]/', function ($matches) {
             $varName = $matches[1];
