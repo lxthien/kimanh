@@ -41,16 +41,24 @@ class ContentFormatter
             return '';
         }
 
-        // Replace hardcoded phone numbers with [hotline_1]
-        // This regex catches variants with spaces, dashes, or en-dashes
-        $hardcodedPhonePattern = '/0974[\s\.]*776[\s\.]*305[\s\-\–]*0966[\s\.]*289[\s\.]*559[\s\-\–]*0987[\s\.]*244[\s\.]*305/i';
-        $content = preg_replace($hardcodedPhonePattern, '[hotline_1]', $content);
+        // Replace hardcoded phone numbers with <a href="tel:[hotline_1]">[hotline_1]</a>
+        // We use lookaround or specific regex to avoid nesting <a> tags if they are already linked.
+        
+        $longPhonePattern = '0974[\s\.]*776[\s\.]*305[\s\-\–]*0966[\s\.]*289[\s\.]*559[\s\-\–]*0987[\s\.]*244[\s\.]*305';
+        // 1. Replace if it is inside an existing <a> tag
+        $content = preg_replace('/<a\b[^>]*>(?:(?!<\/a>).)*?' . $longPhonePattern . '(?:(?!<\/a>).)*?<\/a>/is', '<a href="tel:[hotline_1]">[hotline_1]</a>', $content);
+        // 2. Replace bare occurrences
+        $content = preg_replace('/' . $longPhonePattern . '/is', '<a href="tel:[hotline_1]">[hotline_1]</a>', $content);
 
-        // Replace individual old phone numbers just in case they appear separately
-        $content = preg_replace('/0974[\s\.]*776[\s\.]*305/', '[hotline_1]', $content);
-        // Uncomment these if you also want to replace them with hotline_2 / hotline_3
-        // $content = preg_replace('/0966[\s\.]*289[\s\.]*559/', '[hotline_2]', $content);
-        // $content = preg_replace('/0987[\s\.]*244[\s\.]*305/', '[hotline_3]', $content);
+        $shortPhonePattern = '0974[\s\.]*776[\s\.]*305';
+        // 1. Replace if it is inside an existing <a> tag
+        $content = preg_replace('/<a\b[^>]*>(?:(?!<\/a>).)*?' . $shortPhonePattern . '(?:(?!<\/a>).)*?<\/a>/is', '<a href="tel:[hotline_1]">[hotline_1]</a>', $content);
+        // 2. Replace bare occurrences
+        $content = preg_replace('/' . $shortPhonePattern . '/is', '<a href="tel:[hotline_1]">[hotline_1]</a>', $content);
+
+        // If you also want to replace other numbers:
+        // $content = preg_replace('/0966[\s\.]*289[\s\.]*559/is', '<a href="tel:[hotline_2]">[hotline_2]</a>', $content);
+        // $content = preg_replace('/0987[\s\.]*244[\s\.]*305/is', '<a href="tel:[hotline_3]">[hotline_3]</a>', $content);
 
         // Replace email and ensure it is hyperlinked
         $content = preg_replace('/<a[^>]*href=["\']mailto:xaydungkimanh@gmail\.com["\'][^>]*>.*?<\/a>/i', '<a href="mailto:[email]">[email]</a>', $content);
@@ -70,6 +78,12 @@ class ContentFormatter
                 return $value;
             }
             return $matches[0];
+        }, $content);
+
+        // Clean up spaces, dots, commas, dashes from tel: links
+        $content = preg_replace_callback('/href=["\']tel:(.*?)["\']/i', function($matches) {
+            $cleanedPhone = preg_replace('/[\s\.\,\-\–]+/', '', $matches[1]);
+            return 'href="tel:' . $cleanedPhone . '"';
         }, $content);
 
         // Protect lone "<" characters that are not part of HTML tags
