@@ -56,6 +56,11 @@ class PageType extends AbstractType
                 'required' => false,
                 'label' => 'label.pageKeyword',
             ])
+            ->add('editorialNotes', TextareaType::class, [
+                'required' => false,
+                'label' => 'Ghi chú biên tập (SEO, Content Decay...)',
+                'attr' => ['rows' => 3],
+            ])
         ;
     }
 

@@ -1,19 +1,45 @@
 {{ form_start(form, {attr: attr|default({})}) }}
-    {{ form_widget(form) }}
+{{ form_errors(form) }}
 
-    {{ include('admin/news/_seo_realtime_checklist.html.twig', {
+{{ form_row(form.title) }}
+{{ form_row(form.url) }}
+{{ form_row(form.imageFile) }}
+{{ form_row(form.description) }}
+{{ form_row(form.contents) }}
+{{ form_widget(form.postType) }}
+
+<div class="card-title mt-4">
+	<h3>{{ 'label.seo'|trans }}</h3>
+</div>
+<hr>
+
+{{ form_row(form.pageTitle) }}
+{{ form_row(form.pageDescription) }}
+{{ form_row(form.pageKeyword) }}
+{% if form.editorialNotes is defined %}
+	{{ form_row(form.editorialNotes) }}
+{% endif %}
+{{ include('admin/news/_seo_realtime_checklist.html.twig', {
         form: form,
         has_image: object is defined and object.images is defined and object.images,
         check_category: form.category is defined
     }) }}
 
-    <button type="submit" class="{{ button_css|default("btn btn-primary") }}">
-        <i class="fa fa-save" aria-hidden="true"></i> {{ button_label|default('label.create_post'|trans) }}
-    </button>
+<button type="submit" class="{{ button_css|default("btn btn-primary") }}">
+	<i class="fa fa-save" aria-hidden="true"></i>
+	{{ button_label|default('label.create_post'|trans) }}
+</button>
 
-    {% if include_back_to_home_link|default(false) %}
-        <a href="{{ path('admin_page_index') }}" class="btn btn-link">
-            <i class="fa fa-list-alt" aria-hidden="true"></i> {{ 'action.back_to_list'|trans }}
-        </a>
-    {% endif %}
+{% if form.saveAndCreateNew is defined %}
+	{{ form_widget(form.saveAndCreateNew, {label: 'label.save_and_create_new', attr: {class: button_css|default('btn btn-primary')}}) }}
+{% endif %}
+
+{% if include_back_to_home_link|default(false) %}
+	<a href="{{ path('admin_page_index') }}" class="btn btn-link">
+		<i class="fa fa-list-alt" aria-hidden="true"></i>
+		{{ 'action.back_to_list'|trans }}
+	</a>
+{% endif %}
+
+{{ form_rest(form) }}
 {{ form_end(form) }}

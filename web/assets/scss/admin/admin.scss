@@ -12,6 +12,7 @@
     }
 
     td .item-actions {
+
         .btn-edit,
         .btn-reply {
             padding: 5px 3px;
@@ -38,7 +39,7 @@
         .stat-widget-one .stat-content {
             margin-top: 15px;
         }
-        
+
         .stat-widget-one .stat-text {
             font-size: 20px;
         }
@@ -78,116 +79,117 @@
     }
 }
 
-#admin_news_edit, #admin_post_new {
+#admin_news_edit,
+#admin_post_new {
     .bootstrap-tagsinput {
         height: auto;
     }
 }
 
 .content-decay-summary {
-      .dashboard-mini-card {
-          min-height: 96px;
-          margin-bottom: 22px;
-  
-          .card-body {
-              min-height: 96px !important;
-              padding: 12px 14px;
-          }
-  
-          .stat-widget-one {
-              display: flex;
-              align-items: center;
-              width: 100%;
-          }
-  
-          .stat-icon {
-              width: 36px !important;
-              height: 36px !important;
-              min-width: 36px !important;
-              margin-right: 12px !important;
-              line-height: 36px !important;
-              text-align: center;
-  
-              i {
-                  width: 36px !important;
-                  height: 36px !important;
-                  min-width: 36px !important;
-                  padding: 0 !important;
-                  border-width: 2px !important;
-                  font-size: 16px !important;
-                  line-height: 32px !important;
-                  text-align: center;
-              }
-          }
+    .dashboard-mini-card {
+        min-height: 96px;
+        margin-bottom: 22px;
 
-          .stat-content {
-              margin-left: 0 !important;
-              min-width: 0;
-          }
+        .card-body {
+            min-height: 96px !important;
+            padding: 12px 14px;
+        }
 
-          .stat-text {
-              margin-bottom: 4px;
-              font-size: 14px;
-              line-height: 1.25;
-              white-space: normal;
-          }
-  
-          .stat-digit {
-              font-size: 22px;
-              line-height: 1.15;
-          }
-      }
-  }
-  
-  .content-decay-filters {
-      .content-decay-filter-grid {
-          display: grid;
-          grid-template-columns: minmax(260px, 1.5fr) repeat(4, minmax(170px, 1fr)) minmax(110px, .65fr);
-          gap: 14px 18px;
-          align-items: start;
-      }
-  
-      .form-control {
-          min-width: 0;
-          width: 100%;
-          margin-bottom: 0;
-          text-overflow: ellipsis;
-      }
-  }
-  
-  .content-decay-table {
-      .content-decay-title-col {
-          width: 30%;
-      }
-  
-      .badge {
-          margin: 0 4px 5px 0;
-          white-space: normal;
-          line-height: 1.35;
-      }
-  }
-  
-  .admin-filter-actions {
-      margin-top: 15px;
-  }
-  
-  @media (max-width: 1399px) {
-      .content-decay-filters {
-          .content-decay-filter-grid {
-              grid-template-columns: repeat(3, minmax(210px, 1fr));
-          }
-      }
-  }
-  
-  @media (max-width: 767px) {
-      .content-decay-filters {
-          .content-decay-filter-grid {
-              grid-template-columns: 1fr;
-          }
-      }
-  }
-  
-  
+        .stat-widget-one {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .stat-icon {
+            width: 36px !important;
+            height: 36px !important;
+            min-width: 36px !important;
+            margin-right: 12px !important;
+            line-height: 36px !important;
+            text-align: center;
+
+            i {
+                width: 36px !important;
+                height: 36px !important;
+                min-width: 36px !important;
+                padding: 0 !important;
+                border-width: 2px !important;
+                font-size: 16px !important;
+                line-height: 32px !important;
+                text-align: center;
+            }
+        }
+
+        .stat-content {
+            margin-left: 0 !important;
+            min-width: 0;
+        }
+
+        .stat-text {
+            margin-bottom: 4px;
+            font-size: 14px;
+            line-height: 1.25;
+            white-space: normal;
+        }
+
+        .stat-digit {
+            font-size: 22px;
+            line-height: 1.15;
+        }
+    }
+}
+
+.content-decay-filters {
+    .content-decay-filter-grid {
+        display: grid;
+        grid-template-columns: minmax(260px, 1.5fr) repeat(4, minmax(170px, 1fr)) minmax(110px, .65fr);
+        gap: 14px 18px;
+        align-items: start;
+    }
+
+    .form-control {
+        min-width: 0;
+        width: 100%;
+        margin-bottom: 0;
+        text-overflow: ellipsis;
+    }
+}
+
+.content-decay-table {
+    .content-decay-title-col {
+        width: 30%;
+    }
+
+    .badge {
+        margin: 0 4px 5px 0;
+        white-space: normal;
+        line-height: 1.35;
+    }
+}
+
+.admin-filter-actions {
+    margin-top: 15px;
+}
+
+@media (max-width: 1399px) {
+    .content-decay-filters {
+        .content-decay-filter-grid {
+            grid-template-columns: repeat(3, minmax(210px, 1fr));
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .content-decay-filters {
+        .content-decay-filter-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+
 /*===========================================================================
  * SEO score checker
 ============================================================================*/
@@ -482,6 +484,10 @@
         .dashboard-mini-card {
             min-height: 118px;
             padding: 12px 10px;
+
+            .card-body {
+                padding: 0.9rem;
+            }
         }
 
         .stat-widget-one {
@@ -505,8 +511,9 @@
                 width: 32px !important;
                 height: 32px !important;
                 font-size: 16px !important;
-                line-height: 28px !important;
+                line-height: 0 !important;
                 margin: 0 !important;
+                padding: 15px 7px;
                 border-width: 2px !important;
                 text-align: center;
             }
@@ -514,6 +521,7 @@
 
         .stat-content {
             min-width: 0;
+            margin-left: 5px;
         }
 
         .stat-text {
@@ -554,6 +562,7 @@
         }
     }
 }
+
 @media (max-width: 991px) {
     .health-dashboard {
         .health-note-grid {
@@ -561,4 +570,3 @@
         }
     }
 }
-
