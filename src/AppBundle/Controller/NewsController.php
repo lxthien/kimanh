@@ -176,11 +176,27 @@ class NewsController extends Controller
             $this->get('settings_manager')->get('numberRecordOnPage') ?: 10
         );
 
+        // Query các bài viết hiển thị phía dưới khi category là landing page (isPage = true)
+        $activeCategory = !empty($level2) ? $subCategory : $category;
+        $landingPosts = [];
+        if ($activeCategory->getIsPage() && !empty($activeCategory->getLandingPagePosts())) {
+            $postIds = array_filter(array_map('trim', explode(',', $activeCategory->getLandingPagePosts())));
+            foreach ($postIds as $postId) {
+                $post = $this->getDoctrine()
+                    ->getRepository(News::class)
+                    ->findOneBy(['id' => (int)$postId, 'enable' => 1]);
+                if ($post) {
+                    $landingPosts[] = $post;
+                }
+            }
+        }
+
         return $this->render('news/list.html.twig', [
             'baseUrl' => !empty($level2) ? $this->generateUrl('list_category', array('level1' => $level1, 'level2' => $level2), UrlGeneratorInterface::ABSOLUTE_URL) : $this->generateUrl('news_category', array('level1' => $level1), UrlGeneratorInterface::ABSOLUTE_URL),
-            'category' => !empty($level2) ? $subCategory : $category,
+            'category' => $activeCategory,
             'listCategories' => count($listCategories) > 0 ? $listCategories : NULL,
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'landingPosts' => $landingPosts,
         ]);
     }
 

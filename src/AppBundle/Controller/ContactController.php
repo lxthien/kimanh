@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
@@ -28,7 +27,6 @@ class ContactController extends Controller
         
         $form = $this->createFormBuilder($contact)
             ->add('name', TextType::class, array('label' => 'label.author'))
-            ->add('email', EmailType::class, array('label' => 'label.author_email'))
             ->add('phone', TextType::class, array('label' => 'label.phone'))
             ->add('contents', TextareaType::class, array(
                 'label' => 'label.content',
@@ -71,7 +69,6 @@ class ContactController extends Controller
                                 array(
                                     'name' => $form->get('name')->getData(),
                                     'phone' => $form->get('phone')->getData(),
-                                    'email' => $form->get('email')->getData(),
                                     'body' => $form->get('contents')->getData()
                                 )
                             ),

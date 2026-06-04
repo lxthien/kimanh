@@ -143,6 +143,16 @@ class NewsCategory
     private $isPage = false;
 
     /**
+     * Danh sách post ID cách nhau bởi dấu phẩy, hiển thị phía dưới khi category là landing page.
+     * Ví dụ: "1,5,12,34"
+     *
+     * @var string
+     *
+     * @ORM\Column(name="landingPagePosts", type="string", length=512, nullable=true)
+     */
+    private $landingPagePosts = null;
+
+    /**
      * @var \DateTime
      *
      * @Gedmo\Timestampable(on="create")
@@ -416,5 +426,17 @@ class NewsCategory
     public function getSchemaMarkup()
     {
         return $this->schemaMarkup;
+    }
+
+    public function setLandingPagePosts($landingPagePosts)
+    {
+        $this->landingPagePosts = $landingPagePosts;
+
+        return $this;
+    }
+
+    public function getLandingPagePosts()
+    {
+        return $this->landingPagePosts;
     }
 }

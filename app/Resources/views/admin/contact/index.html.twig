@@ -16,7 +16,6 @@
                                 <thead>
                                     <tr>
                                         <th>{{ 'label.author'|trans }}</th>
-                                        <th>{{ 'label.email'|trans }}</th>
                                         <th>{{ 'label.published_at'|trans }}</th>
                                         <th>{{ 'label.actions'|trans }}</th>
                                     </tr>
@@ -25,7 +24,6 @@
                                     {% for row in objects %}
                                         <tr>
                                             <td>{{ row.getName() }}</td>
-                                            <td>{{ row.getEmail() }}</td>
                                             <td>{{ row.getCreatedAt() | localizeddate('medium', 'short', null, 'Asia/Ho_Chi_Minh', 'd/M/YYYY') }}</td>
                                             <td>
                                                 <div class="item-actions">

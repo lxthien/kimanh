@@ -84,6 +84,14 @@ class NewsCategoryType extends AbstractType
                 'required' => false,
                 'label' => 'Trang tĩnh?',
             ])
+            ->add('landingPagePosts', TextType::class, [
+                'required' => false,
+                'label' => 'Post IDs hiển thị (cách nhau bởi dấu phẩy)',
+                'attr' => [
+                    'placeholder' => 'Ví dụ: 1,5,12,34',
+                    'help' => 'Chỉ hiển thị khi category là trang tĩnh (isPage)',
+                ],
+            ])
             ->add('schemaMarkup', TextareaType::class, [
                 'attr' => ['rows' => '10'],
                 'required' => false,

@@ -1,5 +1,8 @@
-var Encore = require('@symfony/webpack-encore');
+const crypto = require("crypto");
+const crypto_orig_createHash = crypto.createHash;
+crypto.createHash = algorithm => crypto_orig_createHash(algorithm == "md4" ? "sha256" : algorithm);
 
+var Encore = require('@symfony/webpack-encore');
 Encore
     .setOutputPath('web/build/')
     .setPublicPath('/build')
@@ -23,6 +26,7 @@ Encore
     .addStyleEntry('css/list', ['./web/assets/scss/front/list.scss'])
     .addStyleEntry('css/contact', ['./web/assets/scss/front/contact.scss'])
     .addStyleEntry('css/admin', ['./web/assets/scss/admin/admin.scss'])
+    .addStyleEntry('css/ckeditor-content', ['./web/assets/scss/admin/ckeditor-content.scss'])
 ;
 
 module.exports = Encore.getWebpackConfig();

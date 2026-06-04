@@ -48,13 +48,37 @@
             <div class="col-lg-12">
                 {% if category.getContent() %}
                     <div class="category-content">{{ category.getContent()|raw }}</div>
-                    <div class="list-news-items list-news-items-landing">
-                        <h2>Có thể bạn quan tâm</h2>
-                        <div class="row">{% for row in pagination %}{{ include('news/components/itemsGrid.html.twig', {row: row, target: '_blank', rel: 'noopener'}, with_context = false) }}{% endfor %}</div>
+                    {# Hiển thị danh sách bài viết được chỉ định (landingPagePosts) khi category là trang tĩnh #}
+                    {% if landingPosts is defined and landingPosts|length > 0 %}
+                    <div class="list-news-items list-news-items-landing landing-selected-posts">
+                        <h2>Bài viết liên quan</h2>
+                        <div class="row">
+                            {% for row in landingPosts %}
+                                {{ include('news/components/itemsGrid.html.twig', {row: row, target: '_blank', rel: 'noopener'}, with_context = false) }}
+                            {% endfor %}
+                        </div>
                     </div>
+                    {% else %}
+                    <div class="list-news-items list-news-items-landing landing-selected-posts">
+                        <h2>Có thể bạn quan tâm</h2>
+                        <div class="row">
+                            {% for row in pagination %}
+                                {{ include('news/components/itemsGrid.html.twig', {row: row, target: '_blank', rel: 'noopener'}, with_context = false) }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
                 {% elseif pagination|length > 0 %}
-                    {% if get_setting('isShowSortOnCategory') %}{{ include('news/components/sort.html.twig') }}{% endif %}
-                    <div class="list-news-items"><div class="row">{% for row in pagination %}{{ include('news/components/itemsGrid.html.twig') }}{% endfor %}</div></div>
+                    {% if get_setting('isShowSortOnCategory') %}
+                        {{ include('news/components/sort.html.twig') }}
+                    {% endif %}
+                    <div class="list-news-items">
+                        <div class="row">
+                            {% for row in pagination %}
+                                {{ include('news/components/itemsGrid.html.twig') }}
+                            {% endfor %}
+                        </div>
+                    </div>
                     {{ include('news/components/pagination.html.twig') }}
                 {% else %}
                     {{ include('news/components/noRecord.html.twig') }}

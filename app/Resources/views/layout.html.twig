@@ -252,12 +252,13 @@
                     return false;
                 }
                 window.gtmDidInit = true; // flag to ensure script does not get added to DOM more than once.
+                window.dataLayer = window.dataLayer || [];
                 const script = document.createElement('script');
                 script.type = 'text/javascript';
                 script.async = true;
                 // ensure PageViews is always tracked (on script load)
                 script.onload = () => {
-                    dataLayer.push({event: 'gtm.js', 'gtm.start': new Date().getTime(), 'gtm.uniqueEventId': 0});
+                    window.dataLayer.push({event: 'gtm.js', 'gtm.start': new Date().getTime(), 'gtm.uniqueEventId': 0});
                 };
                 script.src = 'https://www.googletagmanager.com/gtm.js?id={{ get_setting('GTM') }}';
                 document.head.appendChild(script);

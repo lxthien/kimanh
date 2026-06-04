@@ -5,6 +5,8 @@ import 'bootstrap-tagsinput';
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal.js';
 
 $(function() {
+    initAdminSidebarState();
+
     // Build the slug for object entiry from the name
     initBuildSluggable();
 
@@ -15,6 +17,42 @@ $(function() {
     initEnableToggleButton();
 
     initMakePrimaryCategory();
+
+    function initAdminSidebarState() {
+        var storageKey = 'kimanh_admin_sidebar_open';
+
+        function setSessionCookie(value) {
+            document.cookie = storageKey + '=' + value + '; path=/; SameSite=Lax';
+        }
+
+        function persistSidebarState() {
+            var isCollapsed = $('body').hasClass('open');
+            var value = isCollapsed ? '1' : '0';
+
+            try {
+                sessionStorage.setItem(storageKey, value);
+            } catch (error) {}
+
+            setSessionCookie(value);
+        }
+
+        try {
+            if (sessionStorage.getItem(storageKey) === '1') {
+                $('body').addClass('open');
+                setSessionCookie('1');
+            }
+        } catch (error) {}
+
+        var menuToggle = document.getElementById('menuToggle');
+
+        if (!menuToggle) {
+            return;
+        }
+
+        menuToggle.addEventListener('click', function() {
+            setTimeout(persistSidebarState, 0);
+        });
+    }
 
     /**
      * Create sluggable from name
@@ -75,11 +113,45 @@ $(function() {
             var height = $(this).data("height") ? $(this).data("height") : "500";
             CKEDITOR.replace(this.id, {
                 height: height + 'px',
+                contentsCss: ['/build/css/ckeditor-content.css'],
+                bodyClass: 'news-container',
                 filebrowserBrowseUrl: '/assets/cksourceckfinder/ckfinder/ckfinder.html',
                 filebrowserUploadUrl: '/assets/cksourceckfinder/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
                 filebrowserWindowWidth: '1000',
-                filebrowserWindowHeight: '700'
+                filebrowserWindowHeight: '700',
+                on: {
+                    instanceReady: function (ev) {
+                        initCkeditorToc(ev.editor);
+                    },
+                    contentDom: function (ev) {
+                        initCkeditorToc(ev.editor);
+                    }
+                }
             });
+        });
+    }
+
+    /**
+     * Add TOC toggle behavior in CKEditor iframe.
+     **/
+    function initCkeditorToc(editor) {
+        var iframeDoc = editor.document.$;
+
+        if (!iframeDoc) return;
+
+        var tocElements = iframeDoc.querySelectorAll('.ka-table-of-contents');
+
+        tocElements.forEach(function (toc) {
+            toc.classList.add('collapsed');
+
+            var mainToc = toc.querySelector('#main-toc');
+            
+            if (mainToc && !mainToc.dataset.initialized) {
+                mainToc.dataset.initialized = 'true';
+                mainToc.addEventListener('click', function () {
+                    toc.classList.toggle('collapsed');
+                });
+            }
         });
     }
 
