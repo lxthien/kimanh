@@ -37,6 +37,11 @@ class NewsType extends AbstractType
                 'required' => false,
                 'label' => 'label.enable',
             ])
+            ->add('editorialNotes', TextareaType::class, [
+                'required' => false,
+                'label' => 'Ghi chú biên tập (SEO, Content Decay...)',
+                'attr' => ['rows' => 3],
+            ])
             ->add('imageFile', VichFileType::class, [
                 'required' => false,
                 'allow_delete' => true,

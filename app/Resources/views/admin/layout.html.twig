@@ -23,5 +23,9 @@
     
     <script src="{{ asset('assets/ivoryckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/cksourceckfinder/ckfinder/ckfinder.js') }}"></script>
+    <script>
+        window.KIMANH_ADMIN = window.KIMANH_ADMIN || {};
+        window.KIMANH_ADMIN.ckeditorContentCss = "{{ asset('build/css/ckeditor-content.css') }}";
+    </script>
     <script src="{{ asset('build/js/admin.js') }}"></script>
 {% endblock %}

@@ -668,4 +668,42 @@ class News
     {
         return $this->template;
     }
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="ignoreDecay", type="boolean", options={"default" : false})
+     */
+    private $ignoreDecay = false;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="editorialNotes", type="text", nullable=true)
+     */
+    private $editorialNotes;
+
+    public function setIgnoreDecay($ignoreDecay)
+    {
+        $this->ignoreDecay = $ignoreDecay;
+
+        return $this;
+    }
+
+    public function getIgnoreDecay()
+    {
+        return $this->ignoreDecay;
+    }
+
+    public function setEditorialNotes($editorialNotes)
+    {
+        $this->editorialNotes = $editorialNotes;
+
+        return $this;
+    }
+
+    public function getEditorialNotes()
+    {
+        return $this->editorialNotes;
+    }
 }
