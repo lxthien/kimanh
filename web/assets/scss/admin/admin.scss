@@ -86,8 +86,8 @@
     }
 }
 
-.content-decay-summary {
-    .dashboard-mini-card {
+.content-decay-summary, .health-summary, .dashboard-summary {
+    .dashboard-mini-card, .dashboard-kpi {
         min-height: 96px;
         margin-bottom: 22px;
 
@@ -103,22 +103,26 @@
         }
 
         .stat-icon {
-            width: 36px !important;
-            height: 36px !important;
-            min-width: 36px !important;
+            width: 40px !important;
+            height: 40px !important;
+            min-width: 40px !important;
             margin-right: 12px !important;
-            line-height: 36px !important;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-            i {
-                width: 36px !important;
-                height: 36px !important;
-                min-width: 36px !important;
+            i, svg {
+                width: 40px !important;
+                height: 40px !important;
+                min-width: 40px !important;
                 padding: 0 !important;
                 border-width: 2px !important;
                 font-size: 16px !important;
-                line-height: 32px !important;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
                 text-align: center;
+                border-radius: 50%;
             }
         }
 

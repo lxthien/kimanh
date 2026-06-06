@@ -11,10 +11,15 @@ Encore
         "window.Bloodhound": require.resolve('bloodhound-js'),
         "jQuery.tagsinput": "bootstrap-tagsinput"
     })
-    .enableSassLoader()
+    .enableSassLoader((options) => {
+        options.sassOptions = {
+            quietDeps: true,
+            silenceDeprecations: ['color-functions', 'global-builtin', 'import', 'slash-div', 'if-function', 'legacy-js-api']
+        };
+    })
     .enableVersioning(Encore.isProduction())
-    .cleanupOutputBeforeBuild(Encore.isProduction())
-    .createSharedEntry('js/common', ['jquery'])
+    .cleanupOutputBeforeBuild()
+    .createSharedEntry('js/common', './web/assets/js/common.js')
     .addEntry('js/app', './web/assets/js/front/app.js')
     .addEntry('js/admin', './web/assets/js/admin/admin.js')
     .addEntry('js/search', './web/assets/js/admin/search.js')

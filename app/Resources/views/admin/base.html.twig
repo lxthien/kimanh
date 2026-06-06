@@ -60,6 +60,10 @@
             <script src="{{ asset('assets/sufeeadmin/assets/js/plugins.js') }}"></script>
             <script src="{{ asset('assets/sufeeadmin/assets/js/main.js') }}"></script>
 
+            <script>
+                window.KIMANH_ADMIN = window.KIMANH_ADMIN || {};
+                window.KIMANH_ADMIN.ckeditorContentCss = "{{ asset('build/css/ckeditor-content.css') }}";
+            </script>
             <script src="{{ asset('build/manifest.js') }}"></script>
             <script src="{{ asset('build/js/common.js') }}"></script>
         {% endblock %}

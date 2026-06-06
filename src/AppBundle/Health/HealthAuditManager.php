@@ -427,6 +427,7 @@ class HealthAuditManager
         }
 
         $relative = ltrim(parse_url($path, PHP_URL_PATH) ?: $path, '/');
+        $relative = urldecode($relative);
         $absolute = $this->webRoot . '/' . $relative;
 
         if (!array_key_exists($absolute, $this->localFileCache)) {

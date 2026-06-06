@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Analytics\NewsViewTracker;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -208,7 +209,7 @@ class NewsController extends Controller
      *          "slug": "[^/\.]++"
      *      })
      */
-    public function showAction($slug, Request $request)
+    public function showAction($slug, Request $request, NewsViewTracker $viewTracker)
     {
         if ($request->query->get('preview') === false || $request->query->get('preview_id') === null) {
             $post = $this->getDoctrine()
@@ -226,9 +227,7 @@ class NewsController extends Controller
             throw $this->createNotFoundException("The item does not exist");
         }
 
-        // Update viewCount for post
-        //$post->setViewCounts( $post->getViewCounts() + 1 );
-        //$this->getDoctrine()->getManager()->flush();
+        $viewCookie = $viewTracker->track($post, $request);
 
         $categoryPrimary = $request->query->get('danh-muc');
         
@@ -329,7 +328,7 @@ class NewsController extends Controller
             $imagePath = substr($imagePath, 1);
             $imageSize = @getimagesize($imagePath);
 
-            return $this->render('news/page.html.twig', [
+            $response = $this->render('news/page.html.twig', [
                 'post'          => $post,
                 'contentsLazy'  => $contentsLazy,
                 'form'          => $form->createView(),
@@ -341,7 +340,7 @@ class NewsController extends Controller
             $imagePath = substr($imagePath, 1);
             $imageSize = @getimagesize($imagePath);
 
-            return $this->render('news/show.html.twig', [
+            $response = $this->render('news/show.html.twig', [
                 'post'          => $post,
                 'contentsLazy'  => $contentsLazy,
                 'articleBody'   => $this->strip_tags_content($contentsLazy),
@@ -360,6 +359,12 @@ class NewsController extends Controller
                 'urlParameters' => !empty($request->query->get('danh-muc')) ? $request->query->get('danh-muc') : NULL
             ]);
         }
+
+        if ($viewCookie) {
+            $response->headers->setCookie($viewCookie);
+        }
+
+        return $response;
     }
 
     private function strip_tags_content($string) { 
@@ -387,7 +392,7 @@ class NewsController extends Controller
      *          "slug": "[^/\.]++"
      *      })
      */
-    public function ampShowAction($slug, Request $request)
+    public function ampShowAction($slug, Request $request, NewsViewTracker $viewTracker)
     {
         $post = $this->getDoctrine()
                 ->getRepository(News::class)
@@ -399,9 +404,7 @@ class NewsController extends Controller
             throw $this->createNotFoundException("The post does not exist");
         }
 
-        // Update viewCount for post
-        $post->setViewCounts( $post->getViewCounts() + 1 );
-        $this->getDoctrine()->getManager()->flush();
+        $viewCookie = $viewTracker->track($post, $request);
 
         $categoryPrimary = $request->query->get('danh-muc');
         
@@ -476,8 +479,19 @@ class NewsController extends Controller
         // Filter content to support Lazy Loading
         $contentsAmp = $this->amploadContent($post);
 
+        // Render form comment for post.
+        $form = $this->renderFormComment($post);
+
+        // Render form rating for post.
+        $formRating = $this->createFormBuilder(null, array(
+                'csrf_protection' => false,
+            ))
+            ->setAction($this->generateUrl('rating'))
+            ->add('rating', RatingType::class)
+            ->getForm();
+
         if ($post->isPage()) {
-            return $this->render('news/page.html.twig', [
+            $response = $this->render('news/page.html.twig', [
                 'post'          => $post,
                 'form'          => $form->createView(),
                 'formRating'    => $formRating->createView(),
@@ -488,7 +502,7 @@ class NewsController extends Controller
                 'comments'      => $comments
             ]);
         } else {
-            return $this->render('amp/amp-theme/index.html.twig', [
+            $response = $this->render('amp/amp-theme/index.html.twig', [
                 'post'          => $post,
                 'contentsAmp'   => $contentsAmp,
                 'relatedNews'   => !empty($relatedNews) ? $relatedNews : NULL,
@@ -497,9 +511,17 @@ class NewsController extends Controller
                 'ratingPercent' => str_replace('.00', '', number_format(($rating['ratingValue'] * 100) / 5, 2)),
                 'ratingValue'   => round($rating['ratingValue']),
                 'ratingCount'   => round($rating['ratingCount']),
-                'comments'      => $comments
+                'comments'      => $comments,
+                'form'          => $form->createView(),
+                'formRating'    => $formRating->createView()
             ]);
         }
+
+        if ($viewCookie) {
+            $response->headers->setCookie($viewCookie);
+        }
+
+        return $response;
     }
 
     private function amploadContent($post) {

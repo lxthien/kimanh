@@ -31,7 +31,7 @@
 
 {{ include('admin/news/_seo_realtime_checklist.html.twig', {
         form: form,
-        has_image: object is defined and object.images is defined and object.images,
+        has_image: news is defined and news.images is defined and news.images,
         check_category: form.category is defined
     }) }}
 
