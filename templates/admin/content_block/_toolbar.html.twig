@@ -8,6 +8,7 @@
         <span>Chèn vào vị trí con trỏ</span>
     </div>
     <div class="cms-block-toolbar__actions">
+        <button type="button" class="cms-block-tool" data-cms-block-open="hero_section" title="Chèn Hero Section"><i class="fa fa-home"></i><span>Hero Section</span></button>
         <button type="button" class="cms-block-tool" data-cms-block-open="faq" title="Chèn FAQ"><i class="fa fa-question-circle"></i><span>FAQ</span></button>
         <button type="button" class="cms-block-tool" data-cms-block-open="cta" title="Chèn CTA"><i class="fa fa-bullhorn"></i><span>CTA</span></button>
         <button type="button" class="cms-block-tool" data-cms-block-open="pricing" title="Chèn bảng giá"><i class="fa fa-table"></i><span>Bảng giá</span></button>
@@ -26,6 +27,20 @@
             </div>
             <div class="modal-body">
                 <div data-cms-block-form>
+                    <div class="cms-block-form" data-cms-block-form-type="hero_section">
+                        <div class="form-group"><label>H1 – Tiêu đề chính</label><input class="form-control" name="heroSectionH1" type="text" placeholder="VD: Báo giá xây nhà trọn gói 2026"></div>
+                        <div class="form-group"><label>Dòng cam kết (subtext)</label><input class="form-control" name="heroSectionSubtext" type="text" placeholder="VD: Cam kết không phát sinh • Bảo hành 5 năm"></div>
+                        <div class="form-group">
+                            <label>Bullet points ưu điểm <small class="text-muted">(mỗi dòng một điểm)</small></label>
+                            <textarea class="form-control" name="heroSectionBullets" rows="4" placeholder="✓ Đơn giá từ 4.850.000đ/m² minh bạch&#10;✓ Báo giá chi tiết trong 24h&#10;✓ 500+ công trình bàn giao đúng tiến độ"></textarea>
+                        </div>
+                        <div class="form-group"><label>Nhãn nút CTA</label><input class="form-control" name="heroSectionCtaLabel" type="text" placeholder="VD: NHẬN BÁO GIÁ 24H"></div>
+                        <div class="form-group"><label>URL form / nút CTA</label><input class="form-control" name="heroSectionCtaUrl" type="text" placeholder="/lien-he/"></div>
+                        <div class="form-group"><label>Hotline (tap-to-call)</label><input class="form-control" name="heroSectionHotline" type="text" placeholder="0974.776.305"></div>
+                        <div class="form-group"><label>URL ảnh công trình thật</label><input class="form-control" name="heroSectionImage" type="text" placeholder="/uploads/cong-trinh.jpg"></div>
+                        <div class="form-group"><label>Alt ảnh</label><input class="form-control" name="heroSectionImageAlt" type="text" placeholder="Công trình thực tế"></div>
+                    </div>
+
                     <div class="cms-block-form" data-cms-block-form-type="faq">
                         <p class="help-block">Mỗi dòng: Câu hỏi | Câu trả lời</p>
                         <textarea class="form-control" name="faqItems" rows="7"></textarea>

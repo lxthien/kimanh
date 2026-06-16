@@ -35,6 +35,7 @@ $(function() {
     initAdminNotifications();
     initPageBuilder();
     initContentBlocks();
+    initMediaPicker();
 
     /**
      * Create sluggable from name
@@ -990,6 +991,7 @@ $(function() {
         var relatedCurrentId = 0;
         var relatedSearchTimer = null;
         var blockTitles = {
+            hero_section: 'Hero Section',
             faq: 'FAQ block',
             cta: 'CTA block',
             pricing: 'Bảng giá',
@@ -1117,6 +1119,19 @@ $(function() {
             var selected;
             var manualRows;
 
+            if (type === 'hero_section') {
+                return {
+                    h1: $form.find('[name="heroSectionH1"]').val(),
+                    subtext: $form.find('[name="heroSectionSubtext"]').val(),
+                    bullets: $form.find('[name="heroSectionBullets"]').val(),
+                    cta_label: $form.find('[name="heroSectionCtaLabel"]').val(),
+                    cta_url: $form.find('[name="heroSectionCtaUrl"]').val() || '#',
+                    hotline: $form.find('[name="heroSectionHotline"]').val(),
+                    image: $form.find('[name="heroSectionImage"]').val(),
+                    image_alt: $form.find('[name="heroSectionImageAlt"]').val()
+                };
+            }
+
             if (type === 'faq') {
                 return {items: parsePipeRows($form.find('[name="faqItems"]').val(), 2)};
             }
@@ -1160,6 +1175,9 @@ $(function() {
         }
 
         function validatePayload(type, payload) {
+            if (type === 'hero_section' && !payload.h1) {
+                return 'Hero Section cần tiêu đề H1.';
+            }
             if (type === 'faq' && (!payload.items || !payload.items.length)) {
                 return 'FAQ cần ít nhất một câu hỏi.';
             }
@@ -1200,6 +1218,35 @@ $(function() {
 
         function buildBlockHtml(type, payload) {
             payload = payload || collectPayload(type);
+
+            if (type === 'hero_section') {
+                var bulletLines = String(payload.bullets || '').split(/\r?\n/).filter(function(l) { return $.trim(l); });
+                var bulletsHtml = bulletLines.length
+                    ? '<ul class="cms-hero-bullets">' + $.map(bulletLines, function(line) {
+                        return '<li>' + escapeHtml($.trim(line)) + '</li>';
+                    }).join('') + '</ul>'
+                    : '';
+                var hotlineHtml = payload.hotline
+                    ? '<p class="cms-hero-hotline"><a href="tel:' + escapeHtml(payload.hotline.replace(/[^\d+]/g, '')) + '">&#128241; Hotline: ' + escapeHtml(payload.hotline) + '</a></p>'
+                    : '';
+                var imageHtml = payload.image
+                    ? '<div class="cms-hero-image"><img src="' + escapeHtml(payload.image) + '" alt="' + escapeHtml(payload.image_alt || '') + '" loading="lazy"></div>'
+                    : '';
+                var ctaHtml = payload.cta_label
+                    ? '<a class="cms-block-button" href="' + escapeHtml(payload.cta_url || '#') + '">' + escapeHtml(payload.cta_label) + '</a>'
+                    : '';
+
+                return '<section class="cms-block cms-block-hero-section"' + baseBlockAttrs(type, payload) + '>' +
+                    '<div class="cms-hero-content">' +
+                    (payload.h1 ? '<p class="cms-hero-title">' + escapeHtml(payload.h1) + '</p>' : '') +
+                    (payload.subtext ? '<p class="cms-hero-subtext">' + escapeHtml(payload.subtext) + '</p>' : '') +
+                    bulletsHtml +
+                    ctaHtml +
+                    hotlineHtml +
+                    '</div>' +
+                    imageHtml +
+                    '</section>';
+            }
 
             if (type === 'faq') {
                 return '<section class="cms-block cms-block-faq"' + baseBlockAttrs(type, payload) + '>' +
@@ -1278,7 +1325,16 @@ $(function() {
         function populateBlockForm(type, payload) {
             if (!payload) { return; }
 
-            if (type === 'faq') {
+            if (type === 'hero_section') {
+                $form.find('[name="heroSectionH1"]').val(payload.h1 || '');
+                $form.find('[name="heroSectionSubtext"]').val(payload.subtext || '');
+                $form.find('[name="heroSectionBullets"]').val(payload.bullets || '');
+                $form.find('[name="heroSectionCtaLabel"]').val(payload.cta_label || '');
+                $form.find('[name="heroSectionCtaUrl"]').val(payload.cta_url || '');
+                $form.find('[name="heroSectionHotline"]').val(payload.hotline || '');
+                $form.find('[name="heroSectionImage"]').val(payload.image || '');
+                $form.find('[name="heroSectionImageAlt"]').val(payload.image_alt || '');
+            } else if (type === 'faq') {
                 $form.find('[name="faqItems"]').val(rowsToText(payload.items || []));
             } else if (type === 'cta') {
                 $form.find('[name="ctaTitle"]').val(payload.title || '');
@@ -1365,6 +1421,23 @@ $(function() {
         function extractPayloadFromBlock(element, type) {
             var $block = $(element.$);
             var payloadType = type === 'related-posts' ? 'related' : type;
+
+            if (payloadType === 'hero_section') {
+                var bulletsText = $block.find('.cms-hero-bullets li').map(function() {
+                    return $.trim($(this).text());
+                }).get().join('\n');
+                var hotlineEl = $block.find('.cms-hero-hotline a').first();
+                return {
+                    h1: $.trim($block.find('.cms-hero-title').first().text()),
+                    subtext: $.trim($block.find('.cms-hero-subtext').first().text()),
+                    bullets: bulletsText,
+                    cta_label: $.trim($block.find('.cms-block-button').first().text()),
+                    cta_url: $block.find('.cms-block-button').first().attr('href') || '#',
+                    hotline: $.trim(hotlineEl.text()).replace(/^Hotline:\s*/, ''),
+                    image: $block.find('.cms-hero-image img').first().attr('src') || '',
+                    image_alt: $block.find('.cms-hero-image img').first().attr('alt') || ''
+                };
+            }
 
             if (payloadType === 'faq') {
                 return {items: $block.find('details').map(function() {
@@ -1599,6 +1672,134 @@ $(function() {
 
         menuToggle.addEventListener('click', function() {
             setTimeout(persistSidebarState, 0);
+        });
+    }
+
+    /**
+     * Media Picker — allows selecting an image from the Media Library
+     * inside any form that has a [data-media-picker] wrapper.
+     * The picker URL is read from data-picker-url on the trigger button.
+     */
+    function initMediaPicker() {
+        var $modal    = $('#mediaPickerModal');
+        var $body     = $('#mediaPickerModalBody');
+        var $confirm  = $('#mediaPickerConfirm');
+        var $selName  = $('#mediaPickerSelectedName');
+        var loaded    = false;
+        var selectedUrl = null;
+
+        if (!$modal.length) {
+            return;
+        }
+
+        // Move modal to body to avoid z-index/backdrop issues in relative containers
+        $modal.appendTo('body');
+
+        var pickerUrl = $modal.data('picker-url') || '';
+
+        function cleanupModalBackdrop() {
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open').css('padding-right', '');
+        }
+
+        function hideMediaPickerModal() {
+            $modal
+                .removeClass('in show')
+                .attr('aria-hidden', 'true')
+                .hide();
+
+            cleanupModalBackdrop();
+        }
+
+        function showMediaPickerModal() {
+            hideMediaPickerModal();
+            $('<div class="modal-backdrop fade in show media-picker-backdrop"></div>').appendTo('body');
+            $('body').addClass('modal-open');
+
+            $modal
+                .show()
+                .addClass('in show')
+                .attr('aria-hidden', 'false')
+                .focus();
+        }
+
+        $(document).on('click', '#mediaPicker_close, #mediaPicker_cancel, .media-picker-backdrop', function (event) {
+            event.preventDefault();
+            hideMediaPickerModal();
+        });
+
+        $(document).on('keydown', function (event) {
+            if (event.key === 'Escape' && $modal.is(':visible')) {
+                hideMediaPickerModal();
+            }
+        });
+
+        // Open modal manually so mixed Bootstrap versions do not leave duplicate backdrops.
+        $(document).on('click', '#mediaPicker_open', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            // Reset state for new open
+            selectedUrl = null;
+            $confirm.prop('disabled', true);
+            $selName.text('');
+            $body.find('.media-picker-item').removeClass('is-selected');
+
+            showMediaPickerModal();
+
+            if (loaded) {
+                return;
+            }
+
+            loaded = true;
+
+            $.get(pickerUrl)
+                .done(function (html) {
+                    $body.html(html);
+                    bindPickerItems();
+                })
+                .fail(function () {
+                    $body.html('<div class="alert alert-danger">Không thể tải thư viện ảnh.</div>');
+                });
+        });
+
+        function bindPickerItems() {
+            $body.find('.media-picker-item').off('click').on('click', function () {
+                $body.find('.media-picker-item').removeClass('is-selected');
+                $(this).addClass('is-selected');
+                selectedUrl = $(this).data('url');
+                $selName.text($(this).data('filename'));
+                $confirm.prop('disabled', false);
+            });
+
+            // Filter search inside picker
+            $body.find('#mediaPickerSearch').off('input').on('input', function () {
+                var q = $(this).val().toLowerCase();
+                $body.find('.media-picker-item').each(function () {
+                    var name = ($(this).data('filename') || '').toLowerCase();
+                    $(this).toggle(name.indexOf(q) !== -1);
+                });
+            });
+        }
+
+        // Confirm selection
+        $(document).on('click', '#mediaPickerConfirm', function () {
+            if (!selectedUrl) { return; }
+
+            $('#mediaPicker_input').val(selectedUrl);
+            $('#mediaPicker_display').val(selectedUrl);
+            $('#mediaPicker_preview_img').attr('src', selectedUrl);
+            $('#mediaPicker_preview_wrap').show();
+
+            hideMediaPickerModal();
+        });
+
+        // Clear thumbnail
+        $(document).on('click', '#mediaPicker_clear', function () {
+            $('#mediaPicker_input').val('');
+            $('#mediaPicker_display').val('');
+            $('#mediaPicker_preview_img').attr('src', '');
+            $('#mediaPicker_preview_wrap').hide();
         });
     }
 });

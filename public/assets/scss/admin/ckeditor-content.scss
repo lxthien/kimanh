@@ -1012,3 +1012,17 @@ body.ka-article-body {
         }
     }
 }
+
+
+body.ka-article-body ul.cms-hero-bullets {
+    padding: 0;
+    margin: 0;
+}
+
+body.ka-article-body ul.cms-hero-bullets li {
+    padding-left: 25px;
+
+    &::before {
+        top: 2px;
+    }
+}
