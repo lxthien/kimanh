@@ -141,6 +141,9 @@ class NewsController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+                // Handle Media Picker selection (bypasses Vich to avoid path conflicts)
+                $this->applyMediaPickerUrl($request, $news);
+
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($news);
                 $em->flush();
@@ -204,6 +207,9 @@ class NewsController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+                // Handle Media Picker selection (bypasses Vich to avoid path conflicts)
+                $this->applyMediaPickerUrl($request, $news);
+
                 $em = $this->getDoctrine()->getManager();
                 $unitOfWork = $em->getUnitOfWork();
                 $originalData = $unitOfWork->getOriginalEntityData($news);
@@ -348,5 +354,47 @@ class NewsController extends Controller
                 )
             )
         );
+    }
+
+    /**
+     * Handle _media_picker_url POST param: copy the selected media file
+     * into the Vich upload dir and update entity->images (filename only).
+     * Only acts when no new imageFile was uploaded (Vich takes precedence).
+     */
+    private function applyMediaPickerUrl(Request $request, News $news): void
+    {
+        // If a new file was uploaded via Vich, let Vich handle images — skip
+        $uploadedFile = $request->files->get('news');
+        if (!empty($uploadedFile['imageFile']['file'])) {
+            return;
+        }
+
+        $pickerUrl = trim((string) $request->request->get('_media_picker_url', ''));
+        if ($pickerUrl === '') {
+            return;
+        }
+
+        $webRoot   = $this->getParameter('kernel.project_dir') . '/public';
+        $sourcePath = $webRoot . '/' . ltrim($pickerUrl, '/');
+
+        if (!is_file($sourcePath)) {
+            return;
+        }
+
+        $destDir  = $webRoot . '/uploads/images/news/';
+        $filename = basename($sourcePath);
+        $destPath = $destDir . $filename;
+
+        if (!is_dir($destDir)) {
+            mkdir($destDir, 0755, true);
+        }
+
+        // Copy only if not already there
+        if (!is_file($destPath)) {
+            copy($sourcePath, $destPath);
+        }
+
+        // Set only filename — Vich uri_prefix handles the rest
+        $news->setImages($filename);
     }
 }

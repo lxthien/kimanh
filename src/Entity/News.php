@@ -183,6 +183,13 @@ class News
     private $schemaMarkup = null;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="note", type="text", nullable=true)
+     */
+    private $note = null;
+
+    /**
      * @var \DateTime
      *
      * @Gedmo\Timestampable(on="create")
@@ -736,6 +743,17 @@ class News
     public function getSchemaMarkup()
     {
         return $this->schemaMarkup;
+    }
+
+    public function getNote()
+    {
+        return $this->note;
+    }
+
+    public function setNote($note)
+    {
+        $this->note = $note;
+        return $this;
     }
 
     public function setTemplate($template)

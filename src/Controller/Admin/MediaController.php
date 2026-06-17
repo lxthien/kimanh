@@ -2,7 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Media;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -22,7 +21,7 @@ class MediaController extends Controller
 {
     private $uploadDir = 'uploads/media/';
     private $maxFileSize = 10485760; // 10MB
-    private $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    private $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
 
     /**
      * Display media library
@@ -33,7 +32,7 @@ class MediaController extends Controller
     public function indexAction(Request $request)
     {
         $page = $request->query->get('page', 1);
-        $uploadDirPath = $this->getParameter('kernel.project_dir') . '/web/' . $this->uploadDir;
+        $uploadDirPath = $this->getParameter('kernel.project_dir') . '/public/' . $this->uploadDir;
         
         // Get storage info
         $storageInfo = $this->getStorageInfo();
@@ -63,6 +62,30 @@ class MediaController extends Controller
     }
 
     /**
+     * Media picker — AJAX endpoint for selecting images in forms
+     *
+     * @Route("/picker", name="admin_media_picker")
+     * @Method("GET")
+     */
+    public function pickerAction(Request $request)
+    {
+        $uploadDirPath = $this->getParameter('kernel.project_dir') . '/public/' . $this->uploadDir;
+
+        $allFiles = $this->getMediaFiles($uploadDirPath);
+
+        usort($allFiles, function ($a, $b) {
+            return $b['time'] - $a['time'];
+        });
+
+        // Return at most 48 latest images for the picker
+        $files = array_slice($allFiles, 0, 48);
+
+        return $this->render('admin/media/_picker.html.twig', [
+            'files' => $files,
+        ]);
+    }
+
+    /**
      * Upload media file
      *
      * @Route("/upload", name="admin_media_upload")
@@ -87,7 +110,7 @@ class MediaController extends Controller
         }
 
         // Create upload directory
-        $uploadDirPath = $this->getParameter('kernel.project_dir') . '/web/' . $this->uploadDir;
+        $uploadDirPath = $this->getParameter('kernel.project_dir') . '/public/' . $this->uploadDir;
         if (!is_dir($uploadDirPath)) {
             mkdir($uploadDirPath, 0755, true);
         }
@@ -103,13 +126,14 @@ class MediaController extends Controller
             
             // Create thumbnail
             $this->createThumbnail($filepath);
+            $thumbpath = $uploadDirPath . 'thumbs/' . $filename;
 
             return new JsonResponse([
                 'status' => 'success',
                 'message' => 'Tải file thành công',
                 'filename' => $filename,
                 'url' => '/' . $this->uploadDir . $filename,
-                'thumb' => '/' . $this->uploadDir . 'thumbs/' . $filename,
+                'thumb' => is_file($thumbpath) ? '/' . $this->uploadDir . 'thumbs/' . $filename : '/' . $this->uploadDir . $filename,
             ]);
         } catch (\Exception $e) {
             return new JsonResponse(['status' => 'error', 'message' => 'Lỗi tải file: ' . $e->getMessage()]);
@@ -128,7 +152,7 @@ class MediaController extends Controller
             return new JsonResponse(['status' => 'error', 'message' => 'Invalid CSRF token']);
         }
 
-        $uploadDirPath = $this->getParameter('kernel.project_dir') . '/web/' . $this->uploadDir;
+        $uploadDirPath = $this->getParameter('kernel.project_dir') . '/public/' . $this->uploadDir;
         $filepath = $uploadDirPath . $filename;
         $thumbpath = $uploadDirPath . 'thumbs/' . $filename;
 
@@ -154,7 +178,7 @@ class MediaController extends Controller
      */
     public function cropAction(Request $request, $filename)
     {
-        $uploadDirPath = $this->getParameter('kernel.project_dir') . '/web/' . $this->uploadDir;
+        $uploadDirPath = $this->getParameter('kernel.project_dir') . '/public/' . $this->uploadDir;
         $filepath = $uploadDirPath . $filename;
 
         if (!file_exists($filepath)) {
@@ -192,7 +216,7 @@ class MediaController extends Controller
      */
     public function resizeAction(Request $request, $filename)
     {
-        $uploadDirPath = $this->getParameter('kernel.project_dir') . '/web/' . $this->uploadDir;
+        $uploadDirPath = $this->getParameter('kernel.project_dir') . '/public/' . $this->uploadDir;
         $filepath = $uploadDirPath . $filename;
 
         if (!file_exists($filepath)) {
@@ -200,8 +224,8 @@ class MediaController extends Controller
         }
 
         $data = json_decode($request->getContent(), true);
-        $newWidth = (int)$data['width'] ?? 800;
-        $newHeight = (int)$data['height'] ?? 600;
+        $newWidth = (int)($data['width'] ?? 800);
+        $newHeight = (int)($data['height'] ?? 600);
 
         try {
             list($origWidth, $origHeight) = getimagesize($filepath);
@@ -227,7 +251,7 @@ class MediaController extends Controller
      */
     private function getStorageInfo()
     {
-        $uploadDirPath = $this->getParameter('kernel.project_dir') . '/web/' . $this->uploadDir;
+        $uploadDirPath = $this->getParameter('kernel.project_dir') . '/public/' . $this->uploadDir;
         
         if (!is_dir($uploadDirPath)) {
             return [
@@ -276,12 +300,23 @@ class MediaController extends Controller
                 $ext = strtolower(pathinfo($item, PATHINFO_EXTENSION));
                 
                 if (in_array($ext, $this->allowedExtensions)) {
-                    list($width, $height) = getimagesize($filepath);
+                    $imageSize = @getimagesize($filepath);
+
+                    if ($imageSize === false) {
+                        continue;
+                    }
+
+                    list($width, $height) = $imageSize;
+                    $thumbpath = $uploadDirPath . 'thumbs/' . $item;
+
+                    if (!is_file($thumbpath)) {
+                        $this->createThumbnail($filepath);
+                    }
                     
                     $files[] = [
                         'filename' => $item,
                         'url' => '/' . $this->uploadDir . $item,
-                        'thumb' => '/' . $this->uploadDir . 'thumbs/' . $item,
+                        'thumb' => is_file($thumbpath) ? '/' . $this->uploadDir . 'thumbs/' . $item : '/' . $this->uploadDir . $item,
                         'size' => filesize($filepath),
                         'size_formatted' => $this->formatBytes(filesize($filepath)),
                         'time' => filemtime($filepath),

@@ -245,6 +245,8 @@ class HealthAuditManager
         return $this->publishedContentCache;
     }
 
+
+
     private function extractAttributes($html, $tag, $attribute)
     {
         if (trim($html) === '') {
@@ -327,32 +329,58 @@ class HealthAuditManager
         }
 
         switch ($route['_route']) {
-            case 'news_category':
-                if (empty($route['level1'])) {
-                    return false;
+            case 'dynamic_post_page':
+            case 'news_show':
+                $slug = $route['slug'] ?? ($route['level1'] ?? '');
+                if (empty($slug)) return false;
+                return $this->publishedPostExists($slug) || $this->categoryExists($slug);
+
+            case 'dynamic_category_post':
+            case 'list_category':
+                $level1 = $route['level1'] ?? ($route['slug'] ?? '');
+                $level2 = $route['level2'] ?? '';
+                if (empty($level1) || empty($level2)) return false;
+
+                $parent = $this->findCategoryByUrl($level1);
+                if (!$parent) return false;
+
+                $childCat = $this->findCategoryByUrl($level2);
+                if ($childCat && is_object($childCat->getParentcat()) && $childCat->getParentcat()->getId() === $parent->getId()) {
+                    return true;
                 }
 
+                if ($this->publishedPostExists($level2)) {
+                    return true;
+                }
+
+                return false;
+
+            case 'dynamic_category_level2_post':
+                $level1 = $route['level1'] ?? '';
+                $level2 = $route['level2'] ?? '';
+                $level3 = $route['level3'] ?? '';
+                if (empty($level1) || empty($level2) || empty($level3)) return false;
+
+                $childCat = $this->findCategoryByUrl($level2);
+                if (!$childCat) return false;
+
+                $grandChildCat = $this->findCategoryByUrl($level3);
+                if ($grandChildCat && is_object($grandChildCat->getParentcat()) && $grandChildCat->getParentcat()->getId() === $childCat->getId()) {
+                    return true;
+                }
+
+                if ($this->publishedPostExists($level3)) {
+                    return true;
+                }
+
+                return false;
+
+            case 'news_category':
+                if (empty($route['level1'])) return false;
                 return $this->categoryExists($route['level1']);
 
-            case 'list_category':
-                if (empty($route['level1']) || empty($route['level2'])) {
-                    return false;
-                }
-
-                $parent = $this->findCategoryByUrl($route['level1']);
-                $child = $this->findCategoryByUrl($route['level2']);
-
-                if (!$parent || !$child || !is_object($child->getParentcat())) {
-                    return false;
-                }
-
-                return $child->getParentcat()->getId() === $parent->getId();
-
             case 'tags':
-                if (empty($route['slug'])) {
-                    return false;
-                }
-
+                if (empty($route['slug'])) return false;
                 return $this->tagExists($route['slug']);
 
             default:
@@ -463,11 +491,24 @@ class HealthAuditManager
         $posts = $this->getPublishedContent();
 
         foreach ($posts as $post) {
+            $notes = (string) $post->getNote();
+            
+            // Check if we should ignore ALL outdated years
+            if (stripos($notes, '[ignore-outdated]') !== false || stripos($notes, '[ignore-outdated:all]') !== false) {
+                continue;
+            }
+
+            // Check if we should ignore specific years
+            $ignoredYears = [];
+            if (preg_match('/\[ignore-outdated:([\d,]+)\]/i', $notes, $matches)) {
+                $ignoredYears = array_map('intval', explode(',', $matches[1]));
+            }
+
             $matchedYears = [];
 
-            $isOutdatedYear = function ($yr) use ($currentYear) {
+            $isOutdatedYear = function ($yr) use ($currentYear, $ignoredYears) {
                 $yrInt = (int)$yr;
-                return $yrInt < $currentYear && $yrInt >= 2015;
+                return $yrInt < $currentYear && $yrInt >= 2015 && !in_array($yrInt, $ignoredYears, true);
             };
 
             // Check Title

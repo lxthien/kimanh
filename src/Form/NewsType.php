@@ -86,11 +86,6 @@ class NewsType extends AbstractType
                     ];
                 },
             ])
-            ->add('tags', TagsInputType::class, [
-                'attr' => ['data-role' => 'tagsinput'],
-                'label' => 'label.tags',
-                'required' => false,
-            ])
             ->add('pageTitle', TextType::class, [
                 'required' => false,
                 'label' => 'label.pageTitle',
@@ -138,6 +133,11 @@ class NewsType extends AbstractType
                 'choices' => ['Mặc định' => '2_columns', 'Landing page' => '1_column', 'Dịch vụ' => 'service_page'],
                 'empty_data' => '2_column',
                 'placeholder' => false
+            ])
+            ->add('note', TextareaType::class, [
+                'required' => false,
+                'attr' => ['rows' => '3'],
+                'label' => 'Ghi chú (Ví dụ: [ignore-outdated:all] hoặc [ignore-outdated:2018,2019])',
             ])
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                 $form = $event->getForm();

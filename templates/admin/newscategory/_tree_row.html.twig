@@ -1,4 +1,13 @@
 <tr>
+    <td class="text-center">
+        {% if category.getThumbnail() %}
+            <img src="{{ category.getThumbnail() }}" alt="{{ category.getName() }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+        {% else %}
+            <div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; color: #aaa; margin: 0 auto;">
+                <i class="fa fa-image"></i>
+            </div>
+        {% endif %}
+    </td>
     <td>
         <span style="margin-left: {{ level * 30 }}px;">
             {% if category.getChildren() and category.getChildren().count() > 0 %}

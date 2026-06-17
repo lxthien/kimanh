@@ -118,6 +118,11 @@ class PageType extends AbstractType
                 'empty_data' => '2_column',
                 'placeholder' => false
             ])
+            ->add('note', TextareaType::class, [
+                'required' => false,
+                'attr' => ['rows' => '3'],
+                'label' => 'Ghi chú (Ví dụ: [ignore-outdated:all] hoặc [ignore-outdated:2018,2019])',
+            ])
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                 $form = $event->getForm();
                 $page = $event->getData();

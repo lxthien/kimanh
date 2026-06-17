@@ -180,6 +180,13 @@ class NewsCategory
      */
     private $cardFormat = null;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="thumbnail", type="string", length=500, nullable=true)
+     */
+    private $thumbnail = null;
+
     public function __construct()
     {
         $this->parentcat = new ArrayCollection();
@@ -434,5 +441,18 @@ class NewsCategory
     public function getCardFormat()
     {
         return $this->cardFormat;
+    }
+
+    public function setThumbnail($thumbnail)
+    {
+        $thumbnail = is_string($thumbnail) ? trim($thumbnail) : $thumbnail;
+        $this->thumbnail = $thumbnail ?: null;
+
+        return $this;
+    }
+
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
     }
 }

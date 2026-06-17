@@ -114,8 +114,8 @@
                 "image": {
                     "@type": "ImageObject",
                     {% set webpUserPath = convert_images.webpConvert(userPath, '', true) %}
-                    "@id": "{{ absolute_url(webpUserPath ?: userPath) }}",
-                    "url": "{{ absolute_url(webpUserPath ?: userPath) }}",
+                    "@id": "{{ absolute_url(webpUserPath ? asset(webpUserPath) : userPath) }}",
+                    "url": "{{ absolute_url(webpUserPath ? asset(webpUserPath) : userPath) }}",
                     "height": "65",
                     "width": "65"
                 }
