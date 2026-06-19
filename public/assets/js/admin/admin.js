@@ -1,4 +1,4 @@
-﻿import 'typeahead.js';
+import 'typeahead.js';
 import 'bootstrap-tagsinput';
 
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal.js';
@@ -1763,6 +1763,13 @@ $(function() {
                         $(this).toggle(($(this).data('filename') || '').toLowerCase().indexOf(q) !== -1);
                     });
                 });
+                $body.find('#mediaPickerFilterFolderSelect').off('change').on('change', function () {
+                    var folder = $(this).val();
+                    var url = pickerUrl + (pickerUrl.indexOf('?') !== -1 ? '&' : '?') + 'folder=' + encodeURIComponent(folder);
+                    $.get(url)
+                        .done(function (html) { $body.html(html); bindLegacyItems(); })
+                        .fail(function () { $body.html('<div class="alert alert-danger">Không thể tải thư viện ảnh.</div>'); });
+                });
                 bindUpload($body, pickerUrl, bindLegacyItems);
             }
 
@@ -1855,6 +1862,13 @@ $(function() {
                         $(this).toggle(($(this).data('filename') || '').toLowerCase().indexOf(q) !== -1);
                     });
                 });
+                $body.find('#mediaPickerFilterFolderSelect').off('change').on('change', function () {
+                    var folder = $(this).val();
+                    var url = pickerUrl + (pickerUrl.indexOf('?') !== -1 ? '&' : '?') + 'folder=' + encodeURIComponent(folder);
+                    $.get(url)
+                        .done(function (html) { $body.html(html); bindItems(); })
+                        .fail(function () { $body.html('<div class="alert alert-danger">Không thể tải thư viện ảnh.</div>'); });
+                });
                 bindUpload($body, pickerUrl, bindItems);
             }
 
@@ -1909,36 +1923,63 @@ $(function() {
                 for (var i = 0; i < files.length; i++) {
                     var f = files[i];
                     if (!f.type.startsWith('image/')) { continue; }
+                    var idx = fileQueue.length;
                     fileQueue.push(f);
-                    var $item = $('<div class="mp-queue-item" style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><span style="flex:1;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + f.name + '</span><div class="progress" style="flex:2;height:7px;margin:0;min-width:80px;"><div class="progress-bar" style="width:0%;transition:width .3s;"></div></div><span class="mp-queue-status" style="font-size:11px;color:#888;min-width:55px;text-align:right;">Cho</span></div>');
+                    var $item = $('<div class="mp-queue-item" style="display:flex;align-items:center;gap:8px;margin-bottom:5px;" data-queue-idx="' + idx + '">' +
+                        '<span style="flex:1;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + f.name + '</span>' +
+                        '<div class="progress" style="flex:2;height:7px;margin:0;min-width:80px;"><div class="progress-bar" style="width:0%;transition:width .3s;"></div></div>' +
+                        '<span class="mp-queue-status" style="font-size:11px;color:#888;min-width:45px;text-align:right;">Chờ</span>' +
+                        '<button type="button" class="mp-queue-remove" title="Xóa" style="background:none;border:none;color:#e74c3c;cursor:pointer;padding:0 4px;font-size:14px;line-height:1;">&#10005;</button>' +
+                        '</div>');
+                    (function($row, qIdx) {
+                        $row.find('.mp-queue-remove').on('click', function() {
+                            fileQueue[qIdx] = null;
+                            $row.remove();
+                            updateCount();
+                        });
+                    })($item, idx);
                     $queue.append($item);
                 }
                 updateCount();
             }
 
             function updateCount() {
-                var n = fileQueue.length;
-                $queueCount.text(n > 0 ? n + ' anh trong hang cho' : '');
+                var n = fileQueue.filter(function(f) { return f !== null; }).length;
+                $queueCount.text(n > 0 ? n + ' ảnh trong hàng chờ' : '');
                 $uploadBtn.prop('disabled', n === 0);
             }
 
             $uploadBtn.off('click').on('click', function () {
-                if (fileQueue.length === 0) { return; }
+                var active = fileQueue.map(function(f, i) { return {f: f, i: i}; }).filter(function(x) { return x.f !== null; });
+                if (active.length === 0) { return; }
                 $uploadBtn.prop('disabled', true);
-                var index = 0;
+
+                var folder = $body.find('#mediaPickerUploadFolderSelect').val() || '';
+                var newFolder = $body.find('#mediaPickerUploadNewFolder').val() || '';
+
+                var pos = 0;
                 function uploadNext() {
-                    if (index >= fileQueue.length) {
+                    if (pos >= active.length) {
                         fileQueue = []; $queue.empty(); updateCount();
-                        $.get(pickerUrl).done(function (html) { $body.html(html); afterUploadCallback(); });
+                        var reloadUrl = pickerUrl;
+                        var targetFolder = newFolder !== '' ? newFolder : folder;
+                        if (targetFolder !== '') {
+                            reloadUrl += (reloadUrl.indexOf('?') !== -1 ? '&' : '?') + 'folder=' + encodeURIComponent(targetFolder);
+                        }
+                        $.get(reloadUrl).done(function (html) { $body.html(html); afterUploadCallback(); });
                         return;
                     }
-                    var f     = fileQueue[index];
-                    var $item = $queue.find('.mp-queue-item').eq(index);
-                    var $bar  = $item.find('.progress-bar');
-                    var $stat = $item.find('.mp-queue-status');
-                    $stat.text('Dang tai...').css('color', '#5b9bd5');
+                    var entry  = active[pos];
+                    var f      = entry.f;
+                    var $item  = $queue.find('[data-queue-idx="' + entry.i + '"]');
+                    var $bar   = $item.find('.progress-bar');
+                    var $stat  = $item.find('.mp-queue-status');
+                    $item.find('.mp-queue-remove').hide();
+                    $stat.text('Đang tải...').css('color', '#5b9bd5');
                     var formData = new FormData();
                     formData.append('file', f);
+                    formData.append('folder', folder);
+                    formData.append('newFolder', newFolder);
                     $.ajax({
                         url: '/admin/media/upload', type: 'POST',
                         data: formData, processData: false, contentType: false,
@@ -1953,10 +1994,10 @@ $(function() {
                             if (res.status === 'success') {
                                 $bar.css('width', '100%').addClass('progress-bar-success');
                                 $stat.text('Xong').css('color', '#27ae60');
-                            } else { $stat.text('Loi').css('color', '#e74c3c'); $bar.addClass('progress-bar-danger'); }
-                            index++; uploadNext();
+                            } else { $stat.text('Lỗi').css('color', '#e74c3c'); $bar.addClass('progress-bar-danger'); }
+                            pos++; uploadNext();
                         },
-                        error: function () { $stat.text('Loi').css('color', '#e74c3c'); index++; uploadNext(); }
+                        error: function () { $stat.text('Lỗi').css('color', '#e74c3c'); pos++; uploadNext(); }
                     });
                 }
                 uploadNext();

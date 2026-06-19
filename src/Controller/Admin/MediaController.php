@@ -32,13 +32,17 @@ class MediaController extends Controller
     public function indexAction(Request $request)
     {
         $page = $request->query->get('page', 1);
+        $folderFilter = trim((string) $request->query->get('folder', ''));
         $uploadDirPath = $this->getParameter('kernel.project_dir') . '/public/' . $this->uploadDir;
         
         // Get storage info
         $storageInfo = $this->getStorageInfo();
         
-        // Get all media files
-        $allFiles = $this->getMediaFiles($uploadDirPath);
+        // Get folders list
+        $folders = $this->getFoldersList($uploadDirPath);
+        
+        // Get media files
+        $allFiles = $this->getMediaFiles($uploadDirPath, $folderFilter);
         
         // Sort by date
         usort($allFiles, function ($a, $b) {
@@ -58,6 +62,8 @@ class MediaController extends Controller
             'totalPages' => $totalPages,
             'totalFiles' => $totalFiles,
             'storageInfo' => $storageInfo,
+            'folders' => $folders,
+            'currentFolder' => $folderFilter,
         ]);
     }
 
@@ -70,8 +76,10 @@ class MediaController extends Controller
     public function pickerAction(Request $request)
     {
         $uploadDirPath = $this->getParameter('kernel.project_dir') . '/public/' . $this->uploadDir;
+        $folderFilter = trim((string) $request->query->get('folder', ''));
 
-        $allFiles = $this->getMediaFiles($uploadDirPath);
+        $folders = $this->getFoldersList($uploadDirPath);
+        $allFiles = $this->getMediaFiles($uploadDirPath, $folderFilter);
 
         usort($allFiles, function ($a, $b) {
             return $b['time'] - $a['time'];
@@ -82,6 +90,8 @@ class MediaController extends Controller
 
         return $this->render('admin/media/_picker.html.twig', [
             'files' => $files,
+            'folders' => $folders,
+            'currentFolder' => $folderFilter,
         ]);
     }
 
@@ -109,8 +119,25 @@ class MediaController extends Controller
             return new JsonResponse(['status' => 'error', 'message' => $validation['message']]);
         }
 
+        // Get folder params
+        $folder = trim((string) $request->request->get('folder', ''));
+        $newFolder = trim((string) $request->request->get('newFolder', ''));
+
+        if ($newFolder !== '') {
+            // Slugify folder name
+            $folderName = preg_replace('/[^a-zA-Z0-9_-]/', '-', strtolower($newFolder));
+            $folderName = preg_replace('/-+/', '-', $folderName);
+            $folderName = trim($folderName, '-');
+            $uploadSubdir = $folderName . '/';
+        } elseif ($folder !== '') {
+            $uploadSubdir = preg_replace('/[^a-zA-Z0-9_-]/', '-', strtolower($folder)) . '/';
+        } else {
+            $uploadSubdir = '';
+        }
+
         // Create upload directory
-        $uploadDirPath = $this->getParameter('kernel.project_dir') . '/public/' . $this->uploadDir;
+        $baseUploadPath = $this->getParameter('kernel.project_dir') . '/public/' . $this->uploadDir;
+        $uploadDirPath = $baseUploadPath . $uploadSubdir;
         if (!is_dir($uploadDirPath)) {
             mkdir($uploadDirPath, 0755, true);
         }
@@ -131,9 +158,9 @@ class MediaController extends Controller
             return new JsonResponse([
                 'status' => 'success',
                 'message' => 'Tải file thành công',
-                'filename' => $filename,
-                'url' => '/' . $this->uploadDir . $filename,
-                'thumb' => is_file($thumbpath) ? '/' . $this->uploadDir . 'thumbs/' . $filename : '/' . $this->uploadDir . $filename,
+                'filename' => $uploadSubdir . $filename,
+                'url' => '/' . $this->uploadDir . $uploadSubdir . $filename,
+                'thumb' => is_file($thumbpath) ? '/' . $this->uploadDir . $uploadSubdir . 'thumbs/' . $filename : '/' . $this->uploadDir . $uploadSubdir . $filename,
             ]);
         } catch (\Exception $e) {
             return new JsonResponse(['status' => 'error', 'message' => 'Lỗi tải file: ' . $e->getMessage()]);
@@ -143,7 +170,7 @@ class MediaController extends Controller
     /**
      * Delete media file
      *
-     * @Route("/{filename}/delete", name="admin_media_delete")
+     * @Route("/{filename}/delete", name="admin_media_delete", requirements={"filename"=".+"})
      * @Method("POST")
      */
     public function deleteAction(Request $request, $filename)
@@ -154,7 +181,7 @@ class MediaController extends Controller
 
         $uploadDirPath = $this->getParameter('kernel.project_dir') . '/public/' . $this->uploadDir;
         $filepath = $uploadDirPath . $filename;
-        $thumbpath = $uploadDirPath . 'thumbs/' . $filename;
+        $thumbpath = dirname($filepath) . '/thumbs/' . basename($filepath);
 
         try {
             if (file_exists($filepath)) {
@@ -171,9 +198,83 @@ class MediaController extends Controller
     }
 
     /**
+     * Move media file to another folder
+     *
+     * @Route("/{filename}/move", name="admin_media_move", requirements={"filename"=".+"})
+     * @Method("POST")
+     */
+    public function moveAction(Request $request, $filename)
+    {
+        if (!$this->isCsrfTokenValid('delete-media', $request->request->get('token'))) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Invalid CSRF token']);
+        }
+
+        $targetFolder = trim((string) $request->request->get('targetFolder', ''));
+        $newFolder    = trim((string) $request->request->get('newFolder', ''));
+
+        $baseUploadPath = $this->getParameter('kernel.project_dir') . '/public/' . $this->uploadDir;
+        $srcPath  = $baseUploadPath . $filename;
+        $srcThumb = dirname($srcPath) . '/thumbs/' . basename($srcPath);
+
+        if (!file_exists($srcPath)) {
+            return new JsonResponse(['status' => 'error', 'message' => 'File không tồn tại']);
+        }
+
+        // Resolve destination subfolder
+        if ($newFolder !== '') {
+            $slug = preg_replace('/[^a-zA-Z0-9_-]/', '-', strtolower($newFolder));
+            $slug = trim(preg_replace('/-+/', '-', $slug), '-');
+            $uploadSubdir = $slug !== '' ? $slug . '/' : '';
+        } elseif ($targetFolder !== '') {
+            $uploadSubdir = rtrim($targetFolder, '/') . '/';
+        } else {
+            $uploadSubdir = '';
+        }
+
+        $destDir   = $baseUploadPath . $uploadSubdir;
+        $destPath  = $destDir . basename($srcPath);
+        $destThumb = $destDir . 'thumbs/' . basename($srcPath);
+
+        // Cannot move to same location
+        if (realpath($srcPath) === realpath($destPath)) {
+            return new JsonResponse(['status' => 'error', 'message' => 'File đã ở trong thư mục này']);
+        }
+
+        try {
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+
+            rename($srcPath, $destPath);
+
+            // Move thumbnail if exists
+            $thumbsDestDir = $destDir . 'thumbs/';
+            if (file_exists($srcThumb)) {
+                if (!is_dir($thumbsDestDir)) {
+                    mkdir($thumbsDestDir, 0755, true);
+                }
+                rename($srcThumb, $destThumb);
+            } else {
+                // Regenerate thumbnail at destination
+                $this->createThumbnail($destPath);
+            }
+
+            $newRelativePath = $uploadSubdir . basename($srcPath);
+            return new JsonResponse([
+                'status'   => 'success',
+                'message'  => 'Di chuyển file thành công',
+                'filename' => $newRelativePath,
+                'url'      => '/' . $this->uploadDir . $newRelativePath,
+            ]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Lỗi di chuyển file: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
      * Crop image
      *
-     * @Route("/{filename}/crop", name="admin_media_crop")
+     * @Route("/{filename}/crop", name="admin_media_crop", requirements={"filename"=".+"})
      * @Method("POST")
      */
     public function cropAction(Request $request, $filename)
@@ -211,7 +312,7 @@ class MediaController extends Controller
     /**
      * Resize image
      *
-     * @Route("/{filename}/resize", name="admin_media_resize")
+     * @Route("/{filename}/resize", name="admin_media_resize", requirements={"filename"=".+"})
      * @Method("POST")
      */
     public function resizeAction(Request $request, $filename)
@@ -279,44 +380,66 @@ class MediaController extends Controller
     /**
      * Get all media files
      */
-    private function getMediaFiles($uploadDirPath)
+    private function getMediaFiles($uploadDirPath, $folderFilter = '')
+    {
+        if ($folderFilter === '') {
+            return $this->scanFilesRecursive($uploadDirPath, $uploadDirPath);
+        } else {
+            $targetDir = $uploadDirPath . '/' . ltrim($folderFilter, '/');
+            return $this->scanFilesRecursive($targetDir, $uploadDirPath);
+        }
+    }
+
+    private function scanFilesRecursive($dirPath, $baseDirPath)
     {
         $files = [];
-        
-        if (!is_dir($uploadDirPath)) {
+        if (!is_dir($dirPath)) {
             return $files;
         }
 
-        $items = scandir($uploadDirPath, SCANDIR_SORT_DESCENDING);
-        
+        $items = scandir($dirPath);
         foreach ($items as $item) {
             if ($item === '.' || $item === '..' || $item === 'thumbs') {
                 continue;
             }
 
-            $filepath = $uploadDirPath . $item;
-            
-            if (is_file($filepath)) {
+            $filepath = $dirPath . '/' . $item;
+            if (is_dir($filepath)) {
+                $files = array_merge($files, $this->scanFilesRecursive($filepath, $baseDirPath));
+            } elseif (is_file($filepath)) {
                 $ext = strtolower(pathinfo($item, PATHINFO_EXTENSION));
-                
                 if (in_array($ext, $this->allowedExtensions)) {
                     $imageSize = @getimagesize($filepath);
-
                     if ($imageSize === false) {
                         continue;
                     }
 
                     list($width, $height) = $imageSize;
-                    $thumbpath = $uploadDirPath . 'thumbs/' . $item;
+
+                    // Normalize slashes for safe replacement
+                    $normalizedBase = str_replace('\\', '/', $baseDirPath);
+                    $normalizedFile = str_replace('\\', '/', $filepath);
+                    $relativePath = ltrim(str_replace($normalizedBase, '', $normalizedFile), '/');
+
+                    $url = '/' . $this->uploadDir . $relativePath;
+                    $parentDir = dirname($filepath);
+                    $thumbpath = $parentDir . '/thumbs/' . $item;
+                    
+                    $relativeDir = dirname($relativePath);
+                    if ($relativeDir === '.') {
+                        $thumbUrl = '/' . $this->uploadDir . 'thumbs/' . $item;
+                    } else {
+                        $thumbUrl = '/' . $this->uploadDir . $relativeDir . '/thumbs/' . $item;
+                    }
 
                     if (!is_file($thumbpath)) {
                         $this->createThumbnail($filepath);
                     }
-                    
+
                     $files[] = [
-                        'filename' => $item,
-                        'url' => '/' . $this->uploadDir . $item,
-                        'thumb' => is_file($thumbpath) ? '/' . $this->uploadDir . 'thumbs/' . $item : '/' . $this->uploadDir . $item,
+                        'filename' => $relativePath,
+                        'url' => $url,
+                        'thumb' => is_file($thumbpath) ? $thumbUrl : $url,
                         'size' => filesize($filepath),
                         'size_formatted' => $this->formatBytes(filesize($filepath)),
                         'time' => filemtime($filepath),
@@ -330,6 +453,27 @@ class MediaController extends Controller
         }
 
         return $files;
+    }
+
+    private function getFoldersList($baseDirPath)
+    {
+        $folders = [];
+        if (!is_dir($baseDirPath)) {
+            return $folders;
+        }
+
+        $items = scandir($baseDirPath);
+        foreach ($items as $item) {
+            if ($item === '.' || $item === '..' || $item === 'thumbs') {
+                continue;
+            }
+
+            if (is_dir($baseDirPath . '/' . $item)) {
+                $folders[] = $item;
+            }
+        }
+
+        return $folders;
     }
 
     /**

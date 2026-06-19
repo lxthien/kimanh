@@ -22,5 +22,5 @@ var app = {
 $(document).ready(function () {
     app.init();
 
-    $('#nav').css('overflow', 'visible');
+    $('#ka-main-nav').css('overflow', 'visible');
 });

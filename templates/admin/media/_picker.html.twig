@@ -1,4 +1,4 @@
-﻿{#
+{#
  Media Picker partial — loaded via AJAX into picker modal body.
  Styles: admin.scss (.media-picker-*)
  JS: admin.js (initMediaPicker / bindPickerItems / bindUpload)
@@ -15,6 +15,21 @@
                style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;">
     </div>
 
+    {# ── Folder controls for upload ── #}
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:200px;">
+            <select id="mediaPickerUploadFolderSelect" class="form-control form-control-sm">
+                <option value="">Không chọn folder</option>
+                {% for folder in folders %}
+                    <option value="{{ folder }}" {% if currentFolder == folder %}selected{% endif %}>{{ folder }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div style="flex:1;min-width:200px;">
+            <input type="text" id="mediaPickerUploadNewFolder" class="form-control form-control-sm" placeholder="Folder mới...">
+        </div>
+    </div>
+
     {# ── Upload controls ── #}
     <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center;flex-wrap:wrap;">
         <button type="button" id="mediaPickerUploadBtn" class="btn btn-success btn-sm" disabled>
@@ -27,10 +42,20 @@
     <div id="mediaPickerUploadQueue" style="margin-bottom:10px;"></div>
 
     {# ── Search + Grid ── #}
-    {% if files|length > 0 %}
-        <div style="margin-bottom:8px;">
-            <input type="text" id="mediaPickerSearch" class="form-control form-control-sm"
-                   placeholder="Lọc theo tên file..." autocomplete="off">
+    {% if files|length > 0 or folders|length > 0 or currentFolder != '' %}
+        <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center;">
+            <div style="width:180px;">
+                <select id="mediaPickerFilterFolderSelect" class="form-control form-control-sm">
+                    <option value="">Tất cả folder</option>
+                    {% for folder in folders %}
+                        <option value="{{ folder }}" {% if currentFolder == folder %}selected{% endif %}>{{ folder }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="flex:1;">
+                <input type="text" id="mediaPickerSearch" class="form-control form-control-sm"
+                       placeholder="Lọc theo tên file..." autocomplete="off">
+            </div>
         </div>
         <div class="media-picker-grid" id="mediaPickerGrid">
             {% for file in files %}

@@ -89,7 +89,7 @@ function initNewsSlider() {
 
 function initFixedMenu() {
     $(window).scroll(function () {
-        var $nav = $("#nav");
+        var $nav = $("#ka-main-nav");
         var $scrollUp = $('.td-scroll-up');
         var scroll = $(window).scrollTop();
 
@@ -197,15 +197,23 @@ function initFancybox() {
 }
 
 function initTypewriterEffect() {
+    var outputEl = $("#output");
+    if (!outputEl.length) {
+        return;
+    }
     setTimeout(function () {
         var i = 0,
             a = 0,
             isBackspacing = false,
             isParagraph = false;
 
-        var textArray = [
-            "CÔNG TY TNHH TƯ VẤN THIẾT KẾ XÂY DỰNG KIM ANH|98/5 NGUYỄN THỊ ĐẸT, ẤP 25, XÃ ĐÔNG THẠNH, TP.HCM"
-        ];
+        var textArray = [];
+        var attrText = outputEl.attr("data-typewriter");
+        if (attrText) {
+            textArray.push(attrText);
+        } else {
+            textArray.push("CÔNG TY TNHH TƯ VẤN THIẾT KẾ XÂY DỰNG KIM ANH|98/5 NGUYỄN THỊ ĐẸT, ẤP 25, XÃ ĐÔNG THẠNH, TP.HCM");
+        }
 
         // Speed (in milliseconds) of typing.
         var speedForward = 80, //Typing Speed
@@ -219,11 +227,21 @@ function initTypewriterEffect() {
         function typeWriter(id, ar) {
             var element = $("#" + id),
                 aString = ar[a],
-                eHeader = element.children("p#header-company"), //Header element
-                eParagraph = element.children("p#header-address"); //Subheader element
+                eHeader = element.children("p#ka-header-company"), //Header element
+                eParagraph = element.children("p#ka-header-address"); //Subheader element
 
             // Determine if animation should be typing or backspacing
             if (!isBackspacing) {
+                // Add cursor class at the start of typing
+                if (i === 0) {
+                    if (!isParagraph) {
+                        eHeader.addClass("cursor");
+                        eParagraph.removeClass("cursor");
+                    } else {
+                        eHeader.removeClass("cursor");
+                        eParagraph.addClass("cursor");
+                    }
+                }
 
                 // If full string hasn't yet been typed out, continue typing
                 if (i < aString.length) {

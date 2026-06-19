@@ -29,7 +29,7 @@
 	<div class="ka-branding-area d-none hidden-xs hidden-sm">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-4" id="ka-logo-container">
+				<div class="col-md-3" id="ka-logo-container">
 					<div id="ka-brand-logo">
 						<a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
 							<img src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}" width="274" height="99" alt="{{ get_setting('siteName') }}" fetchpriority="high">
@@ -39,14 +39,14 @@
 				<div class="col-md-6">
 					<div class="ka-contact-info-top">
 						<div class="wp90">
-							<div class="ka-info-nd" id="output">
+							<div class="ka-info-nd" id="output" data-typewriter="{{ get_setting('siteName') }}|{{ get_setting('contens_dia_chi') }}">
 								<p class="ka-tel text-uppercase" id="ka-header-company"></p>
 								<p class="text-uppercase" id="ka-header-address"></p>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-md-2">
+				<div class="col-md-3">
 					<div class="ka-contact-info-top ka-hotline-top">
 						<div class="wp90 pull-right">
 							<div class="ka-info-nd">

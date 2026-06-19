@@ -44,11 +44,30 @@
                                 </div>
                                 <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
                             </div>
-                            <div id="uploadProgress" style="margin-top: 15px; display: none;">
-                                <div class="progress" style="height: 15px;">
-                                    <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                            <div class="form-row mt-3">
+                                <div class="col-md-6 form-group">
+                                    <label class="font-weight-bold">Chọn folder</label>
+                                    <select id="uploadFolderSelect" class="form-control form-control-sm">
+                                        <option value="">Không chọn folder</option>
+                                        {% for folder in folders %}
+                                            <option value="{{ folder }}" {% if currentFolder == folder %}selected{% endif %}>{{ folder }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
-                                <small id="uploadStatus" class="text-muted d-block mt-1 text-center"></small>
+                                <div class="col-md-6 form-group">
+                                    <label class="font-weight-bold">Folder mới</label>
+                                    <input type="text" id="uploadNewFolder" class="form-control form-control-sm" placeholder="Nhập tên folder mới...">
+                                </div>
+                            </div>
+                            {# Queue section #}
+                            <div id="uploadQueueWrap" style="display:none; margin-top:12px;">
+                                <div class="d-flex align-items-center mb-2" style="gap:10px;">
+                                    <button type="button" id="uploadAllBtn" class="btn btn-success btn-sm">
+                                        <i class="fa fa-upload"></i> Upload tất cả
+                                    </button>
+                                    <span id="uploadQueueCount" class="text-muted" style="font-size:13px;"></span>
+                                </div>
+                                <div id="uploadQueue"></div>
                             </div>
                         </div>
                     </div>
@@ -61,8 +80,16 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <strong class="card-title mb-0">Thư viện hình ảnh <span class="badge badge-primary">{{ totalFiles }}</span></strong>
-                            <div style="width: 300px;">
-                                <input type="text" id="mediaFilter" class="form-control form-control-sm" placeholder="Tìm kiếm theo tên...">
+                            <div class="d-flex align-items-center">
+                                <select id="filterFolderSelect" class="form-control form-control-sm mr-2" style="width: 200px;">
+                                    <option value="">Tất cả folder</option>
+                                    {% for folder in folders %}
+                                        <option value="{{ folder }}" {% if currentFolder == folder %}selected{% endif %}>{{ folder }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div style="width: 200px;">
+                                    <input type="text" id="mediaFilter" class="form-control form-control-sm" placeholder="Tìm kiếm theo tên...">
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -141,6 +168,9 @@
                                                             <li class="nav-item">
                                                                 <a class="nav-link" data-toggle="tab" href="#crop{{ loop.index }}">Cắt ảnh</a>
                                                             </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" data-toggle="tab" href="#move{{ loop.index }}"><i class="fa fa-folder-open"></i> Di chuyển thư mục</a>
+                                                            </li>
                                                         </ul>
                                                         <div class="tab-content mt-3">
                                                             <!-- Resize Tab -->
@@ -185,6 +215,27 @@
                                                                     <i class="fa fa-crop"></i> Cắt ảnh
                                                                 </button>
                                                             </div>
+
+                                                            <!-- Move Tab -->
+                                                            <div id="move{{ loop.index }}" class="tab-pane fade">
+                                                                <p class="text-muted">Thư mục hiện tại: <strong>{{ file.filename|split('/')|slice(0,-1)|join('/') ?: '(gốc)' }}</strong></p>
+                                                                <div class="form-group">
+                                                                    <label>Chọn thư mục đích</label>
+                                                                    <select class="form-control" id="moveFolder{{ loop.index }}">
+                                                                        <option value="">(Thư mục gốc)</option>
+                                                                        {% for folder in folders %}
+                                                                            <option value="{{ folder }}">{{ folder }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Hoặc tạo thư mục mới</label>
+                                                                    <input type="text" class="form-control" id="moveNewFolder{{ loop.index }}" placeholder="Nhập tên thư mục mới...">
+                                                                </div>
+                                                                <button class="btn btn-warning" onclick="moveMedia('{{ file.filename }}', '#moveFolder{{ loop.index }}', '#moveNewFolder{{ loop.index }}')">
+                                                                    <i class="fa fa-folder-open"></i> Di chuyển
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -199,19 +250,19 @@
                                         <ul class="pagination justify-content-center">
                                             {% if currentPage > 1 %}
                                                 <li class="page-item">
-                                                    <a class="page-link" href="{{ path('admin_media_index', {page: currentPage - 1}) }}">Trước</a>
+                                                    <a class="page-link" href="{{ path('admin_media_index', {page: currentPage - 1, folder: currentFolder}) }}">Trước</a>
                                                 </li>
                                             {% endif %}
 
                                             {% for page in 1..totalPages %}
                                                 <li class="page-item {% if page == currentPage %}active{% endif %}">
-                                                    <a class="page-link" href="{{ path('admin_media_index', {page: page}) }}">{{ page }}</a>
+                                                    <a class="page-link" href="{{ path('admin_media_index', {page: page, folder: currentFolder}) }}">{{ page }}</a>
                                                 </li>
                                             {% endfor %}
 
                                             {% if currentPage < totalPages %}
                                                 <li class="page-item">
-                                                    <a class="page-link" href="{{ path('admin_media_index', {page: currentPage + 1}) }}">Tiếp</a>
+                                                    <a class="page-link" href="{{ path('admin_media_index', {page: currentPage + 1, folder: currentFolder}) }}">Tiếp</a>
                                                 </li>
                                             {% endif %}
                                         </ul>
@@ -227,16 +278,19 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
     <script>
-        // Upload functionality
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const uploadProgress = document.getElementById('uploadProgress');
-        const progressBar = document.getElementById('progressBar');
-        const uploadStatus = document.getElementById('uploadStatus');
+        // ── Queue-based upload (no auto-upload) ──────────────────────────────
+        const uploadArea    = document.getElementById('uploadArea');
+        const fileInput     = document.getElementById('fileInput');
+        const uploadAllBtn  = document.getElementById('uploadAllBtn');
+        const uploadQueue   = document.getElementById('uploadQueue');
+        const uploadQueueWrap = document.getElementById('uploadQueueWrap');
+        const uploadQueueCount = document.getElementById('uploadQueueCount');
+        let fileQueue = [];
 
-        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('click', (e) => {
+            if (e.target !== fileInput) fileInput.click();
+        });
 
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
@@ -253,54 +307,115 @@
             e.preventDefault();
             uploadArea.style.backgroundColor = '#f8f9fa';
             uploadArea.style.borderColor = '#007bff';
-            
-            const files = e.dataTransfer.files;
-            uploadFiles(files);
+            addFilesToQueue(e.dataTransfer.files);
         });
 
         fileInput.addEventListener('change', (e) => {
-            uploadFiles(e.target.files);
+            addFilesToQueue(e.target.files);
+            fileInput.value = '';
         });
 
-        function uploadFiles(files) {
-            uploadProgress.style.display = 'block';
-            uploadStatus.textContent = 'Đang tải lên...';
-            let uploaded = 0;
-
+        function addFilesToQueue(files) {
             Array.from(files).forEach((file) => {
-                const formData = new FormData();
-                formData.append('file', file);
+                if (!file.type.startsWith('image/')) return;
+                const idx = fileQueue.length;
+                fileQueue.push(file);
 
-                fetch('{{ path("admin_media_upload") }}', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        uploaded++;
-                        const percent = Math.round((uploaded / files.length) * 100);
-                        progressBar.style.width = percent + '%';
-                        uploadStatus.textContent = `${uploaded}/${files.length} hoàn tất`;
-
-                        if (uploaded === files.length) {
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1000);
-                        }
-                    } else {
-                        uploadStatus.innerHTML += '<div class="alert alert-warning mt-2">' + file.name + ': ' + data.message + '</div>';
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    uploadStatus.innerHTML += '<div class="alert alert-warning mt-2">' + file.name + ': Lỗi tải file</div>';
-                });
+                const row = document.createElement('div');
+                row.className = 'queue-item d-flex align-items-center mb-1';
+                row.dataset.queueIdx = idx;
+                row.innerHTML = `
+                    <span class="flex-grow-1" style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${file.name}</span>
+                    <div class="progress mx-2" style="flex:2;height:7px;min-width:80px;">
+                        <div class="progress-bar" style="width:0%;transition:width .3s;"></div>
+                    </div>
+                    <span class="queue-status" style="font-size:11px;color:#888;min-width:45px;text-align:right;">Chờ</span>
+                    <button type="button" class="btn btn-xs btn-link text-danger ml-1 queue-remove-btn" title="Xóa khỏi hàng chờ" style="padding:0 4px;">
+                        <i class="fa fa-times"></i>
+                    </button>`;
+                row.querySelector('.queue-remove-btn').addEventListener('click', () => removeFromQueue(idx, row));
+                uploadQueue.appendChild(row);
             });
+            updateQueueCount();
         }
+
+        function removeFromQueue(idx, rowEl) {
+            fileQueue[idx] = null;
+            rowEl.remove();
+            updateQueueCount();
+        }
+
+        function updateQueueCount() {
+            const n = fileQueue.filter(f => f !== null).length;
+            if (n > 0) {
+                uploadQueueWrap.style.display = '';
+                uploadQueueCount.textContent = n + ' ảnh trong hàng chờ';
+            } else {
+                uploadQueueWrap.style.display = 'none';
+                uploadQueueCount.textContent = '';
+                uploadQueue.innerHTML = '';
+                fileQueue = [];
+            }
+        }
+
+        uploadAllBtn && uploadAllBtn.addEventListener('click', () => {
+            const active = fileQueue.map((f, i) => ({f, i})).filter(({f}) => f !== null);
+            if (active.length === 0) return;
+            uploadAllBtn.disabled = true;
+
+            const folderValue    = document.getElementById('uploadFolderSelect')?.value || '';
+            const newFolderValue = document.getElementById('uploadNewFolder')?.value || '';
+
+            let done = 0;
+            const rows = uploadQueue.querySelectorAll('.queue-item');
+
+            function uploadNext(pos) {
+                if (pos >= active.length) {
+                    setTimeout(() => location.reload(), 800);
+                    return;
+                }
+                const {f, i} = active[pos];
+                const row = uploadQueue.querySelector(`[data-queue-idx="${i}"]`);
+                const bar  = row ? row.querySelector('.progress-bar') : null;
+                const stat = row ? row.querySelector('.queue-status') : null;
+                const removeBtn = row ? row.querySelector('.queue-remove-btn') : null;
+                if (stat) stat.textContent = 'Đang tải...';
+                if (removeBtn) removeBtn.style.display = 'none';
+
+                const formData = new FormData();
+                formData.append('file', f);
+                formData.append('folder', folderValue);
+                formData.append('newFolder', newFolderValue);
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '{{ path("admin_media_upload") }}');
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.upload.onprogress = (evt) => {
+                    if (evt.lengthComputable && bar) bar.style.width = Math.round(evt.loaded / evt.total * 100) + '%';
+                };
+                xhr.onload = () => {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        if (data.status === 'success') {
+                            if (bar) { bar.style.width = '100%'; bar.classList.add('bg-success'); }
+                            if (stat) { stat.textContent = 'Xong'; stat.style.color = '#27ae60'; }
+                        } else {
+                            if (bar) bar.classList.add('bg-danger');
+                            if (stat) { stat.textContent = 'Lỗi'; stat.style.color = '#e74c3c'; }
+                        }
+                    } catch(e) {
+                        if (stat) { stat.textContent = 'Lỗi'; stat.style.color = '#e74c3c'; }
+                    }
+                    uploadNext(pos + 1);
+                };
+                xhr.onerror = () => {
+                    if (stat) { stat.textContent = 'Lỗi'; stat.style.color = '#e74c3c'; }
+                    uploadNext(pos + 1);
+                };
+                xhr.send(formData);
+            }
+            uploadNext(0);
+        });
 
         function resizeImage(filename, widthSelector, heightSelector) {
             const width = document.querySelector(widthSelector).value;
@@ -364,6 +479,36 @@
                 console.error('Error:', error);
                 alert('Lỗi cắt ảnh');
             });
+        }
+
+        // ── Move media to another folder ────────────────────────────────────
+        function moveMedia(filename, folderSelector, newFolderSelector) {
+            const targetFolder = document.querySelector(folderSelector).value;
+            const newFolder    = document.querySelector(newFolderSelector).value;
+            if (!targetFolder && !newFolder) {
+                alert('Vui lòng chọn hoặc nhập tên thư mục đích.');
+                return;
+            }
+            const formData = new FormData();
+            formData.append('token', '{{ csrf_token("delete-media") }}');
+            formData.append('targetFolder', targetFolder);
+            formData.append('newFolder', newFolder);
+
+            fetch('{{ path("admin_media_move", {filename: "FILENAME"}) }}'.replace('FILENAME', encodeURIComponent(filename)), {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Di chuyển thành công!');
+                    location.reload();
+                } else {
+                    alert('Lỗi: ' + data.message);
+                }
+            })
+            .catch(() => alert('Lỗi khi di chuyển file'));
         }
 
         document.querySelectorAll('.btn-copy').forEach((btn) => {
@@ -443,6 +588,15 @@
                 }
             });
         });
+
+        // Lọc theo folder
+        const filterFolderSelect = document.getElementById('filterFolderSelect');
+        if (filterFolderSelect) {
+            filterFolderSelect.addEventListener('change', function() {
+                const val = this.value;
+                window.location.href = '{{ path("admin_media_index") }}' + (val ? '?folder=' + encodeURIComponent(val) : '');
+            });
+        }
     </script>
 
     <style>

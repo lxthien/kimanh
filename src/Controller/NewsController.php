@@ -263,6 +263,11 @@ class NewsController extends Controller
      */
     public function listAction($level1, $level2 = null, $page = 1, Request $request)
     {
+        $page = $request->query->getInt('page', $page);
+        if ($page < 1) {
+            $page = 1;
+        }
+
         $category = $this->getDoctrine()
             ->getRepository(NewsCategory::class)
             ->findOneBy(array('url' => $level1, 'enable' => 1));
@@ -385,7 +390,7 @@ class NewsController extends Controller
 
         // 2. HTTP Caching: Tăng tốc cho người dùng quay lại và giảm tải Server
         $response = new Response();
-        $response->setEtag(md5($post->getId() . $post->getUpdatedAt()->getTimestamp()));
+        $response->setEtag(md5($post->getId() . $post->getUpdatedAt()->getTimestamp() . $this->getParameter('app.cache_version')));
         $response->setPublic();
         if ($response->isNotModified($request)) {
             return $response;
