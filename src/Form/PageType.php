@@ -111,6 +111,11 @@ class PageType extends AbstractType
                 'required' => false,
                 'label' => 'Breadcrumb Title (Short label for breadcrumbs)',
             ])
+            ->add('schemaMarkup', TextareaType::class, [
+                'required' => false,
+                'attr' => ['rows' => '10'],
+                'label' => 'Schema Markup',
+            ])
             ->add('template', ChoiceType::class, [
                 'required' => false,
                 'label' => 'Template',

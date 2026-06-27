@@ -25,5 +25,8 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
+User-agent: PerplexityBot
+Allow: /
+
 # XML Sitemaps
 Sitemap: https://kientruckimanh.com/sitemap.xml

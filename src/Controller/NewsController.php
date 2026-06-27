@@ -292,7 +292,7 @@ class NewsController extends Controller
 
             // Verify that $level2 is actually a child of $level1
             if ($subCategory->getParentcat() === null || $subCategory->getParentcat()->getId() != $category->getId()) {
-                return $this->redirectToRoute('homepage', [], 301);
+                throw $this->createNotFoundException("The item does not exist");
             }
         }
 
@@ -515,7 +515,7 @@ class NewsController extends Controller
             );
 
         if (!$tag) {
-            return $this->redirectToRoute('homepage', [], 301);
+            throw $this->createNotFoundException("Tag not found");
         }
 
         // Get the list post related to tag

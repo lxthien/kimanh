@@ -98,8 +98,8 @@
                                     {% for file in files %}
                                         <div class="col-md-5ths col-sm-4 col-6 mb-4 media-grid-item" data-filename="{{ file.filename }}">
                                             <div class="media-item" style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden; text-align: center; background: #f9f9f9; transition: all 0.3s;">
-                                                <div style="position: relative; overflow: hidden; height: 200px; background: #f0f0f0;">
-                                                    <img src="{{ file.thumb }}" alt="{{ file.filename }}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" data-toggle="modal" data-target="#previewModal{{ loop.index }}" title="Xem trước">
+                                                <div style="position: relative; overflow: hidden; height: 150px; background: #fff; display: flex; align-items: center; justify-content: center;">
+                                                    <img src="{{ file.thumb }}" alt="{{ file.filename }}" style="max-width: 100%; max-height: 150px; width: auto; height: auto; object-fit: contain; cursor: pointer;" data-toggle="modal" data-target="#previewModal{{ loop.index }}" title="Xem trước">
                                                     <div style="position: absolute; top: 0; right: 0; padding: 5px;">
                                                         <span class="badge badge-info">{{ file.width }}x{{ file.height }}</span>
                                                     </div>
