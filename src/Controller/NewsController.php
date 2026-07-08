@@ -1094,12 +1094,14 @@ class NewsController extends Controller
             ->getForm();
     }
 
-    /**
+        /**
      * @Route("/chi-phi-xay-dung/", name="caculator_cost_construction")
      * 
      */
     public function caculatorCostConstructionAction($type = null, Request $request)
     {
+        $settingsManager = $this->get('settings_manager');
+
         $form = $this->createFormBuilder(null, array(
             'csrf_protection' => false,
         ))
@@ -1120,6 +1122,14 @@ class NewsController extends Controller
                 ),
                 'label' => 'Chọn hình thức thi công'
             ))
+            ->add('muc_dau_tu', ChoiceType::class, array(
+                'choices' => array(
+                    'Trung bình' => 1,
+                    'TB - Khá' => 2,
+                    'Khá +' => 3,
+                ),
+                'label' => 'Mức đầu tư'
+            ))
             ->add('wide', TextType::class, array(
                 'label' => 'Chiều rộng (m)',
                 'attr' => array(
@@ -1134,21 +1144,16 @@ class NewsController extends Controller
             ))
             ->add('floor', ChoiceType::class, array(
                 'choices' => array(
-                    '1' => 1,
-                    '2' => 2,
-                    '3' => 3,
-                    '4' => 4,
-                    '5' => 5,
-                    '6' => 6,
-                    '7' => 7,
+                    '1' => 1, '2' => 2, '3' => 3, '4' => 4,
+                    '5' => 5, '6' => 6, '7' => 7,
                 ),
                 'label' => 'Chọn số tầng'
             ))
             ->add('mong', ChoiceType::class, array(
                 'choices' => array(
+                    'Móng cọc (Móng đài)' => 1,
                     'Móng băng' => 2,
                     'Móng đơn' => 3,
-                    'Móng cọc (Móng đài)' => 1,
                 ),
                 'label' => 'Chọn loại móng'
             ))
@@ -1160,6 +1165,57 @@ class NewsController extends Controller
                     'Mái BTCT lợp ngói' => 4,
                 ),
                 'label' => 'Chọn loại mái'
+            ))
+            ->add('mat_tien', ChoiceType::class, array(
+                'choices' => array(
+                    '1 mặt tiền' => 1,
+                    '2 mặt tiền' => 2,
+                ),
+                'label' => 'Mặt tiền'
+            ))
+            ->add('hem', ChoiceType::class, array(
+                'choices' => array(
+                    'Lớn hơn 5m' => 1,
+                    'Hẻm 3m - 5m' => 2,
+                    'Hẻm nhỏ hơn 3m' => 3,
+                ),
+                'label' => 'Điều kiện thi công (Hẻm)'
+            ))
+            ->add('lung', ChoiceType::class, array(
+                'choices' => array('Không' => 0, 'Có' => 1),
+                'label' => 'Tầng lửng'
+            ))
+            ->add('tum', ChoiceType::class, array(
+                'choices' => array('Không' => 0, 'Có' => 1),
+                'label' => 'Tum / Tầng thượng'
+            ))
+            ->add('san_thuong', ChoiceType::class, array(
+                'choices' => array(
+                    'Không' => 0,
+                    'Sân thượng không mái' => 1,
+                    'Sân thượng có mái che' => 2,
+                ),
+                'label' => 'Sân thượng'
+            ))
+            ->add('ban_cong', ChoiceType::class, array(
+                'choices' => array('Không' => 0, 'Có' => 1),
+                'label' => 'Ban công'
+            ))
+            ->add('tang_ham', ChoiceType::class, array(
+                'choices' => array(
+                    'Không có' => 0,
+                    'Sâu 1.0m - 1.2m' => 1,
+                    'Sâu 1.2m - 1.5m' => 2,
+                    'Sâu 1.5m - 1.7m' => 3,
+                    'Sâu 1.7m - 2.0m' => 4,
+                    'Sâu 2.0m - 2.5m' => 5,
+                    'Sâu > 2.5m' => 6,
+                ),
+                'label' => 'Tầng hầm'
+            ))
+            ->add('san_vuon', ChoiceType::class, array(
+                'choices' => array('Không' => 0, 'Có' => 1),
+                'label' => 'Sân vườn'
             ))
             ->add('reset', ResetType::class, array(
                 'label' => 'Làm lại'
@@ -1176,95 +1232,157 @@ class NewsController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $type = $form->get('type')->getData();
             $method = $form->get('method')->getData();
+            $muc_dau_tu = $form->get('muc_dau_tu')->getData();
             $long = $form->get('long')->getData();
             $wide = $form->get('wide')->getData();
             $floor = $form->get('floor')->getData() ? $form->get('floor')->getData() : 1;
+            
             $mong = $form->get('mong')->getData();
             $mai = $form->get('mai')->getData();
+            
+            $mat_tien = $form->get('mat_tien')->getData();
+            $hem = $form->get('hem')->getData();
+            $lung = $form->get('lung')->getData();
+            $tum = $form->get('tum')->getData();
+            $san_thuong = $form->get('san_thuong')->getData();
+            $ban_cong = $form->get('ban_cong')->getData();
+            $tang_ham = $form->get('tang_ham')->getData();
+            $san_vuon = $form->get('san_vuon')->getData();
+
             $cost = 0;
             $title = '';
-            $titleMong = '';
-            $areaMong = 0;
-            $titleMai = '';
-            $areaMai = 0;
-            $note = 'Chi phí xây dựng trên chỉ áp dụng đối với diện tích xây dựng > 60 m<sup>2</sup>/1sàn trở lên. Áp dụng với các nhà phố thông dụng không có các kiến trúc kết cấu đặc biệt.';
-
-            if (!is_numeric($long) || !is_numeric($wide) || !is_numeric($type) || !is_numeric($method) || !is_numeric($floor) || !is_numeric($mong) || !is_numeric($mai)) {
-                $this->addFlash(
-                    'error',
-                    "Vui lòng nhập đúng dữ liệu"
-                );
+            
+            // Validate numeric
+            if (!is_numeric($long) || !is_numeric($wide) || !is_numeric($type) || !is_numeric($method) || !is_numeric($floor)) {
+                $this->addFlash('error', "Vui lòng nhập đúng dữ liệu");
                 return $this->redirectToRoute('caculator_cost_construction');
             }
 
             $area = $long * $wide;
 
-            if ($type === 1) {
-                if ($method === 1) {
-                    $cost = 3200000;
-                    $title = "Đơn giá xây nhà phần thô nhà phố";
-                } else {
-                    $cost = 5000000;
-                    $title = "Đơn giá xây nhà trọn gói nhà phố";
+            // 1. Get Base Cost
+            if ($type === 1) { // Nhà phố
+                if ($method === 1) { 
+                    $cost = $settingsManager->get('cost_nha_pho_phan_tho', 3200000); 
+                    $title = "Đơn giá xây nhà phần thô nhà phố"; 
+                } else { 
+                    $cost = $settingsManager->get('cost_nha_pho_tron_goi', 5000000); 
+                    $title = "Đơn giá xây nhà trọn gói nhà phố"; 
                 }
-            } elseif ($type === 3) {
-                if ($method === 1) {
-                    $cost = 3000000;
-                    $title = "Đơn giá xây nhà cấp 4 phần thô";
-                } else {
-                    $cost = 4900000;
-                    $title = "Đơn giá xây nhà cấp 4 trọn gói";
+            } elseif ($type === 3) { // Nhà cấp 4
+                if ($method === 1) { 
+                    $cost = $settingsManager->get('cost_nha_cap4_phan_tho', 3000000); 
+                    $title = "Đơn giá xây nhà cấp 4 phần thô"; 
+                } else { 
+                    $cost = $settingsManager->get('cost_nha_cap4_tron_goi', 4900000); 
+                    $title = "Đơn giá xây nhà cấp 4 trọn gói"; 
                 }
-            } else {
-                if ($method === 1) {
-                    $cost = 3600000;
-                    $title = "Đơn giá xây dựng biệt thự phần thô";
-                } else {
-                    $cost = 6000000;
-                    $title = "Đơn giá xây dựng biệt thự trọn gói";
+            } else { // Biệt thự
+                if ($method === 1) { 
+                    $cost = $settingsManager->get('cost_biet_thu_phan_tho', 3600000); 
+                    $title = "Đơn giá xây dựng biệt thự phần thô"; 
+                } else { 
+                    $cost = $settingsManager->get('cost_biet_thu_tron_goi', 6000000); 
+                    $title = "Đơn giá xây dựng biệt thự trọn gói"; 
                 }
             }
+
+            // 2. Surcharge for small area
+            $threshold = $settingsManager->get('cost_small_area_threshold', 60);
+            $smallAreaSurcharge = $settingsManager->get('cost_small_area_surcharge', 10);
+            if ($area < $threshold) {
+                $cost = $cost * (1 + ($smallAreaSurcharge / 100));
+            }
+
+            // 3. Investment Level Ratio
+            if ($muc_dau_tu === 2) {
+                $cost = $cost * $settingsManager->get('cost_level_tb_kha_ratio', 1.15);
+            } elseif ($muc_dau_tu === 3) {
+                $cost = $cost * $settingsManager->get('cost_level_kha_plus_ratio', 1.3);
+            }
+
+            // 4. Calculate Areas
+            $areaMong = 0; $titleMong = "Không có móng";
+            $areaMai = 0; $titleMai = "Không có mái";
+            $areaLung = 0; $areaTum = 0; $areaSanThuong = 0; 
+            $areaBanCong = 0; $areaTangHam = 0; $areaSanVuon = 0;
 
             if ($type !== 3) {
+                // Mong
                 if ($mong === 1) {
-                    $areaMong = $area * 0.5;
+                    $areaMong = $area * $settingsManager->get('cost_mong_coc_ratio', 0.5);
+                    $titleMong = "Móng cọc (Móng đài)";
                 } elseif ($mong === 2) {
-                    $areaMong = $area * 0.55;
+                    $areaMong = $area * $settingsManager->get('cost_mong_bang_ratio', 0.55);
+                    $titleMong = "Móng băng";
                 } else {
-                    $areaMong = $area * 0.3;
+                    $areaMong = $area * $settingsManager->get('cost_mong_don_ratio', 0.3);
+                    $titleMong = "Móng đơn";
                 }
 
+                // Mai
                 if ($mai === 1) {
-                    $areaMai = $area * 0.7;
+                    $areaMai = $area * $settingsManager->get('cost_mai_btct_ratio', 0.7);
+                    $titleMai = "Mái BTCT đúc bằng";
                 } elseif ($mai === 2) {
-                    $areaMai = $area * 0.3;
+                    $areaMai = $area * $settingsManager->get('cost_mai_ton_ratio', 0.3);
+                    $titleMai = "Mái lợp tôn lạnh";
                 } elseif ($mai === 3) {
-                    $areaMai = $area * 0.7;
+                    $areaMai = $area * $settingsManager->get('cost_mai_ngoi_xago_ratio', 0.7);
+                    $titleMai = "Mái xà gồ thép lợp ngói";
                 } else {
-                    $areaMai = $area * 1;
+                    $areaMai = $area * $settingsManager->get('cost_mai_ngoi_btct_ratio', 1.0);
+                    $titleMai = "Mái BTCT lợp ngói";
                 }
+                
+                // Lung, Tum, San thuong
+                if ($lung === 1) $areaLung = $area * $settingsManager->get('cost_lung_ratio', 1.0);
+                if ($tum === 1) $areaTum = $area * $settingsManager->get('cost_tum_ratio', 0.7);
+                if ($san_thuong === 1) {
+                    $areaSanThuong = $area * $settingsManager->get('cost_san_thuong_ratio', 0.3);
+                } elseif ($san_thuong === 2) {
+                    $areaSanThuong = $area * $settingsManager->get('cost_san_thuong_mai_ratio', 0.5);
+                }
+                
+                // Ban cong
+                if ($ban_cong === 1) $areaBanCong = $floor * $settingsManager->get('cost_ban_cong_area', 4.0);
+                
+                // Tang ham
+                if ($tang_ham === 1) $areaTangHam = $area * $settingsManager->get('cost_ham_1_0_1_2_ratio', 1.5);
+                elseif ($tang_ham === 2) $areaTangHam = $area * $settingsManager->get('cost_ham_1_2_1_5_ratio', 1.7);
+                elseif ($tang_ham === 3) $areaTangHam = $area * $settingsManager->get('cost_ham_1_5_1_7_ratio', 2.0);
+                elseif ($tang_ham === 4) $areaTangHam = $area * $settingsManager->get('cost_ham_1_7_2_0_ratio', 2.3);
+                elseif ($tang_ham === 5) $areaTangHam = $area * $settingsManager->get('cost_ham_2_0_2_5_ratio', 2.5);
+                elseif ($tang_ham === 6) $areaTangHam = $area * $settingsManager->get('cost_ham_2_5_3_0_ratio', 3.0);
+                
+                // San vuon
+                if ($san_vuon === 1) $areaSanVuon = $area * $settingsManager->get('cost_san_vuon_ratio', 0.3);
 
-                $areaTotal = ($area * $floor) + $areaMong + $areaMai;
+                $areaTotal = ($area * $floor) + $areaMong + $areaMai + $areaLung + $areaTum + $areaSanThuong + $areaBanCong + $areaTangHam + $areaSanVuon;
             } else {
-                $areaTotal = $area;
+                $areaTotal = $area; // Nhà cấp 4
             }
 
-            if ($mong === 1) {
-                $titleMong = "Móng cọc (Móng đài)";
-            } elseif ($mong === 2) {
-                $titleMong = "Móng băng";
-            } else {
-                $titleMong = "Móng đơn";
+            // 5. Total Cost
+            $costTotal = $cost * $areaTotal;
+            
+            // 6. Final Surcharges (Hem, Mat Tien)
+            $surcharge = 0;
+            if ($hem === 2) $surcharge += $settingsManager->get('cost_hem_3_5m_surcharge', 3);
+            elseif ($hem === 3) $surcharge += $settingsManager->get('cost_hem_nho_3m_surcharge', 5);
+            
+            if ($mat_tien === 2) $surcharge += $settingsManager->get('cost_2_mat_tien_surcharge', 5);
+            
+            if ($surcharge > 0) {
+                $costTotal = $costTotal * (1 + ($surcharge / 100));
             }
-
-            if ($mai === 1) {
-                $titleMai = "Mái BTCT đúc bằng";
-            } elseif ($mai === 2) {
-                $titleMai = "Mái lợp tôn lạnh";
-            } elseif ($mai === 3) {
-                $titleMai = "Mái xà gồ thép lợp ngói";
-            } else {
-                $titleMai = "Mái BTCT lợp ngói";
+            
+            $note = 'Chi phí xây dựng trên chỉ mang tính chất tham khảo.';
+            if ($area < $threshold) {
+                $note .= ' Giá đã bao gồm phụ phí ' . $smallAreaSurcharge . '% cho diện tích nhỏ (< ' . $threshold . 'm²).';
+            }
+            if ($surcharge > 0) {
+                $note .= ' Giá đã bao gồm phụ phí thi công/mặt tiền (' . $surcharge . '%).';
             }
 
             $costs = (object) array(
@@ -1274,9 +1392,15 @@ class NewsController extends Controller
                 'areaMong' => $areaMong,
                 'titleMai' => $titleMai,
                 'areaMai' => $areaMai,
+                'areaLung' => $areaLung,
+                'areaTum' => $areaTum,
+                'areaSanThuong' => $areaSanThuong,
+                'areaBanCong' => $areaBanCong,
+                'areaTangHam' => $areaTangHam,
+                'areaSanVuon' => $areaSanVuon,
                 'areaTotal' => $areaTotal,
-                'cost' => $cost,
-                'costTotal' => $cost * $areaTotal,
+                'cost' => $cost, // Final adjusted unit price
+                'costTotal' => $costTotal,
                 'title' => $title,
                 'note' => $note
             );
@@ -1313,3 +1437,4 @@ class NewsController extends Controller
     }
 
 }
+

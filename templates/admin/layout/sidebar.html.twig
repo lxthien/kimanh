@@ -146,11 +146,25 @@
 					</a>
 				</li>
 
-				<li>
-					<a href="{{ path('admin_settings_global') }}">
+				<li class="menu-item-has-children dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						<i class="menu-icon fa fa-cogs"></i>
 						{{ 'menu.setting'|trans }}
 					</a>
+					<ul class="sub-menu children dropdown-menu">
+						<li>
+							<i class="fa fa-cogs"></i>
+							<a href="{{ path('admin_settings_global') }}">Cài đặt chung</a>
+						</li>
+						<li>
+							<i class="fa fa-calculator"></i>
+							<a href="{{ path('admin_settings_construction_cost') }}">Đơn giá xây dựng</a>
+						</li>
+						<li>
+							<i class="fa fa-random"></i>
+							<a href="{{ path('admin_redirect_index') }}">Quản lý Redirect</a>
+						</li>
+					</ul>
 				</li>
 			</ul>
 		</div>

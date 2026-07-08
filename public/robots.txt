@@ -28,5 +28,11 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
 # XML Sitemaps
 Sitemap: https://kientruckimanh.com/sitemap.xml

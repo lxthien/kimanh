@@ -39,4 +39,27 @@ class SettingsController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    /**
+     * @Route("/construction-cost", name="admin_settings_construction_cost", methods={"GET", "POST"})
+     */
+    public function constructionCost(Request $request, SettingsManager $settingsManager): Response
+    {
+        $settings = $settingsManager->all();
+
+        $form = $this->createForm(\App\Form\ConstructionCostSettingsType::class, $settings);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $settingsManager->setMany($data);
+
+            $this->addFlash('success', 'Cài đặt đơn giá xây dựng đã được cập nhật.');
+
+            return $this->redirectToRoute('admin_settings_construction_cost');
+        }
+
+        return $this->render('admin/settings/construction_cost.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 }
