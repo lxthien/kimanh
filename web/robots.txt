@@ -10,4 +10,31 @@ Disallow: /*?filter_by=*
 Disallow: /*?PageSpeed=*
 Disallow: /*?danh-muc=*
 Disallow: /*.pdf$
+
+Content-Signal: search=yes; ai-train=no;
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: ChatGPT
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
 Sitemap: https://www.xaydungkimanh.com/sitemap.xml

@@ -2,6 +2,7 @@
 @import "../front/global/color_variables";
 
 body.news-container {
+    padding: 0 10px;
     line-height: 1.7;
     font-size: 17px;
     color: $black;
@@ -493,5 +494,180 @@ body.news-container {
         background: linear-gradient(120deg, rgba($accentLight, 0.3) 0%, rgba($accentLight, 0.3) 100%);
         padding: 2px 5px;
         border-radius: 3px;
+    }
+
+    /* ==========================================================
+        GEO BLOCKS - xaydungkimanh.com - BẢN KHÔNG DÙNG CSS VARIABLES
+        Màu đã tính sẵn theo UI thật: navy header + cam CTA (#da532c)
+        Dán nguyên khối vào cuối file CSS đang load của trang bài viết
+        ========================================================== */
+    
+    /* ---------- 1. KEY TAKEAWAYS (navy) ---------- */
+    .key-takeaways {
+        background: #eef1f7;
+        border: 1px solid #c6cede;
+        border-left: 4px solid #16275c;
+        border-radius: 6px;
+        padding: 18px 22px;
+        margin: 24px 0;
+        color: #333;
+    }
+
+    .key-takeaways>p:first-child {
+        margin: 0 0 10px;
+        color: #16275c;
+        font-size: 1.05em;
+    }
+
+    .key-takeaways ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .key-takeaways li {
+        margin: 0 0 8px;
+        line-height: 1.6;
+    }
+
+    .key-takeaways li:last-child {
+        margin-bottom: 0;
+    }
+
+    /* ---------- 2. DEFINITION (cam) ---------- */
+    .definition {
+        background: #fdf3ee;
+        border: 1px solid #f0c9b8;
+        border-left: 4px solid #da532c;
+        border-radius: 6px;
+        padding: 16px 22px;
+        margin: 24px 0;
+        color: #333;
+    }
+
+    .definition p {
+        margin: 0;
+        line-height: 1.7;
+    }
+
+    .definition p+p {
+        margin-top: 10px;
+    }
+
+    .definition>p>strong:first-child {
+        color: #da532c;
+    }
+
+    /* ---------- 3. STAT BOX ---------- */
+    .stat-box {
+        background: #eef1f7;
+        border: 1px solid #c6cede;
+        border-radius: 8px;
+        padding: 20px 24px;
+        margin: 24px 0;
+        text-align: center;
+    }
+
+    .stat-box .stat-number {
+        margin: 0 0 6px;
+        font-size: 1.9em;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #16275c;
+        text-align: center;
+    }
+
+    .stat-box .stat-label {
+        margin: 0 0 8px;
+        font-size: 1em;
+        line-height: 1.55;
+        color: #333;
+        text-align: center;
+    }
+
+    .stat-box .stat-source {
+        margin: 0;
+        font-size: 0.82em;
+        font-style: italic;
+        color: #6b7280;
+        text-align: center;
+    }
+
+    .stat-box--blue {
+        background: #eef1f7;
+        border-color: #c6cede;
+    }
+
+    .stat-box--blue .stat-number {
+        color: #16275c;
+    }
+
+    .stat-box--green {
+        background: #ecf6f0;
+        border-color: #bfe0cd;
+    }
+
+    .stat-box--green .stat-number {
+        color: #1e7a45;
+    }
+
+    /* ---------- 4. EXPERT QUOTE ---------- */
+    blockquote.expert-quote {
+        background: #fafbfc;
+        border: 1px solid #e4e7eb;
+        border-left: 4px solid #16275c;
+        border-radius: 6px;
+        margin: 28px 0;
+        padding: 20px 24px;
+        font-style: normal;
+        quotes: none;
+    }
+
+    blockquote.expert-quote::before,
+    blockquote.expert-quote::after {
+        content: none;
+    }
+
+    blockquote.expert-quote p {
+        margin: 0 0 10px;
+        line-height: 1.7;
+        color: #333;
+        font-size: 1.02em;
+    }
+
+    blockquote.expert-quote p:last-child {
+        margin: 0;
+        font-weight: 600;
+        font-style: italic;
+        color: #16275c;
+        text-align: right;
+        font-size: 0.95em;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 600px) {
+
+        .key-takeaways,
+        .definition,
+        .stat-box,
+        blockquote.expert-quote {
+            padding: 14px 16px;
+            margin: 18px 0;
+        }
+
+        .stat-box .stat-number {
+            font-size: 1.5em;
+        }
+    }
+
+    /* ---------- PRINT ---------- */
+    @media print {
+
+        .key-takeaways,
+        .definition,
+        .stat-box,
+        blockquote.expert-quote {
+            background: #fff;
+            border: 1px solid #999;
+        }
     }
 }
