@@ -74,7 +74,7 @@ class NewsController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function dynamicRouteAction($slug = null, $level1 = null, $level2 = null, $level3 = null, Request $request)
+    public function dynamicRouteAction(Request $request, $slug = null, $level1 = null, $level2 = null, $level3 = null)
     {
         // Normalize parameters
         if (empty($slug) && !empty($level1)) {
@@ -142,7 +142,7 @@ class NewsController extends Controller
             }
 
             // It's a top-level category - forward to listAction
-            return $this->listAction($slug, null, 1, $request);
+            return $this->listAction($request, $slug, null, 1);
         }
 
         // Not found
@@ -173,7 +173,7 @@ class NewsController extends Controller
 
         if ($childCategory) {
             // It's a child category - forward to listAction
-            return $this->listAction($level1, $level2, 1, $request);
+            return $this->listAction($request, $level1, $level2, 1);
         }
 
         // Check if level2 is a post in this category
@@ -261,7 +261,7 @@ class NewsController extends Controller
      * 
      * @return News
      */
-    public function listAction($level1, $level2 = null, $page = 1, Request $request)
+    public function listAction(Request $request, $level1, $level2 = null, $page = 1)
     {
         $page = $request->query->getInt('page', $page);
         if ($page < 1) {
@@ -776,7 +776,7 @@ class NewsController extends Controller
             return $this->redirectToRoute('homepage', [], 301);
         }
 
-        $q = $form->getData()['q'];
+        $q = $form->getData()['q'] ?? null;
         if (!empty($q)) {
             return $this->redirectToRoute('news_search', array('q' => $q));
         }
@@ -1098,7 +1098,7 @@ class NewsController extends Controller
      * @Route("/chi-phi-xay-dung/", name="caculator_cost_construction")
      * 
      */
-    public function caculatorCostConstructionAction($type = null, Request $request)
+    public function caculatorCostConstructionAction(Request $request, $type = null)
     {
         $settingsManager = $this->get('settings_manager');
 
