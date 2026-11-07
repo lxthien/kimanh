@@ -88,7 +88,32 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFunction('locales', [$this, 'getLocales']),
             new TwigFunction('admin_notifications', [$this, 'getAdminNotifications']),
+            new TwigFunction('inline_css', [$this, 'getInlineCss'], ['is_safe' => ['html']]),
         ];
+    }
+
+    public function getInlineCss(string $assetPath): string
+    {
+        $publicDir = dirname(__DIR__, 2) . '/public';
+        $manifestPath = $publicDir . '/build/manifest.json';
+
+        if (is_file($manifestPath)) {
+            $manifest = json_decode((string) file_get_contents($manifestPath), true);
+            $normalizedKey = ltrim($assetPath, '/');
+            if (is_array($manifest) && isset($manifest[$normalizedKey])) {
+                $resolvedFile = $publicDir . '/' . ltrim($manifest[$normalizedKey], '/');
+                if (is_file($resolvedFile)) {
+                    return (string) file_get_contents($resolvedFile);
+                }
+            }
+        }
+
+        $directFile = $publicDir . '/' . ltrim($assetPath, '/');
+        if (is_file($directFile)) {
+            return (string) file_get_contents($directFile);
+        }
+
+        return '';
     }
 
     /**

@@ -30,8 +30,8 @@
                     width="282"
                     height="220" />
             </picture>
-            <a title="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl() }) }}">
-                <i class="fa fa-link"></i>
+            <a title="{{ row.getTitle() }}" aria-label="{{ row.getTitle() }}" href="{{ path('news_show', {'slug': row.getUrl() }) }}">
+                <i class="fa fa-link" aria-hidden="true"></i>
             </a>
         </div>
         <div class="media-body">

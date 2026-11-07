@@ -22,7 +22,7 @@
 							</span>
 						</li>
 						<li>
-							<i class="fab fa-internet-explorer"></i>
+							<i class="fa fa-globe" aria-hidden="true"></i>
 							<span>
 								<a href="{{ absolute_url(path('homepage')) }}">www.kientruckimanh.com</a>
 							</span>
@@ -57,15 +57,15 @@
 			</div>
 			<div class="col-sm-6 col-md-3">
 				<h3 class="ka-footer-heading text-uppercase">Fanpage</h3>
-				<a href="https://www.facebook.com/xaydungkimanh/" rel="noopener">
-					<img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/fanpage.jpg'), '')) }}" width="277" height="130" alt="Fanpage Xây Dựng Kim Anh">
+				<a href="https://www.facebook.com/xaydungkimanh/" rel="noopener" aria-label="Fanpage Xây Dựng Kim Anh">
+					<img class="lazyload" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/fanpage.jpg'), '')) }}" width="385" height="182" alt="Fanpage Xây Dựng Kim Anh" decoding="async">
 				</a>
 			</div>
 		</div>
 		<div class="row ka-footer-middle">
 			<div class="col-md-12">
 				<a href="{{ path('homepage') }}" title="{{ get_setting('siteName') }}">
-					<img class="lazyload ka-footer-logo" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}" alt="{{ get_setting('siteName') }}" width="293" height="106">
+					<img class="lazyload ka-footer-logo" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ app.request.scheme ~ '://' ~ app.request.host ~ '/' ~ convert_images.webpConvert2(asset('/assets/images/logo.png'), '') }}" alt="{{ get_setting('siteName') }}" width="274" height="99" decoding="async">
 				</a>
 				<div class="ka-footer-desc text-center">
 					<p>Chúng tôi tự hào là đơn vị uy tín hàng đầu trong lĩnh vực thiết kế và thi công xây dựng nhà ở dân dụng tại TP.HCM và các tỉnh lân cận. Cam kết chất lượng, tiến độ và minh bạch vật tư.</p>

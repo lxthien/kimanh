@@ -68,10 +68,11 @@ function initTableOfContents() {
 }
 
 exports.init = function () {
-
-    $('#form-comment').validate();
-
-    intHandleFormComment();
-    intHandleFormReplyComment();
+    var $formComment = $('#form-comment');
+    if ($formComment.length) {
+        $formComment.validate();
+        intHandleFormComment();
+        intHandleFormReplyComment();
+    }
     initTableOfContents();
 };

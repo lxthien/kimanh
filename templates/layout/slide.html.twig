@@ -1,10 +1,10 @@
 {% if showSlide is defined %}
 	{% set slides = [
-        {img: 'xay-dung-kim-anh-1.jpg', alt: 'Xây Dựng Kim Anh', link1: path('contact'), link2: path('dynamic_post_page', {'slug': 'bao-gia-xay-nha-tron-goi'}), caption: 'Mang đến không gian sống hoàn hảo cho gia đình bạn với dịch vụ xây nhà trọn gói'},
+        {img: 'xay-dung-kim-anh-1.jpg', alt: 'Xây Dựng Kim Anh', link1: path('contact'), link2: path('dynamic_post_page', {'slug': 'bao-gia-xay-nha-tron-goi'}), caption: 'Mang đến không gian sống hoàn hảo cho gia đình bạn với dịch vụ xây nhà trọn gói', eager: true},
         {img: 'xuan-2023-3.jpg', alt: 'Công Ty Xây Dựng Kim Anh', link1: path('contact'), link2: null, caption: 'Kinh nghiệm 10+ năm trong lĩnh vực xây dựng dân dụng'},
         {img: 'cong-ty-xay-dung-kim-anh.jpg', alt: 'Công ty xây dựng uy tín', link1: path('contact'), link2: null, caption: 'Đội ngũ kỹ sư, kiến trúc sư tận tâm và chuyên nghiệp'},
         {img: 'xay-nha-tron-goi-tphcm.jpg', alt: 'Xây Dựng Kim Anh', link1: path('contact'), link2: null, caption: 'Cam kết chất lượng và tiến độ thi công đúng hạn'},
-        {img: 'banner-thi-cong-phan-tho.jpg', alt: 'Thi công xây dựng phần thô', link1: path('contact'), link2: null, caption: 'Giải pháp xây dựng tối ưu, tiết kiệm chi phí', eager: true},
+        {img: 'banner-thi-cong-phan-tho.jpg', alt: 'Thi công xây dựng phần thô', link1: path('contact'), link2: null, caption: 'Giải pháp xây dựng tối ưu, tiết kiệm chi phí'},
         {img: 'xay-dung-kim-anh-02.jpg', alt: 'Thương Hiệu Của Sự Bền Vững', link1: path('contact'), link2: null, caption: 'Thương hiệu của sự bền vững và tin cậy'}
     ] %}
 
@@ -42,14 +42,14 @@
 							<a href="{{ slide.link2 }}" class="ka-slide-link">
 							{% endif %}
 							<picture class="ka-slide-picture">
-								{% if slide.eager is defined and slide.eager %}
+								{% if loop.first or (slide.eager is defined and slide.eager) %}
 									<source srcset="{{ srcMobile }}" media="(max-width: 799px)">
 									<source srcset="{{ srcDesktop }}" media="(min-width: 800px)">
-									<img src="{{ srcDesktop }}" alt="{{ slide.alt }}" class="ka-slide-img" fetchpriority="high">
+									<img src="{{ srcDesktop }}" alt="{{ slide.alt }}" class="ka-slide-img" width="1500" height="550" fetchpriority="high" decoding="async">
 								{% else %}
 									<source data-srcset="{{ srcMobile }}" media="(max-width: 799px)">
 									<source data-srcset="{{ srcDesktop }}" media="(min-width: 800px)">
-									<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ srcDesktop }}" alt="{{ slide.alt }}" class="ka-slide-img lazyload">
+									<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ srcDesktop }}" alt="{{ slide.alt }}" class="ka-slide-img lazyload" width="1500" height="550" decoding="async">
 								{% endif %}
 							</picture>
 							{% if slide.link2 %}

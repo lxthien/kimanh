@@ -133,10 +133,13 @@
                 }
             }
 
-            h4 {
+            h4,
+            .ka-about-subtitle {
+                font-family: $roboto;
                 font-size: 18px;
                 font-weight: 600;
                 color: $accentColor;
+                margin-top: 0;
                 margin-bottom: 20px;
                 line-height: 1.5;
             }
@@ -729,6 +732,7 @@
         }
 
         img {
+            width: auto;
             height: 25px;
             vertical-align: baseline;
         }
@@ -1002,8 +1006,9 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: url("../../../images/background-contact-us.jpg") center/cover no-repeat fixed;
-        opacity: 0.15;
+        background:
+            radial-gradient(circle at 15% 25%, rgba($accentColor, 0.06) 0%, transparent 50%),
+            radial-gradient(circle at 85% 75%, rgba($primaryColor, 0.06) 0%, transparent 50%);
         z-index: 0;
     }
 

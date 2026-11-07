@@ -1,8 +1,7 @@
 {% extends 'layout.html.twig' %}
 
 {% block stylesheets %}
-	<link href="{{ absolute_url(asset('build/css/homepage.css')) }}" rel="preload stylesheet" as="style" onload="this.rel='stylesheet'">
-	<noscript><link rel="stylesheet" href="{{ absolute_url(asset('build/css/homepage.css')) }}"></noscript>
+	<link rel="stylesheet" href="{{ absolute_url(asset('build/css/homepage.css')) }}">
 {% endblock %}
 
 {% block structuredOpenGraph %}
@@ -44,7 +43,7 @@
 								<div class="ka-about-inner">
 									<div class="ka-block-text">
 										<h1>CÔNG TY THIẾT KẾ - XÂY DỰNG KIM ANH</h1>
-										<h4>Chuyên tư vấn, thiết kế kiến trúc - nội thất, xây dựng công trình dân dụng và công nghiệp.</h4>
+										<h2 class="ka-about-subtitle">Chuyên tư vấn, thiết kế kiến trúc - nội thất, xây dựng công trình dân dụng và công nghiệp.</h2>
 										<ul>
 											<li>Là một doanh nghiệp hoạt động kinh doanh chuyên nghiệp trong lĩnh vực tư vấn - thiết kế kiến trúc - xây dựng. Được thành lập từ năm 2017 bởi đội ngũ Kiến trúc sư, Kỹ sư trẻ trung và tâm huyết với nghề, lấy sự hài lòng của khách hàng làm niềm vui cho mình.</li>
 											<li>Với bề dày kinh nghiệm và năng lực trong Thiết kế kiến trúc – Thi công xây dựng – Tư vấn giám sát qua nhiều công trình từ nhà ở dân dụng, văn phòng, nhà xưởng, khách sạn, Xây Dựng Kim Anh luôn để lại ấn tượng tốt đối với khách hàng. Với phương châm
@@ -61,7 +60,10 @@
 								</div>
 							</div>
 							<div class="col-xs-12 col-sm-5 col-md-5 ka-about-content-right">
-								<a class="ka-about-img-effect"><img alt="Xây Dựng Kim Anh" src="{{ asset('assets/images/banner/xay-dung-kim-anh-5.jpg') }}" class="img-responsive"></a>
+								{% set aboutWebp = convert_images.webpConvert2(asset('/assets/images/banner/xay-dung-kim-anh-5.jpg'), '') %}
+								<a href="{{ path('dynamic_post_page', {'slug': 'gioi-thieu' }) }}" class="ka-about-img-effect" aria-label="Giới thiệu Xây Dựng Kim Anh">
+									<img alt="Xây Dựng Kim Anh" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(aboutWebp ?: 'assets/images/banner/xay-dung-kim-anh-5.jpg') }}" class="img-responsive lazyload" width="1492" height="570" decoding="async">
+								</a>
 							</div>
 						</div>
 					</div>
@@ -213,7 +215,7 @@
 			<div class="container">
 				<div class="ka-block-header">
 					<div class="text-uppercase ka-header-title">
-						<img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset('assets/images/icon-logo.png') }}" width="35" height="25">
+						<img alt="{{ blockOnHomepage.category.getName() }}" src="{{ asset(convert_images.webpConvert2(asset('/assets/images/icon-logo.png'), '') ?: 'assets/images/icon-logo.png') }}" width="38" height="25" loading="lazy" decoding="async">
 						<p class="ka-header-subtitle">{{ blockOnHomepage.title }}</p>
 						<i class="fa fa-angle-right"></i>
 						<h2>
@@ -270,40 +272,40 @@
 			<h2 class="text-center text-uppercase ka-testimonials-heading">Khách hàng đánh giá</h2>
 			<div class="row ka-video-grid">
 				<div class="col-sm-3 col-xs-6 mb-15">
-					<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=76AB9uOFBos" class="ka-video-item">
+					<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=76AB9uOFBos" class="ka-video-item" aria-label="Video khách hàng chia sẻ về Xây Dựng Kim Anh">
 						<div class="ka-video-thumb">
-							<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-1.jpg'), '')) }}" class="lazyload" alt="Khách hàng chia sẻ về Xây Dựng Kim Anh" width="277" height="208">
-							<div class="ka-play-icon">
+							<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-1.jpg'), '')) }}" class="lazyload" alt="Khách hàng chia sẻ về Xây Dựng Kim Anh" width="277" height="208" decoding="async">
+							<div class="ka-play-icon" aria-hidden="true">
 								<i class="fas fa-play"></i>
 							</div>
 						</div>
 					</a>
 				</div>
 				<div class="col-sm-3 col-xs-6 mb-15">
-					<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=qZHPIqGX7pA" class="ka-video-item">
+					<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=qZHPIqGX7pA" class="ka-video-item" aria-label="Video ý kiến khách hàng về Xây Dựng Kim Anh">
 						<div class="ka-video-thumb">
-							<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-2.jpg'), '')) }}" class="lazyload" alt="Ý kiến khách hàng về Xây Dựng Kim Anh" width="282" height="212">
-							<div class="ka-play-icon">
+							<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-2.jpg'), '')) }}" class="lazyload" alt="Ý kiến khách hàng về Xây Dựng Kim Anh" width="282" height="212" decoding="async">
+							<div class="ka-play-icon" aria-hidden="true">
 								<i class="fas fa-play"></i>
 							</div>
 						</div>
 					</a>
 				</div>
 				<div class="col-sm-3 col-xs-6 mb-15">
-					<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=CsMoN-G_QK8" class="ka-video-item">
+					<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=CsMoN-G_QK8" class="ka-video-item" aria-label="Video Xây Nhà Quận Bình Tân - Uy Tín">
 						<div class="ka-video-thumb">
-							<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-3.jpg'), '')) }}" class="lazyload" alt="Xây Nhà Quận Bình Tân - Uy Tín" width="277" height="208">
-							<div class="ka-play-icon">
+							<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-3.jpg'), '')) }}" class="lazyload" alt="Xây Nhà Quận Bình Tân - Uy Tín" width="277" height="208" decoding="async">
+							<div class="ka-play-icon" aria-hidden="true">
 								<i class="fas fa-play"></i>
 							</div>
 						</div>
 					</a>
 				</div>
 				<div class="col-sm-3 col-xs-6 mb-15">
-					<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=Jw70fD5eZp4" class="ka-video-item">
+					<a data-fancybox="gallery-yt" href="https://www.youtube.com/watch?v=Jw70fD5eZp4" class="ka-video-item" aria-label="Video ý kiến khách hàng về Kim Anh">
 						<div class="ka-video-thumb">
-							<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-4.jpg'), '')) }}" class="lazyload" alt="Ý kiến khách hàng về Kim Anh" width="277" height="208">
-							<div class="ka-play-icon">
+							<img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="{{ asset(convert_images.webpConvert2(asset('/assets/images/yt-4.jpg'), '')) }}" class="lazyload" alt="Ý kiến khách hàng về Kim Anh" width="277" height="208" decoding="async">
+							<div class="ka-play-icon" aria-hidden="true">
 								<i class="fas fa-play"></i>
 							</div>
 						</div>

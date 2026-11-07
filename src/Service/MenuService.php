@@ -237,10 +237,12 @@ class MenuService
 
         // Allow Home icon for Trang chủ, and match live site structure
         $label = htmlspecialchars($item['title']);
+        $isHomeIcon = false;
         if ($item['title'] === 'Trang chủ' || $item['url'] === '/' || $item['url'] === '') {
             if ($depth === 0) {
-                 $label = '<span class="hidden">' . htmlspecialchars($item['title']) . '</span><i class="fa fa-home"></i>';
+                 $label = '<span class="sr-only">' . htmlspecialchars($item['title']) . '</span><i class="fa fa-home" aria-hidden="true"></i>';
                  $aClass .= ' home';
+                 $isHomeIcon = true;
             }
         }
 
@@ -249,6 +251,10 @@ class MenuService
             'class' => htmlspecialchars($aClass),
             'href' => $this->buildUrl($item['url']),
         ];
+
+        if ($isHomeIcon) {
+            $linkAttrs['aria-label'] = htmlspecialchars($item['title'] ?: 'Trang chủ');
+        }
 
         if (!empty($item['target'])) {
             $linkAttrs['target'] = htmlspecialchars($item['target']);
