@@ -124,7 +124,9 @@ class ContentFormatter
             $src = !is_bool($this->convertImages->webpConvert2($src, '')) ? $this->convertImages->webpConvert2($src, '') : $src;
 
             $img->setAttribute('src', '/' . $src);
-            $img->setAttribute('loading', 'lazy');
+            if (strtolower($img->getAttribute('fetchpriority')) !== 'high') {
+                $img->setAttribute('loading', 'lazy');
+            }
             $img->setAttribute('alt', !empty($alt) ? $alt : $post->getTitle());
             $img->setAttribute('width', !empty($width) ? ($width > 900 ? 900 : $width) : 500);
             $img->setAttribute('height', !empty($height) ? ($width > 900 ? round(($height * 900) / $width) : $height) : 500);

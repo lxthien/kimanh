@@ -1,0 +1,32 @@
+{% macro badge(issue) %}<span class="il-badge il-badge--{{ issue.level }}" title="{{ issue.help }}">{{ issue.label }}</span>{% endmacro %}
+
+{% macro tierBadge(page) %}
+{% set t = page.tier|default('blog') %}
+{% if t == 'money' %}
+<span class="il-badge il-badge--money" title="Money Page: Trang đích Dịch vụ & Báo giá cốt lõi toàn công ty">★ Money Page</span>
+{% elseif t == 'local' %}
+<span class="il-badge il-badge--local" title="Local Page: Trang SEO Địa phương ({{ page.locationName|default('Khu vực') }})">📍 Local{{ page.locationName is defined and page.locationName ? ' · ' ~ page.locationName : '' }}</span>
+{% elseif t == 'project' %}
+<span class="il-badge il-badge--project" title="Project Page: Dự án / Công trình thực tế (E-E-A-T)">🏗 Dự án{{ page.locationName is defined and page.locationName ? ' · ' ~ page.locationName : '' }}</span>
+{% elseif t == 'hub' %}
+<span class="il-badge il-badge--hub" title="Hub Page: Danh mục trụ cột điều phối Silo">📂 Hub</span>
+{% elseif t == 'trust' %}
+<span class="il-badge il-badge--trust" title="Trust Page: Trang Thương hiệu / Pháp nhân / E-E-A-T">🛡 Trust</span>
+{% else %}
+<span class="il-badge il-badge--cluster" title="Blog Page: Bài kiến thức, cẩm nang, mẫu nhà, phong thủy">📝 Blog</span>
+{% endif %}
+{% endmacro %}
+
+{% macro zoneBadge(zone) %}
+{% if zone == 'early' %}
+<span class="il-badge il-badge--ok" title="Nằm trong 35% đầu bài viết — truyền trọng số cao nhất (1.5x)">Đầu bài (1.5x)</span>
+{% elseif zone == 'middle' %}
+<span class="il-badge il-badge--info" title="Nằm ở thân bài viết (1.2x)">Giữa bài (1.2x)</span>
+{% elseif zone == 'late' %}
+<span class="il-badge il-badge--cluster" title="Nằm ở cuối bài viết (1.0x)">Cuối bài (1.0x)</span>
+{% elseif zone == 'nav' %}
+<span class="il-badge il-badge--hub">Menu</span>
+{% endif %}
+{% endmacro %}
+
+{% macro edit(page) %}{% if page.edit %}<a href="{{ path(page.edit.route, {id: page.edit.id}) }}" target="_blank">Sửa nội dung</a>{% endif %}{% endmacro %}

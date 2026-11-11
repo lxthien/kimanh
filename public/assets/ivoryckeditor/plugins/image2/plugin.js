@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @license Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
@@ -342,6 +342,11 @@
 					alt: this.data.alt
 				} );
 
+				if ( this.data.fetchpriority )
+					this.parts.image.setAttribute( 'fetchpriority', this.data.fetchpriority );
+				else
+					this.parts.image.removeAttribute( 'fetchpriority' );
+
 				// If shifting non-captioned -> captioned, remove classes
 				// related to styles from <img/>.
 				if ( this.oldData && !this.oldData.hasCaption && this.data.hasCaption ) {
@@ -367,6 +372,7 @@
 						alt: image.getAttribute( 'alt' ) || '',
 						width: image.getAttribute( 'width' ) || '',
 						height: image.getAttribute( 'height' ) || '',
+						fetchpriority: image.getAttribute( 'fetchpriority' ) || '',
 
 						// Lock ratio is on by default (http://dev.ckeditor.com/ticket/10833).
 						lock: this.ready ? helpers.checkHasNaturalRatio( image ) : true
@@ -1537,7 +1543,7 @@
 					match: centerWrapperChecker( editor )
 				},
 				img: {
-					attributes: '!src,alt,width,height'
+					attributes: '!src,alt,width,height,fetchpriority,data-fancybox,data-caption,loading,decoding'
 				},
 				figure: {
 					classes: '!' + editor.config.image2_captionedClass

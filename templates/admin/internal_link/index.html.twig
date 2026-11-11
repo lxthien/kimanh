@@ -1,0 +1,428 @@
+{% extends 'admin/layout.html.twig' %}
+{% import 'admin/internal_link/_macros.html.twig' as il %}
+
+{% block title %}Quản trị Internal Link & Truyền lực Money Page{% endblock %}
+{% block body_id 'admin_internal_link_index' %}
+
+{% block main %}
+<section class="banner-manager il-manager">
+    <header class="banner-manager__header">
+        <div>
+            <h1>Internal Link &amp; Mô hình Topic Cluster / Money Page</h1>
+            <p>Phân tích đồ thị liên kết nội bộ, điểm truyền lực (Internal PageRank), phát hiện trang mồ côi, Anchor Cannibalization và gợi ý đẩy sức mạnh sang Money Pages.</p>
+        </div>
+        <form method="post" action="{{ path('admin_internal_link_refresh') }}">
+            <input type="hidden" name="token" value="{{ csrf_token('internal_link_refresh') }}">
+            <button type="submit" class="banner-button banner-button--primary">
+                <i class="fa fa-refresh"></i> Phân tích lại
+            </button>
+        </form>
+    </header>
+
+    {% if report is null %}
+        <div class="banner-panel il-empty">
+            <h2>Chưa có báo cáo Internal Link</h2>
+            <p>Bấm <strong>“Phân tích lại”</strong> ở góc phải phía trên, hoặc chạy lệnh dưới đây trên máy chủ để khởi tạo báo cáo đầu tiên:</p>
+            <code>php bin/console app:compute-internal-links</code>
+        </div>
+    {% else %}
+        {% set s = report.summary %}
+        <p class="il-meta">
+            Báo cáo cập nhật lúc <time datetime="{{ generatedAt|date('c') }}">{{ generatedAt|date('d/m/Y H:i', 'Asia/Ho_Chi_Minh') }}</time>.
+            Sau khi chỉnh sửa bài viết trên CMS, hãy bấm <strong>Phân tích lại</strong> để cập nhật điểm truyền lực.
+        </p>
+
+        <nav class="il-tabs" aria-label="Các phần của báo cáo">
+            {% set tabs = {
+                'overview': 'Tổng quan',
+                'money': '★ Sức mạnh Money Pages',
+                'local': '📍 Sức mạnh Local Pages',
+                'pages': 'Tất cả trang (6 nhóm)',
+                'links': 'Link có vấn đề',
+                'opportunities': 'Gợi ý truyền lực'
+            } %}
+            {% for id, label in tabs %}
+                <a href="{{ path('admin_internal_link_index', {tab: id}) }}" class="{{ tab == id ? 'is-active' : '' }}" {{ tab == id ? 'aria-current="page"' : '' }}>
+                    {{ label }}
+                    {% if id == 'money' %}
+                        <span>{{ s.moneyPages|default(0) }}</span>
+                    {% elseif id == 'local' %}
+                        <span>{{ s.localPages|default(0) }}</span>
+                    {% elseif id == 'opportunities' %}
+                        <span>{{ s.opportunities }}</span>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </nav>
+
+        {% if tab == 'overview' %}
+            <div class="il-summary" aria-label="Chỉ số chính">
+                <article class="il-score {{ report.score >= 80 ? 'is-good' : (report.score >= 60 ? 'is-medium' : 'is-bad') }}">
+                    <span>Điểm sức khỏe Internal Link</span>
+                    <strong>{{ report.score }}<small>/100</small></strong>
+                    <small>Theo tiêu chuẩn Google Leak &amp; Silo 6 tầng</small>
+                </article>
+                <article>
+                    <span>★ Money Pages &amp; 📍 Local Pages</span>
+                    <strong>{{ s.moneyPages|default(0) }} <small>Money</small> · {{ s.localPages|default(0) }} <small>Local</small></strong>
+                    <small>{{ s.moneyStarved|default(0) }} Money thiếu lực · {{ s.localStarved|default(0) }} Local thiếu lực</small>
+                </article>
+                <article>
+                    <span>Cấu trúc 6 nhóm trang ({{ s.pages }} trang)</span>
+                    <strong>{{ s.projectPages|default(0) }} <small>Dự án</small> · {{ s.blogPages|default(0) }} <small>Blog</small></strong>
+                    <small>{{ s.hubPages|default(0) }} Hub danh mục · {{ s.trustPages|default(0) }} Trust/Thương hiệu</small>
+                </article>
+                <article>
+                    <span>Cơ hội truyền lực mới</span>
+                    <strong>{{ s.opportunities }}</strong>
+                    <small>{{ s.moneyOpportunities|default(0) }} về Money Page · {{ s.localOpportunities|default(0) }} về Local Page</small>
+                </article>
+            </div>
+
+            <div class="il-columns">
+                <section class="banner-panel il-issues" aria-labelledby="il-page-issues">
+                    <header class="banner-panel__toolbar">
+                        <h2 id="il-page-issues">Vấn đề cấu trúc &amp; Silo theo trang</h2>
+                        <span>{{ s.indexablePages }} trang index</span>
+                    </header>
+                    <ul>
+                        {% for code, issue in pageIssues %}
+                            {% set count = attribute(s, code)|default(0) %}
+                            <li class="{{ count ? 'has-issue' : '' }}">
+                                <a href="{{ path('admin_internal_link_index', {tab: code == 'money_starved' ? 'money' : (code == 'local_starved' ? 'local' : 'pages'), issue: code}) }}">
+                                    <span class="il-badge il-badge--{{ count ? issue.level : 'ok' }}">{{ count }}</span>
+                                    <span>
+                                        <strong>{{ issue.label }}</strong>
+                                        <small>{{ issue.help }}</small>
+                                    </span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+
+                <section class="banner-panel il-issues" aria-labelledby="il-link-issues">
+                    <header class="banner-panel__toolbar">
+                        <h2 id="il-link-issues">Vấn đề chất lượng Link &amp; Anchor Text</h2>
+                        <span>{{ s.internalLinks + s.menuLinks }} link</span>
+                    </header>
+                    <ul>
+                        {% for code, issue in linkIssues %}
+                            {% set count = attribute(s, code)|default(0) %}
+                            <li class="{{ count ? 'has-issue' : '' }}">
+                                <a href="{{ path('admin_internal_link_index', {tab: 'links', issue: code}) }}">
+                                    <span class="il-badge il-badge--{{ count ? issue.level : 'ok' }}">{{ count }}</span>
+                                    <span>
+                                        <strong>{{ issue.label }}</strong>
+                                        <small>{{ issue.help }}</small>
+                                    </span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            </div>
+
+            <details class="banner-panel il-guide" open>
+                <summary>Nguyên tắc SEO Internal Link theo tài liệu Google Content Warehouse Leak &amp; Mô hình Hub-Spoke</summary>
+                <p><strong>1. Dồn lực cho Money Pages (Trang báo giá / Dịch vụ trụ cột):</strong> Trong kiến trúc Topic Cluster (Hub &amp; Spoke), mọi bài viết tư vấn/kinh nghiệm (Spoke/Vệ tinh) phải đặt ít nhất 1–2 link ngữ cảnh trỏ ngược về <strong>Money Page</strong> hoặc <strong>Hub Danh mục</strong> cùng chủ đề để hội tụ <em>Internal PageRank (Link Juice)</em>.</p>
+                <p><strong>2. Vị trí đặt link &amp; First-Link Priority (Google Leak <code>PerDocData</code> / <code>Anchors</code>):</strong> Link đặt ở <strong>35% đầu bài viết (Đầu bài)</strong> nằm trong đoạn văn ngữ cảnh (<code>context2</code>) truyền trọng số mạnh nhất (1.5x). Nếu 1 bài viết trỏ nhiều link tới cùng 1 trang đích, Google ưu tiên ghi nhận Anchor Text của link đầu tiên (tránh đặt link đầu bằng anchor chung chung như “xem thêm”).</p>
+                <p><strong>3. Đa dạng hóa Anchor &amp; Chống ăn thịt từ khóa (Anchor Cannibalization):</strong> Không dùng cùng 1 anchor text từ khóa chính để trỏ sang 2 bài viết khác nhau. Trang Money Page nên nhận đa dạng các biến thể từ khóa tự nhiên (Exact-match + Partial-match + Semantic) từ các bài vệ tinh đang có lượt xem (<code>viewCounts</code>) cao.</p>
+                <p><strong>4. Độ sâu Click (<code>homepagePagerankNs</code>):</strong> Mọi Money Page cần cách Trang chủ tối đa 1–2 click; bài vệ tinh không quá {{ constant('App\\Seo\\InternalLink\\InternalLinkAnalyzer::MAX_CLICK_DEPTH') }} click.</p>
+            </details>
+
+        {% else %}
+            <form class="banner-panel il-filters" method="get" action="{{ path('admin_internal_link_index') }}">
+                <input type="hidden" name="tab" value="{{ tab }}">
+                <label class="il-search">
+                    Tìm kiếm
+                    <input type="search" name="q" value="{{ filters.q }}" placeholder="{{ tab == 'links' ? 'URL, anchor hoặc trang nguồn…' : 'Tiêu đề, đường dẫn, cụm chủ đề hoặc từ khóa…' }}">
+                </label>
+
+                {% if tab == 'pages' or tab == 'money' or tab == 'local' %}
+                    <label>
+                        Vấn đề
+                        <select name="issue">
+                            <option value="">Tất cả</option>
+                            <option value="any" {{ filters.issue == 'any' ? 'selected' : '' }}>Chỉ trang có vấn đề</option>
+                            {% for code, issue in pageIssues %}
+                                <option value="{{ code }}" {{ filters.issue == code ? 'selected' : '' }}>{{ issue.label }} ({{ attribute(s, code)|default(0) }})</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    {% if tab == 'pages' %}
+                        <label>
+                            Phân tầng SEO (6 nhóm)
+                            <select name="tier">
+                                <option value="">Tất cả 6 nhóm</option>
+                                {% for code, label in tierLabels %}
+                                    <option value="{{ code }}" {{ filters.tier == code ? 'selected' : '' }}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                    {% endif %}
+                    <label>
+                        Sắp xếp
+                        <select name="sort">
+                            <option value="" {{ filters.sort == '' ? 'selected' : '' }}>Ưu tiên lỗi nặng nhất</option>
+                            <option value="inlinks_asc" {{ filters.sort == 'inlinks_asc' ? 'selected' : '' }}>Ít bài link tới nhất</option>
+                            <option value="inlinks_desc" {{ filters.sort == 'inlinks_desc' ? 'selected' : '' }}>Nhiều bài link tới nhất</option>
+                            <option value="juice_desc" {{ filters.sort == 'juice_desc' ? 'selected' : '' }}>Điểm Link Juice cao → thấp</option>
+                            <option value="juice_asc" {{ filters.sort == 'juice_asc' ? 'selected' : '' }}>Điểm Link Juice thấp → cao</option>
+                            <option value="views_desc" {{ filters.sort == 'views_desc' ? 'selected' : '' }}>Lượt xem (Traffic) cao nhất</option>
+                        </select>
+                    </label>
+                {% elseif tab == 'links' %}
+                    <label>
+                        Vấn đề
+                        <select name="issue">
+                            <option value="">Mọi link có vấn đề</option>
+                            {% for code, issue in linkIssues %}
+                                <option value="{{ code }}" {{ filters.issue == code ? 'selected' : '' }}>{{ issue.label }} ({{ attribute(s, code)|default(0) }})</option>
+                            {% endfor %}
+                            <option value="all" {{ filters.issue == 'all' ? 'selected' : '' }}>Tất cả link nội bộ</option>
+                        </select>
+                    </label>
+                {% elseif tab == 'opportunities' %}
+                    <label>
+                        Mục tiêu ưu tiên
+                        <select name="target_tier">
+                            <option value="" {{ filters.target_tier == '' ? 'selected' : '' }}>Tất cả cơ hội ({{ s.opportunities }})</option>
+                            <option value="money" {{ filters.target_tier == 'money' ? 'selected' : '' }}>★ Chỉ truyền lực về Money Page ({{ s.moneyOpportunities|default(0) }})</option>
+                            <option value="local" {{ filters.target_tier == 'local' ? 'selected' : '' }}>📍 Chỉ truyền lực về Local Page ({{ s.localOpportunities|default(0) }})</option>
+                            <option value="cluster" {{ filters.target_tier == 'cluster' ? 'selected' : '' }}>Cùng cụm chủ đề / Cùng địa bàn Quận</option>
+                        </select>
+                    </label>
+                {% endif %}
+
+                <div class="il-filter-actions">
+                    <button type="submit" class="banner-button banner-button--primary"><i class="fa fa-filter"></i> Lọc</button>
+                    <a href="{{ path('admin_internal_link_index', {tab: tab}) }}">Bỏ lọc</a>
+                </div>
+            </form>
+
+            <section class="banner-panel il-results">
+                <header class="banner-panel__toolbar">
+                    <h2>{{ {
+                        'money': 'Bảng điều khiển sức mạnh Money Pages (Trang báo giá & dịch vụ cốt lõi)',
+                        'local': 'Bảng điều khiển sức mạnh Local Pages (Trang SEO Quận/Huyện/Tỉnh)',
+                        'pages': 'Danh sách trang & Chỉ số Internal Link (Phân loại 6 nhóm)',
+                        'links': 'Danh sách Link & Kiểm toán Anchor Text',
+                        'opportunities': 'Gợi ý đặt Link ngữ cảnh truyền sức mạnh (Blog/Dự án → Money/Local)'
+                    }[tab] }}</h2>
+                    <span>{{ pagination.totalItemCount }} kết quả</span>
+                </header>
+
+                {% if tab == 'opportunities' %}
+                    <p class="il-hint">
+                        Hệ thống tự động quét văn bản của các bài <strong>Blog / Dự án thực tế</strong> nhắc tới từ khóa hoặc địa bàn của <strong>Money Page / Local Page</strong> nhưng chưa đặt link.
+                        <strong>Mẹo SEO:</strong> Ưu tiên ghép <em>Dự án thực tế Quận X → Local Page Quận X</em> và đặt link ở 35% đầu bài viết.
+                    </p>
+                {% elseif tab == 'money' %}
+                    <p class="il-hint">
+                        Danh sách các <strong>Money Pages (Trang dịch vụ, bảng báo giá chủ lực toàn cục)</strong>. Hãy đảm bảo mỗi Money Page có tối thiểu <strong>{{ constant('App\\Seo\\InternalLink\\InternalLinkAnalyzer::MIN_MONEY_PAGE_INLINKS') }}–10 bài vệ tinh</strong> trỏ link ngữ cảnh về và có điểm Link Juice cao.
+                    </p>
+                {% elseif tab == 'local' %}
+                    <p class="il-hint">
+                        Danh sách các <strong>Local Pages (Trang dịch vụ xây nhà theo Quận/Huyện/Tỉnh)</strong>. Hãy đảm bảo các bài <strong>🏗 Dự án thực tế</strong> cùng địa bàn trỏ link ngữ cảnh về đúng trang Local Page tương ứng (tối thiểu {{ constant('App\\Seo\\InternalLink\\InternalLinkAnalyzer::MIN_LOCAL_PAGE_INLINKS') }} bài trỏ về).
+                    </p>
+                {% endif %}
+
+                {% if pagination.totalItemCount == 0 %}
+                    <p class="il-empty">{{ tab == 'links' and filters.issue == '' and filters.q == '' ? 'Tuyệt vời! Không có link nào gặp vấn đề.' : 'Không có kết quả khớp bộ lọc hiện tại.' }}</p>
+                {% elseif tab == 'pages' or tab == 'money' or tab == 'local' %}
+                    <div class="il-table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Trang &amp; Cụm chủ đề (Silo)</th>
+                                    <th class="il-num" title="Điểm truyền lực nội bộ (Internal PageRank 0-100)">Link Juice<small>Sức mạnh</small></th>
+                                    <th class="il-num" title="Số trang khác có link ngữ cảnh trỏ tới">Link đến<small>ngữ cảnh / đầu bài</small></th>
+                                    <th class="il-num" title="Số biến thể Anchor Text khác nhau trỏ tới">Đa dạng<small>Anchor</small></th>
+                                    <th class="il-num">Menu</th>
+                                    <th class="il-num" title="Link đi trong nội dung: Nội bộ (Money Page) / Ngoài">Link đi<small>nội bộ (★) / ngoài</small></th>
+                                    <th class="il-num" title="Số click ngắn nhất từ trang chủ">Độ sâu</th>
+                                    <th>Chẩn đoán SEO</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for page in pagination %}
+                                    <tr>
+                                        <td>
+                                            <div>{{ il.tierBadge(page) }} <strong>{{ page.title }}</strong></div>
+                                            <small>
+                                                {{ typeLabels[page.type] }}
+                                                {% if page.clusterName is defined and page.clusterName %} · Cụm: <strong>{{ page.clusterName }}</strong>{% endif %}
+                                                · <code>{{ page.path }}</code>
+                                                {% if page.viewCounts is defined and page.viewCounts > 0 %} · {{ page.viewCounts|number_format }} lượt xem{% endif %}
+                                                {{ page.indexable ? '' : ' · <strong class="text-danger">noindex</strong>'|raw }}
+                                            </small>
+                                        </td>
+                                        <td class="il-num">
+                                            <strong class="il-juice {{ page.linkJuice|default(0) >= 60 ? 'is-high' : (page.linkJuice|default(0) >= 30 ? 'is-mid' : 'is-low') }}">
+                                                {{ page.linkJuice|default(0) }}
+                                            </strong>
+                                            <small>/100</small>
+                                        </td>
+                                        <td class="il-num">
+                                            <strong>{{ page.inContent }}</strong> bài
+                                            <small>{{ page.inContentLinks }} link ({{ page.inEarlyLinks|default(0) }} đầu bài)</small>
+                                        </td>
+                                        <td class="il-num">
+                                            <strong>{{ page.uniqueAnchors|default(0) }}</strong>
+                                            <small>anchor</small>
+                                        </td>
+                                        <td class="il-num">{{ page.inMenu ? '<span class="il-ok">Có</span>'|raw : '—' }}</td>
+                                        <td class="il-num">
+                                            {{ page.outInternal }} ({{ page.outMoneyLinks|default(0) }}★ / {{ page.outLocalLinks|default(0) }}📍) / {{ page.outExternal }}
+                                        </td>
+                                        <td class="il-num">{{ page.depth is null ? '?' : page.depth }}</td>
+                                        <td>
+                                            {% for code in page.issues %}
+                                                {% if pageIssues[code] is defined %}{{ il.badge(pageIssues[code]) }}{% endif %}
+                                            {% else %}
+                                                <span class="il-ok">✓ Tối ưu</span>
+                                            {% endfor %}
+                                        </td>
+                                        <td class="il-actions">
+                                            <a href="{{ path('admin_internal_link_page', {key: page.key}) }}">Chi tiết &amp; Gợi ý</a>
+                                            {{ il.edit(page) }}
+                                            <a href="{{ page.path }}" target="_blank">Xem trang ↗</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% elseif tab == 'links' %}
+                    <div class="il-table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Trang nguồn</th>
+                                    <th>Anchor Text &amp; Ngữ cảnh</th>
+                                    <th>Vị trí đặt</th>
+                                    <th>Link trỏ tới</th>
+                                    <th>Vấn đề phát hiện</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for link in pagination %}
+                                    {% set source = report.pages[link.source]|default(null) %}
+                                    <tr>
+                                        <td>
+                                            {% if source %}
+                                                <strong>{{ source.title }}</strong>
+                                                <small><code>{{ source.path }}</code> · Juice: {{ source.linkJuice|default(0) }}</small>
+                                            {% else %}
+                                                <strong>Menu điều hướng</strong>
+                                                <small>Hiển thị toàn trang</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <strong>{{ link.anchor ?: '(rỗng)' }}</strong>
+                                            {% if link.context is defined and link.context %}
+                                                <small class="il-context-snippet">“{{ link.context }}”</small>
+                                            {% endif %}
+                                        </td>
+                                        <td class="il-num">
+                                            {{ il.zoneBadge(link.positionZone|default('')) }}
+                                        </td>
+                                        <td>
+                                            <code>{{ link.href }}</code>
+                                            {% if link.target and report.pages[link.target] is defined %}
+                                                <small>
+                                                    → {{ il.tierBadge(report.pages[link.target]) }}
+                                                    <a href="{{ path('admin_internal_link_page', {key: link.target}) }}">{{ report.pages[link.target].title }}</a>
+                                                </small>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% for code in link.issues %}
+                                                {% if linkIssues[code] is defined %}{{ il.badge(linkIssues[code]) }}{% endif %}
+                                            {% else %}
+                                                <span class="il-ok">✓ Ổn</span>
+                                            {% endfor %}
+                                            {% if link.note %}<small>{{ link.note }}</small>{% endif %}
+                                        </td>
+                                        <td class="il-actions">
+                                            {% if source %}
+                                                {{ il.edit(source) }}
+                                            {% else %}
+                                                <a href="{{ path('admin_menu_index') }}">Sửa menu</a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="il-table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Trang nguồn (Bài truyền lực)</th>
+                                    <th>Đoạn văn ngữ cảnh chứa từ khóa</th>
+                                    <th>Trang đích (Nhận sức mạnh)</th>
+                                    <th class="il-num">Điểm ưu tiên</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in pagination %}
+                                    {% set source = report.pages[item.source] %}
+                                    {% set target = report.pages[item.target] %}
+                                    <tr>
+                                        <td>
+                                            <div>{{ il.tierBadge(source) }} <strong>{{ source.title }}</strong></div>
+                                            <small>
+                                                <code>{{ source.path }}</code>
+                                                · Juice: <strong>{{ source.linkJuice|default(0) }}</strong>
+                                                {% if source.viewCounts is defined and source.viewCounts > 0 %} · {{ source.viewCounts|number_format }} views{% endif %}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            {{ item.snippet }}
+                                            <small>
+                                                Anchor gợi ý: <strong class="text-primary">{{ item.keyword }}</strong>
+                                                {% if item.flowLabel is defined and item.flowLabel %}
+                                                    · <span class="il-ok">✓ {{ item.flowLabel }}</span>
+                                                {% elseif item.sameCluster is defined and item.sameCluster %}
+                                                    · <span class="il-ok">✓ Cùng cụm Silo ({{ source.clusterName }})</span>
+                                                {% endif %}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <div>{{ il.tierBadge(target) }} <strong>{{ target.title }}</strong></div>
+                                            <small>
+                                                <code>{{ target.path }}</code> · Đang có <strong>{{ target.inContent }}</strong> bài link tới (Juice: {{ target.linkJuice|default(0) }})
+                                            </small>
+                                        </td>
+                                        <td class="il-num">
+                                            <span class="il-badge il-badge--{{ item.powerScore|default(50) >= 70 ? 'critical' : 'info' }}">
+                                                {{ item.powerScore|default(50) }}/100
+                                            </span>
+                                        </td>
+                                        <td class="il-actions">
+                                            {{ il.edit(source) }}
+                                            <a href="{{ path('admin_internal_link_page', {key: target.key}) }}">Chi tiết trang đích</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </section>
+
+            <nav class="il-pagination" aria-label="Phân trang">
+                {{ knp_pagination_render(pagination, '@KnpPaginator/Pagination/twitter_bootstrap_v3_pagination.html.twig') }}
+            </nav>
+        {% endif %}
+    {% endif %}
+</section>
+{% endblock %}
+

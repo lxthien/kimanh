@@ -118,6 +118,7 @@ class FileBag extends ParameterBag
             return $data;
         }
 
+        unset($data['full_path']);
         $keys = array_keys($data);
         sort($keys);
 

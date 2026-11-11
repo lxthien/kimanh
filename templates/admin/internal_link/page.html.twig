@@ -1,0 +1,288 @@
+{% extends 'admin/layout.html.twig' %}
+{% import 'admin/internal_link/_macros.html.twig' as il %}
+
+{% block title %}Chi tiết Internal Link: {{ page.title }}{% endblock %}
+{% block body_id 'admin_internal_link_index' %}
+
+{% block main %}
+<section class="banner-manager il-manager">
+    <header class="banner-manager__header">
+        <div>
+            <h1>{{ il.tierBadge(page) }} {{ page.title }}</h1>
+            <p>
+                {{ typeLabels[page.type] }}
+                {% if page.clusterName is defined and page.clusterName %} · Cụm Silo: <strong>{{ page.clusterName }}</strong>{% endif %}
+                · <code>{{ page.path }}</code>
+                {{ page.indexable ? '' : ' · noindex' }}
+            </p>
+        </div>
+        <div class="il-header-actions">
+            <a class="banner-button" href="{{ path('admin_internal_link_index', {tab: page.isMoneyPage ? 'money' : (page.isLocalPage|default(false) ? 'local' : 'pages')}) }}">← Quay lại danh sách</a>
+            {% if page.edit %}
+                <a class="banner-button banner-button--primary" href="{{ path(page.edit.route, {id: page.edit.id}) }}" target="_blank">
+                    <i class="fa fa-edit"></i> Sửa nội dung trang này
+                </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <p class="il-meta">Theo báo cáo lúc {{ generatedAt|date('d/m/Y H:i', 'Asia/Ho_Chi_Minh') }}.</p>
+
+    <div class="il-summary">
+        <article class="il-score {{ page.linkJuice|default(0) >= 60 ? 'is-good' : (page.linkJuice|default(0) >= 30 ? 'is-medium' : 'is-bad') }}">
+            <span>Điểm truyền lực (Link Juice)</span>
+            <strong>{{ page.linkJuice|default(0) }}<small>/100</small></strong>
+            <small>{{ page.viewCounts|default(0)|number_format }} lượt xem · {{ page.wordCount|default(0)|number_format }} từ</small>
+        </article>
+        <article>
+            <span>Bài viết trỏ tới (Ngữ cảnh)</span>
+            <strong>{{ page.inContent }}</strong>
+            <small>{{ page.inContentLinks }} link ({{ page.inEarlyLinks|default(0) }} link ở đầu bài) · {{ page.uniqueAnchors|default(0) }} anchor khác nhau</small>
+        </article>
+        <article>
+            <span>Link đi ra từ trang này</span>
+            <strong>{{ page.outInternal }}</strong>
+            <small>{{ page.outMoneyLinks|default(0) }} tới Money Page · {{ page.outLocalLinks|default(0) }} tới Local Page · {{ page.outExternal }} link ngoài</small>
+        </article>
+        <article>
+            <span>Độ sâu từ Trang chủ</span>
+            <strong>{{ page.depth is null ? '?' : page.depth }}</strong>
+            <small>{{ page.inMenu ? 'Có trong Menu chính (1 click)' : (page.depth is null ? 'Chưa có đường dẫn từ trang chủ' : 'lần click từ Trang chủ') }}</small>
+        </article>
+    </div>
+
+    {% if page.issues %}
+        <section class="banner-panel il-issues">
+            <header class="banner-panel__toolbar">
+                <h2>Chẩn đoán SEO của trang này</h2>
+                <span>{{ page.issues|length }} vấn đề</span>
+            </header>
+            <ul>
+                {% for code in page.issues %}
+                    {% if pageIssues[code] is defined %}
+                        {% set issue = pageIssues[code] %}
+                        <li class="has-issue">
+                            <div>
+                                <span class="il-badge il-badge--{{ issue.level }}">{{ issue.label }}</span>
+                                <span><small>{{ issue.help }}</small></span>
+                            </div>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+
+    {% if anchorCounts is defined and anchorCounts|length > 0 %}
+        <section class="banner-panel il-results">
+            <header class="banner-panel__toolbar">
+                <h2>Phân bố Anchor Text trỏ tới trang này (Đa dạng hóa từ khóa)</h2>
+                <span>{{ anchorCounts|length }} biến thể anchor</span>
+            </header>
+            <div class="il-anchor-cloud">
+                {% for anchorText, count in anchorCounts %}
+                    <span class="il-badge il-badge--info">{{ anchorText }} <strong>({{ count }})</strong></span>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    {% if opportunities %}
+        <section class="banner-panel il-results">
+            <header class="banner-panel__toolbar">
+                <h2>★ Gợi ý: Các bài viết có sẵn từ khóa nên đặt link trỏ VỀ trang này</h2>
+                <span>{{ opportunities|length }} cơ hội truyền lực</span>
+            </header>
+            <div class="il-table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Trang nguồn (Nơi mở ra để chèn link)</th>
+                            <th>Đoạn văn chứa từ khóa</th>
+                            <th class="il-num">Điểm truyền lực</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in opportunities %}
+                            {% set source = report.pages[item.source] %}
+                            <tr>
+                                <td>
+                                    <strong>{{ source.title }}</strong>
+                                    <small>
+                                        <code>{{ source.path }}</code> · Juice: <strong>{{ source.linkJuice|default(0) }}</strong>
+                                        {% if source.viewCounts is defined and source.viewCounts > 0 %} · {{ source.viewCounts|number_format }} views{% endif %}
+                                    </small>
+                                </td>
+                                <td>
+                                    {{ item.snippet }}
+                                    <small>
+                                        Từ khóa gợi ý làm Anchor: <strong class="text-primary">{{ item.keyword }}</strong>
+                                        {% if item.sameCluster is defined and item.sameCluster %} · <span class="il-ok">✓ Cùng cụm Silo</span>{% endif %}
+                                    </small>
+                                </td>
+                                <td class="il-num">
+                                    <span class="il-badge il-badge--{{ item.powerScore|default(50) >= 70 ? 'critical' : 'info' }}">{{ item.powerScore|default(50) }}/100</span>
+                                </td>
+                                <td class="il-actions">{{ il.edit(source) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    {% endif %}
+
+    {% if outboundOpportunities is defined and outboundOpportunities|length > 0 %}
+        <section class="banner-panel il-results">
+            <header class="banner-panel__toolbar">
+                <h2>Gợi ý: Từ bài viết này nên đặt link trỏ ĐI đâu để truyền sức mạnh?</h2>
+                <span>{{ outboundOpportunities|length }} gợi ý</span>
+            </header>
+            <div class="il-table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Trang đích nên nhận link</th>
+                            <th>Đoạn văn trong bài này có từ khóa</th>
+                            <th>URL cần chèn</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in outboundOpportunities %}
+                            {% set target = report.pages[item.target] %}
+                            <tr>
+                                <td>
+                                    <div>{{ il.tierBadge(target) }} <strong>{{ target.title }}</strong></div>
+                                    <small>Đang có {{ target.inContent }} bài link tới</small>
+                                </td>
+                                <td>
+                                    {{ item.snippet }}
+                                    <small>Từ khóa: <strong class="text-primary">{{ item.keyword }}</strong></small>
+                                </td>
+                                <td><code>{{ target.path }}</code></td>
+                                <td class="il-actions">{{ il.edit(page) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="banner-panel il-results">
+        <header class="banner-panel__toolbar">
+            <h2>Danh sách Link đang trỏ TỚI trang này (Inbound Links)</h2>
+            <span>{{ inbound|length }} link</span>
+        </header>
+        {% if inbound %}
+            <div class="il-table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Trang nguồn</th>
+                            <th>Anchor Text &amp; Ngữ cảnh</th>
+                            <th class="il-num">Vị trí</th>
+                            <th>URL được dùng</th>
+                            <th>Đánh giá</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for link in inbound %}
+                            {% set source = report.pages[link.source]|default(null) %}
+                            <tr>
+                                <td>
+                                    {% if source %}
+                                        <strong>{{ source.title }}</strong>
+                                        <small><code>{{ source.path }}</code> · Juice: {{ source.linkJuice|default(0) }}</small>
+                                    {% else %}
+                                        <strong>Menu điều hướng</strong>
+                                        <small>Hiển thị toàn trang</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong>{{ link.anchor ?: '(rỗng)' }}</strong>
+                                    {% if link.context is defined and link.context %}
+                                        <small class="il-context-snippet">“{{ link.context }}”</small>
+                                    {% endif %}
+                                </td>
+                                <td class="il-num">{{ il.zoneBadge(link.positionZone|default('')) }}</td>
+                                <td><code>{{ link.href }}</code></td>
+                                <td>
+                                    {% if linkIssues[link.status] is defined %}{{ il.badge(linkIssues[link.status]) }}{% endif %}
+                                    {% for code in link.flags %}
+                                        {% if linkIssues[code] is defined %}{{ il.badge(linkIssues[code]) }}{% endif %}
+                                    {% endfor %}
+                                    {% if link.status == 'ok' and link.flags is empty %}<span class="il-ok">✓ Tốt</span>{% endif %}
+                                    {% if link.note %}<small>{{ link.note }}</small>{% endif %}
+                                </td>
+                                <td class="il-actions">{% if source %}{{ il.edit(source) }}{% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="il-empty">Chưa có link nào trong nội dung hoặc menu trỏ tới trang này.</p>
+        {% endif %}
+    </section>
+
+    <section class="banner-panel il-results">
+        <header class="banner-panel__toolbar">
+            <h2>Danh sách Link đi RA từ trang này (Outbound Links)</h2>
+            <span>{{ outbound|length }} link</span>
+        </header>
+        {% if outbound %}
+            <div class="il-table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Anchor Text &amp; Ngữ cảnh</th>
+                            <th class="il-num">Vị trí</th>
+                            <th>Link trỏ tới</th>
+                            <th>Đánh giá</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for link in outbound %}
+                            <tr>
+                                <td>
+                                    <strong>{{ link.anchor ?: '(rỗng)' }}</strong>
+                                    {% if link.context is defined and link.context %}
+                                        <small class="il-context-snippet">“{{ link.context }}”</small>
+                                    {% endif %}
+                                </td>
+                                <td class="il-num">{{ il.zoneBadge(link.positionZone|default('')) }}</td>
+                                <td>
+                                    <code>{{ link.href }}</code>
+                                    {% if link.target and report.pages[link.target] is defined %}
+                                        <small>
+                                            → {{ il.tierBadge(report.pages[link.target]) }}
+                                            <a href="{{ path('admin_internal_link_page', {key: link.target}) }}">{{ report.pages[link.target].title }}</a>
+                                        </small>
+                                    {% elseif link.status == 'external' %}
+                                        <small>Link ngoài site</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if linkIssues[link.status] is defined %}{{ il.badge(linkIssues[link.status]) }}{% endif %}
+                                    {% for code in link.flags %}
+                                        {% if linkIssues[code] is defined %}{{ il.badge(linkIssues[code]) }}{% endif %}
+                                    {% endfor %}
+                                    {% if link.status == 'ok' and link.flags is empty %}<span class="il-ok">✓ Tốt</span>{% endif %}
+                                    {% if link.note %}<small>{{ link.note }}</small>{% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="il-empty">Nội dung trang này chưa có link nào đi ra.</p>
+        {% endif %}
+    </section>
+</section>
+{% endblock %}
+
